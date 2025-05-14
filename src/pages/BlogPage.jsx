@@ -33,7 +33,7 @@ function BlogPage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="container mx-auto px-4 py-8 mt-16 min-h-screen py-24"
+      className="container mx-auto px-4 py-8 mt-16"
     >
       <h1 className="text-4xl font-bold text-gray-800 mb-8 dark:text-white">Blog</h1>
       
