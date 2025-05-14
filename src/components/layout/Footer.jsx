@@ -73,7 +73,7 @@ function Footer() {
             </p>
             <div className="flex space-x-4">
               <a
-                href="https://www.instagram.com/yas_made2409"
+                href={settings?.social_links?.instagram}
                 target="_blank"
                 rel="noreferrer"
                 className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
