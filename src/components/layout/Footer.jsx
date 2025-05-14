@@ -91,7 +91,7 @@ function Footer() {
                 <FiFacebook size={20} />
               </a>
               <a
-                href="mailto:info@yasmade.com"
+                href={`mailto:${settings?.social_links?.email}`}
                 className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 aria-label="Email"
               >
