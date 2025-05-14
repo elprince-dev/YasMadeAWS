@@ -48,7 +48,7 @@ function AdminLoginPage() {
       <div className="max-w-md w-full">
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
           <div className="text-center">
-            <div className="flex justify-center mb-6">
+            <div className="flex justify-center">
               <Logo className="h-48 w-auto" />
             </div>
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
