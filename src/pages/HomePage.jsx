@@ -393,9 +393,7 @@ function HomePage() {
                   <div className="ml-4">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Location</h3>
                     <p className="text-gray-600 dark:text-gray-400">
-                      123 Creative Street<br />
-                      Artisan City, AC 12345<br />
-                      United States
+                      {settings?.social_links?.location}
                     </p>
                   </div>
                 </div>
