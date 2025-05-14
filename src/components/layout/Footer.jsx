@@ -82,7 +82,7 @@ function Footer() {
                 <FiInstagram size={20} />
               </a>
               <a
-                href="https://facebook.com"
+                href={settings?.social_links?.facebook}
                 target="_blank"
                 rel="noreferrer"
                 className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
