@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { FiInstagram, FiFacebook, FiMail } from 'react-icons/fi'
 import { useSupabase } from '../../contexts/SupabaseContext'
@@ -11,6 +11,28 @@ function Footer() {
   const [subscribing, setSubscribing] = useState(false)
   const [subscribeError, setSubscribeError] = useState(null)
   const [subscribeSuccess, setSubscribeSuccess] = useState(false)
+  //---------------------
+  const [settings, setSettings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  async function fetchSettings() {
+    try {
+      const { data, error } = await supabase
+        .from('settings')
+        .select('*');
+
+      if (error) throw error;
+      setSettings(data[0] || []);
+    } catch (error) {
+      console.error('Error fetching blogs:', error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+  //----------------------
   
   const handleSubscribe = async (e) => {
     e.preventDefault()
