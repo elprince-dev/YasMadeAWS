@@ -56,7 +56,7 @@ function Footer() {
       setSubscribing(false)
     }
   }
-  console.log(settings.quran_verse)
+  console.log(settings.social_links.instagram)
   
   return (
     <footer className="bg-gray-50 dark:bg-gray-900 pt-12 pb-6 border-t border-gray-200 dark:border-gray-800">
