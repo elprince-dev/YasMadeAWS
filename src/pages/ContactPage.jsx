@@ -106,7 +106,7 @@ function ContactPage() {
                 <div className="ml-4">
                   <h3 className="text-lg font-medium">Email</h3>
                   <p className="text-gray-600 dark:text-gray-400">
-                    <a href="mailto:info@yasmade.com" className="hover:text-primary-600 dark:hover:text-primary-400">
+                    <a href={`mailto:${settings?.social_links?.email}`} className="hover:text-primary-600 dark:hover:text-primary-400">
                       {settings?.social_links?.email}
                     </a>
                   </p>
