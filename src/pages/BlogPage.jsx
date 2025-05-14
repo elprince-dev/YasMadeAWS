@@ -35,7 +35,7 @@ function BlogPage() {
       exit={{ opacity: 0 }}
       className="container-custom mx-auto px-4 py-8 mt-16"
     >
-      <h1 className=" font-bold text-gray-800 mb-8 dark:text-white text-center mb-12">Blog</h1>
+      <h1 className="heading-1 font-bold text-gray-800 mb-8 dark:text-white text-center mb-12">Blog</h1>
       
       {loading ? (
         <div className="flex justify-center items-center h-64">
