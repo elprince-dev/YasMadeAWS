@@ -10,7 +10,24 @@ function HomePage() {
   const [loading, setLoading] = useState(true)
     //---------------------
   const [settings, setSettings] = useState([]);
+  useEffect(() => {
+    fetchSettings();
+  }, []);
 
+  async function fetchSettings() {
+    try {
+      const { data, error } = await supabase
+        .from('settings')
+        .select('*');
+
+      if (error) throw error;
+      setSettings(data[0] || []);
+    } catch (error) {
+      console.error('Error fetching blogs:', error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
   //----------------------
   const [featuredProducts, setFeaturedProducts] = useState([])
   const [latestBlogs, setLatestBlogs] = useState([])
@@ -18,39 +35,41 @@ function HomePage() {
   
 
   useEffect(() => {
-  async function fetchAllData() {
-    setLoading(true)
-    try {
-      const [settingsRes, productsRes, blogsRes, sessionsRes] = await Promise.all([
-        supabase.from('settings').select('*'),
-        supabase.from('products').select('*').eq('featured', true).limit(3),
-        supabase.from('blogs').select('*').order('created_at', { ascending: false }).limit(2),
-        supabase.from('sessions')
+    async function fetchData() {
+      setLoading(true)
+      try {
+        // Fetch featured products
+        const { data: products } = await supabase
+          .from('products')
           .select('*')
-          .gt('session_date', new Date().toISOString())
+          .eq('featured', true)
+          .limit(3)
+        
+        // Fetch latest blog posts
+        const { data: blogs } = await supabase
+          .from('blogs')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(2)
+        
+        // Fetch upcoming sessions
+        const today = new Date().toISOString()
+        const { data: sessions } = await supabase
+          .from('sessions')
+          .select('*')
+          .gt('session_date', today)
           .order('session_date')
           .limit(2)
-      ])
-
-      if (settingsRes.error) throw settingsRes.error
-      if (productsRes.error) throw productsRes.error
-      if (blogsRes.error) throw blogsRes.error
-      if (sessionsRes.error) throw sessionsRes.error
-
-      setSettings(settingsRes.data[0] || {})
-      setFeaturedProducts(productsRes.data || [])
-      setLatestBlogs(blogsRes.data || [])
-      setUpcomingSessions(sessionsRes.data || [])
+        
+        setFeaturedProducts(products || [])
+        setLatestBlogs(blogs || [])
+        setUpcomingSessions(sessions || [])
       } catch (error) {
-        console.error('Error fetching homepage data:', error.message)
+        console.error('Error fetching homepage data:', error)
       } finally {
         setLoading(false)
       }
     }
-
-  fetchAllData()
-}, [supabase])
-
     
     fetchData()
   }, [supabase])
