@@ -1,10 +1,33 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import emailjs from "@emailjs/browser";
 import { FiMail, FiMapPin, FiPhone } from 'react-icons/fi'
 import { useSupabase } from '../contexts/SupabaseContext'
 
 function ContactPage() {
+  //---------------------
+  const { supabase } = useSupabase()
+  const [settings, setSettings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  async function fetchSettings() {
+    try {
+      const { data, error } = await supabase
+        .from('settings')
+        .select('*');
+
+      if (error) throw error;
+      setSettings(data[0] || []);
+    } catch (error) {
+      console.error('Error fetching blogs:', error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+  //----------------------
   const formRef = useRef();
   const { supabase } = useSupabase()
   const [formData, setFormData] = useState({
@@ -85,7 +108,7 @@ function ContactPage() {
                   <h3 className="text-lg font-medium">Email</h3>
                   <p className="text-gray-600 dark:text-gray-400">
                     <a href="mailto:info@yasmade.com" className="hover:text-primary-600 dark:hover:text-primary-400">
-                      info@yasmade.com
+                      {settings?.social_links?.email}
                     </a>
                   </p>
                 </div>
