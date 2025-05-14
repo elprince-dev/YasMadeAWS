@@ -134,9 +134,7 @@ function ContactPage() {
                 <div className="ml-4">
                   <h3 className="text-lg font-medium">Location</h3>
                   <p className="text-gray-600 dark:text-gray-400">
-                    123 Creative Street<br />
-                    Artisan City, AC 12345<br />
-                    United States
+                    {settings?.social_links?.location}
                   </p>
                 </div>
               </div>
