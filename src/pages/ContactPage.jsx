@@ -5,8 +5,8 @@ import { FiMail, FiMapPin, FiPhone } from 'react-icons/fi'
 import { useSupabase } from '../contexts/SupabaseContext'
 
 function ContactPage() {
-  //---------------------
   const { supabase } = useSupabase()
+  //---------------------
   const [settings, setSettings] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -29,7 +29,6 @@ function ContactPage() {
   }
   //----------------------
   const formRef = useRef();
-  const { supabase } = useSupabase()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
