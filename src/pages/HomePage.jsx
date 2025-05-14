@@ -373,7 +373,7 @@ function HomePage() {
                   <div className="ml-4">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Email</h3>
                     <a href="mailto:info@yasmade.com" className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">
-                      info@yasmade.com
+                      {settings?.social_links?.email}
                     </a>
                   </div>
                 </div>
