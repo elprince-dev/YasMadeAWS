@@ -7,10 +7,32 @@ import { FiBookOpen, FiCalendar, FiShoppingBag, FiMail, FiMapPin, FiPhone } from
 
 function HomePage() {
   const { supabase } = useSupabase()
+  const [loading, setLoading] = useState(true)
+    //---------------------
+  const [settings, setSettings] = useState([]);
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  async function fetchSettings() {
+    try {
+      const { data, error } = await supabase
+        .from('settings')
+        .select('*');
+
+      if (error) throw error;
+      setSettings(data[0] || []);
+    } catch (error) {
+      console.error('Error fetching blogs:', error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+  //----------------------
   const [featuredProducts, setFeaturedProducts] = useState([])
   const [latestBlogs, setLatestBlogs] = useState([])
   const [upcomingSessions, setUpcomingSessions] = useState([])
-  const [loading, setLoading] = useState(true)
+  
 
   useEffect(() => {
     async function fetchData() {
