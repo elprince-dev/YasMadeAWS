@@ -93,12 +93,12 @@ function Header() {
 
           {user ? (
             <>
-              <NavLink
+              {/* <NavLink
                 to="/admin"
                 className={({ isActive }) => getLinkClasses(isActive)}
               >
                 Admin
-              </NavLink>
+              </NavLink> */}
               <button
                 onClick={handleSignOut}
                 className={`flex items-center ${getLinkClasses(false)}`}
@@ -107,14 +107,14 @@ function Header() {
                 Sign Out
               </button>
             </>
-          ) : (
-            <Link
-              to="/admin/login"
-              className={`flex items-center ${getLinkClasses(false)}`}
-            >
-              <FiLogIn className="w-5 h-5 mr-1" />
-              Sign In
-            </Link>
+          ) : (null
+            // <Link
+            //   to="/admin/login"
+            //   className={`flex items-center ${getLinkClasses(false)}`}
+            // >
+            //   <FiLogIn className="w-5 h-5 mr-1" />
+            //   Sign In
+            // </Link>
           )}
 
           {/* Theme toggle */}
