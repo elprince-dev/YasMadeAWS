@@ -12,6 +12,7 @@ function SessionsPage() {
 
   useEffect(() => {
     async function fetchSessions() {
+      const today = new Date().toISOString()
       try {
         const { data, error } = await supabase
           .from('sessions')
