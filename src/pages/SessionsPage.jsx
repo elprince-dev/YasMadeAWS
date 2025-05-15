@@ -44,7 +44,7 @@ function SessionsPage() {
     >
       <div className="container-custom">
         <div className="text-center mb-12">
-          <h1 className="heading-1 mb-4 gradient-text">Creative Sessions</h1>
+          <h1 className="heading-1 mb-4">Creative Sessions</h1>
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             Join our creative sessions and explore the art of handmade embroidery.
           </p>
