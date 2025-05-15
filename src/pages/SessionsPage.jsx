@@ -16,6 +16,7 @@ function SessionsPage() {
         const { data, error } = await supabase
           .from('sessions')
           .select('*')
+          .gt('session_date', today)
           .order('session_date', { ascending: false });
 
         if (error) {
