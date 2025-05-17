@@ -3,8 +3,9 @@ import { NavLink, Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useTheme } from '../../contexts/ThemeContext'
 import { useSupabase } from '../../contexts/SupabaseContext'
-import { FiSun, FiMoon, FiMenu, FiX, FiLogOut, FiLogIn } from 'react-icons/fi'
+import { FiSun, FiMoon, FiMenu, FiX, FiLogOut, FiLogIn, FiShoppingCart } from 'react-icons/fi'
 import Logo from '../common/Logo'
+import { useCart } from '../../stores/cartStore';
 
 function Header() {
   const { theme, toggleTheme } = useTheme()
@@ -12,6 +13,8 @@ function Header() {
   const location = useLocation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const { getItemCount } = useCart();
+  const cartItemCount = getItemCount();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -91,14 +94,21 @@ function Header() {
             </NavLink>
           ))}
 
+          {/* Cart Link */}
+          <Link
+            to="/cart"
+            className={`relative flex items-center ${getLinkClasses(false)}`}
+          >
+            <FiShoppingCart className="w-5 h-5" />
+            {cartItemCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-primary-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {cartItemCount}
+              </span>
+            )}
+          </Link>
+
           {user ? (
             <>
-              {/* <NavLink
-                to="/admin"
-                className={({ isActive }) => getLinkClasses(isActive)}
-              >
-                Admin
-              </NavLink> */}
               <button
                 onClick={handleSignOut}
                 className={`flex items-center ${getLinkClasses(false)}`}
@@ -107,15 +117,7 @@ function Header() {
                 Sign Out
               </button>
             </>
-          ) : (null
-            // <Link
-            //   to="/admin/login"
-            //   className={`flex items-center ${getLinkClasses(false)}`}
-            // >
-            //   <FiLogIn className="w-5 h-5 mr-1" />
-            //   Sign In
-            // </Link>
-          )}
+          ) : null}
 
           {/* Theme toggle */}
           <button
@@ -133,6 +135,19 @@ function Header() {
 
         {/* Mobile Navigation Toggle */}
         <div className="flex md:hidden items-center">
+          {/* Cart Link */}
+          <Link
+            to="/cart"
+            className={`relative p-2 mr-2 ${getLinkClasses(false)}`}
+          >
+            <FiShoppingCart className="w-5 h-5" />
+            {cartItemCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-primary-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {cartItemCount}
+              </span>
+            )}
+          </Link>
+
           <button
             onClick={toggleTheme}
             className={`p-2 mr-2 rounded-full transition-colors duration-300 ${
