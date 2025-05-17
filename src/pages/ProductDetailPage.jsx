@@ -70,7 +70,7 @@ function ProductDetailPage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="container mx-auto px-4 py-8 mt-14"
+      className="container mx-auto px-4 py-8 mt-14 container-custom"
     >
       <div className="grid md:grid-cols-2 gap-8">
         <div className="relative">
