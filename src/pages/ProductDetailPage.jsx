@@ -90,7 +90,7 @@ function ProductDetailPage() {
         <div>
           <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
           <p className="text-2xl font-semibold text-indigo-600 mb-6">
-            £{product.price.toFixed(2)}
+            ${product.price.toFixed(2)}
           </p>
           <div className="prose max-w-none mb-8">
             <p>{product.description}</p>
