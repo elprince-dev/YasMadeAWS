@@ -27,6 +27,8 @@ import AdminRegistrations from './pages/admin/AdminRegistrations'
 import AdminMessages from './pages/admin/AdminMessages'
 import AdminSubscribers from './pages/admin/AdminSubscribers'
 import AdminOrders from './pages/admin/AdminOrders'
+import AdminShippingRates from './pages/admin/AdminShippingRates'
+import AdminPromoCodes from './pages/admin/AdminPromoCodes'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 import NotFoundPage from './pages/NotFoundPage'
 import ScrollToTop from './components/utils/ScrollToTop'
@@ -76,6 +78,8 @@ function App() {
             <Route path="/admin/subscribers" element={<ProtectedRoute><AdminSubscribers /></ProtectedRoute>} />
             <Route path="/admin/settings" element={<ProtectedRoute><AdminSettings /></ProtectedRoute>} />
             <Route path="/admin/orders" element={<ProtectedRoute><AdminOrders /></ProtectedRoute>} />
+            <Route path="/admin/shipping" element={<ProtectedRoute><AdminShippingRates /></ProtectedRoute>} />
+            <Route path="/admin/promo-codes" element={<ProtectedRoute><AdminPromoCodes /></ProtectedRoute>} />
             
             {/* 404 Page */}
             <Route path="*" element={<NotFoundPage />} />
