@@ -14,7 +14,9 @@ function AdminProductEdit() {
     price: 0,
     image_url: '',
     featured: false,
-    in_stock: true
+    in_stock: true,
+    stripe_product_id: '',
+    stripe_price_id: ''
   })
   const [loading, setLoading] = useState(id ? true : false)
   const [saving, setSaving] = useState(false)
@@ -59,21 +61,50 @@ function AdminProductEdit() {
     setError(null)
 
     try {
+      // Create or update Stripe product
+      const response = await fetch('/api/stripe/create-product', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productId: id,
+          name: product.name,
+          description: product.description,
+          price: product.price,
+          image: product.image_url,
+          stripeProductId: product.stripe_product_id,
+          stripePriceId: product.stripe_price_id
+        }),
+      })
+
+      const stripeData = await response.json()
+      
+      if (!response.ok) {
+        throw new Error(stripeData.error || 'Failed to sync with Stripe')
+      }
+
+      const productData = {
+        ...product,
+        stripe_product_id: stripeData.productId,
+        stripe_price_id: stripeData.priceId
+      }
+
       const { error } = id
         ? await supabase
             .from('products')
-            .update(product)
+            .update(productData)
             .eq('id', id)
         : await supabase
             .from('products')
-            .insert([product])
+            .insert([productData])
 
       if (error) throw error
 
       navigate('/admin/products')
     } catch (error) {
       console.error('Error saving product:', error)
-      setError('Failed to save product')
+      setError('Failed to save product: ' + error.message)
       setSaving(false)
     }
   }
