@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { useSupabase } from '../../contexts/SupabaseContext'
-import { FiPackage, FiEdit3, FiCalendar, FiUsers, FiSettings, FiMail, FiUserPlus } from 'react-icons/fi'
+import { FiPackage, FiEdit3, FiCalendar, FiUsers, FiSettings, FiMail, FiUserPlus, FiTruck, FiTag } from 'react-icons/fi'
 
 function AdminDashboard() {
   const { supabase } = useSupabase()
@@ -118,6 +118,18 @@ function AdminDashboard() {
       color: 'bg-blue-500',
     },
     {
+      title: 'Manage Shipping',
+      link: '/admin/shipping',
+      icon: FiTruck,
+      color: 'bg-green-500',
+    },
+    {
+      title: 'Manage Promo Codes',
+      link: '/admin/promo-codes',
+      icon: FiTag,
+      color: 'bg-yellow-500',
+    },
+    {
       title: 'Update Settings',
       link: '/admin/settings',
       icon: FiSettings,
@@ -175,7 +187,7 @@ function AdminDashboard() {
         {/* Quick Actions */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">Quick Actions</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {quickActions.map((action) => (
               <Link
                 key={action.title}
