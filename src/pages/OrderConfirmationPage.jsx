@@ -137,7 +137,7 @@ function OrderConfirmationPage() {
             
             <div className="mb-8">
               <p className="text-lg mb-4">
-                Thank you for your order! Your order number is: <span className="font-semibold">#{order.id.slice(0, 8)}</span>
+                Thank you for your order! Your order number is: <span className="font-semibold">#{order?.id.slice(0, 8)}</span>
               </p>
               <p className="text-gray-600 dark:text-gray-400">
                 Please complete your payment by sending an e-transfer to:
