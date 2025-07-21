@@ -16,10 +16,18 @@ function AdminOrders() {
     dateTo: '',
     searchTerm: ''
   })
+  const [trackingInput, setTrackingInput] = useState('');
+  const [trackingSuccess, setTrackingSuccess] = useState(false);
 
   useEffect(() => {
     fetchOrders()
   }, [])
+
+  useEffect(() => {
+    if (showModal && selectedOrder) {
+      setTrackingInput(selectedOrder.tracking_number || '');
+    }
+  }, [showModal, selectedOrder]);
 
   async function fetchOrders() {
     try {
@@ -77,6 +85,8 @@ function AdminOrders() {
       setOrders(orders.map(order =>
         order.id === orderId ? { ...order, tracking_number: trackingNumber } : order
       ))
+      setTrackingSuccess(true);
+      setTimeout(() => setTrackingSuccess(false), 2000);
     } catch (error) {
       console.error('Error updating tracking number:', error)
       alert('Failed to update tracking number')
@@ -401,7 +411,7 @@ function AdminOrders() {
                     className="px-4 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
                   >
                     <option value="pending">Pending</option>
-                    <option value="paid">Paid</option>
+                    <option value="processing">Processing</option>
                     <option value="shipped">Shipped</option>
                     <option value="delivered">Delivered</option>
                     <option value="cancelled">Cancelled</option>
@@ -415,19 +425,41 @@ function AdminOrders() {
                 <div className="flex items-center space-x-2">
                   <input
                     type="text"
-                    value={selectedOrder.tracking_number || ''}
-                    onChange={(e) => handleTrackingUpdate(selectedOrder.id, e.target.value)}
+                    value={trackingInput}
+                    onChange={(e) => setTrackingInput(e.target.value)}
                     placeholder="Enter tracking number"
                     className="flex-1 px-4 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
                   />
                   <button
-                    onClick={() => handleTrackingUpdate(selectedOrder.id, selectedOrder.tracking_number)}
+                    onClick={() => handleTrackingUpdate(selectedOrder.id, trackingInput)}
                     className="btn-primary py-2"
                   >
                     Update
                   </button>
                 </div>
+                {trackingSuccess && (
+                  <div className="mt-2 text-green-700 bg-green-50 dark:bg-green-900/20 rounded p-2 text-sm text-center">
+                    Tracking number updated successfully!
+                  </div>
+                )}
               </div>
+
+              {/* Payment Proof */}
+              {selectedOrder.payment_proof && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-medium mb-2">Payment Proof</h3>
+                  <div className="flex flex-col items-center">
+                    <a href={selectedOrder.payment_proof} target="_blank" rel="noopener noreferrer">
+                      <img
+                        src={selectedOrder.payment_proof}
+                        alt="Payment Proof"
+                        className="max-h-64 rounded shadow border border-gray-200 dark:border-gray-700"
+                      />
+                    </a>
+                    <p className="text-xs text-gray-500 mt-2 text-center">Click image to view full size.</p>
+                  </div>
+                </div>
+              )}
 
               {/* Customer Information */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">

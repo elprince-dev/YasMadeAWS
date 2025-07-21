@@ -284,7 +284,7 @@ function CartPage() {
                           required
                           value={orderDetails.country}
                           disabled
-                          className="w-full px-4 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-gray-50"
+                          className="w-full px-4 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 opacity-70"
                         />
                       </div>
                     </div>

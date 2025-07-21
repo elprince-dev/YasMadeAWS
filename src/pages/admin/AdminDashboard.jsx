@@ -96,6 +96,13 @@ function AdminDashboard() {
       link: '/admin/subscribers',
       color: 'bg-indigo-500',
     },
+    {
+      title: 'Orders',
+      count: null, // Optionally, you can fetch and display the order count
+      icon: FiTruck,
+      link: '/admin/orders',
+      color: 'bg-orange-500',
+    },
   ]
 
   const quickActions = [
@@ -128,6 +135,12 @@ function AdminDashboard() {
       link: '/admin/promo-codes',
       icon: FiTag,
       color: 'bg-yellow-500',
+    },
+    {
+      title: 'Manage Orders',
+      link: '/admin/orders',
+      icon: FiTruck,
+      color: 'bg-orange-500',
     },
     {
       title: 'Update Settings',
