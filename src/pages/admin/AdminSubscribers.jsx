@@ -54,7 +54,7 @@ function AdminSubscribers() {
         .order('created_at', { ascending: false })
 
       if (error) throw error
-
+      console.log(data)
       setSubscribers(data)
     } catch (error) {
       console.error('Error fetching subscribers:', error)
