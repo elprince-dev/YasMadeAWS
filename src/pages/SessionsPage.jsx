@@ -72,7 +72,7 @@ function SessionsPage() {
                     animate={{ opacity: 1, y: 0 }}
                     className="card card-hover overflow-hidden"
                   >
-                    <Link to={`/sessions/register/${session.id}`}>
+                    <Link to={`/sessions/${session.id}`}>
                       {session.image_url && (
                         <div className="aspect-video overflow-hidden">
                           <img
@@ -107,7 +107,7 @@ function SessionsPage() {
                             ${session.price?.toFixed(2) || 'Free'}
                           </span>
                           <span className="btn-primary py-2 px-4">
-                            Register Now
+                            View Details
                           </span>
                         </div>
                       </div>

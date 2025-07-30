@@ -10,8 +10,7 @@ import CartPage from './pages/CartPage'
 import BlogPage from './pages/BlogPage'
 import BlogPostPage from './pages/BlogPostPage'
 import SessionsPage from './pages/SessionsPage'
-import SessionRegistrationPage from './pages/SessionRegistrationPage'
-import SessionRegistrationSuccessPage from './pages/SessionRegistrationSuccessPage'
+import SessionDetailPage from './pages/SessionDetailPage'
 import ContactPage from './pages/ContactPage'
 import AboutPage from './pages/AboutPage'
 import AdminLoginPage from './pages/admin/AdminLoginPage'
@@ -23,7 +22,6 @@ import AdminBlogEdit from './pages/admin/AdminBlogEdit'
 import AdminSessions from './pages/admin/AdminSessions'
 import AdminSessionEdit from './pages/admin/AdminSessionEdit'
 import AdminSettings from './pages/admin/AdminSettings'
-import AdminRegistrations from './pages/admin/AdminRegistrations'
 import AdminMessages from './pages/admin/AdminMessages'
 import AdminSubscribers from './pages/admin/AdminSubscribers'
 import AdminOrders from './pages/admin/AdminOrders'
@@ -58,8 +56,7 @@ function App() {
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:id" element={<BlogPostPage />} />
             <Route path="/sessions" element={<SessionsPage />} />
-            <Route path="/sessions/register/:id" element={<SessionRegistrationPage />} />
-            <Route path="/sessions/registration-success" element={<SessionRegistrationSuccessPage />} />
+            <Route path="/sessions/:id" element={<SessionDetailPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/admin/login" element={<AdminLoginPage />} />
@@ -75,7 +72,6 @@ function App() {
             <Route path="/admin/sessions" element={<ProtectedRoute><AdminSessions /></ProtectedRoute>} />
             <Route path="/admin/sessions/new" element={<ProtectedRoute><AdminSessionEdit /></ProtectedRoute>} />
             <Route path="/admin/sessions/:id" element={<ProtectedRoute><AdminSessionEdit /></ProtectedRoute>} />
-            <Route path="/admin/registrations" element={<ProtectedRoute><AdminRegistrations /></ProtectedRoute>} />
             <Route path="/admin/messages" element={<ProtectedRoute><AdminMessages /></ProtectedRoute>} />
             <Route path="/admin/subscribers" element={<ProtectedRoute><AdminSubscribers /></ProtectedRoute>} />
             <Route path="/admin/settings" element={<ProtectedRoute><AdminSettings /></ProtectedRoute>} />

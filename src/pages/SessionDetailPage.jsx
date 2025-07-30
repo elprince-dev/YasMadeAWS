@@ -4,18 +4,13 @@ import { motion } from 'framer-motion'
 import { useSupabase } from '../contexts/SupabaseContext'
 import { FiCalendar, FiClock, FiMapPin, FiUsers, FiAlertCircle } from 'react-icons/fi'
 
-function SessionRegistrationPage() {
+function SessionDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { supabase } = useSupabase()
   const [session, setSession] = useState(null)
-  const [formFields, setFormFields] = useState([])
-  const [formData, setFormData] = useState({})
   const [loading, setLoading] = useState(true)
-  const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(null)
-  const [registrationsClosed, setRegistrationsClosed] = useState(false)
-  const [currentRegistrations, setCurrentRegistrations] = useState(0)
 
   useEffect(() => {
     async function fetchSessionData() {
@@ -28,31 +23,7 @@ function SessionRegistrationPage() {
 
         if (sessionError) throw sessionError
 
-        const { count, error: countError } = await supabase
-          .from('session_registrations')
-          .select('*', { count: 'exact' })
-          .eq('session_id', id)
-
-        if (countError) throw countError
-
-        const { data: fieldsData, error: fieldsError } = await supabase
-          .from('form_fields')
-          .select('*')
-          .eq('session_id', id)
-          .order('order_position')
-
-        if (fieldsError) throw fieldsError
-
         setSession(sessionData)
-        setCurrentRegistrations(count)
-        setRegistrationsClosed(sessionData.max_participants && count >= sessionData.max_participants)
-        setFormFields(fieldsData || [])
-
-        const initialFormData = {}
-        fieldsData?.forEach(field => {
-          initialFormData[field.field_name] = ''
-        })
-        setFormData(initialFormData)
       } catch (error) {
         console.error('Error fetching session data:', error)
         setError('Failed to load session details')
@@ -188,7 +159,7 @@ function SessionRegistrationPage() {
               )}
               <div className="flex items-center text-gray-600 dark:text-gray-400">
                 <FiUsers className="w-5 h-5 mr-2" />
-                {currentRegistrations} / {session.max_participants || '∞'} registered
+                {session.max_participants ? `${session.max_participants} spots available` : 'Unlimited spots'}
               </div>
             </div>
             <div className="mt-4 text-gray-600 dark:text-gray-400">
@@ -201,100 +172,24 @@ function SessionRegistrationPage() {
             )}
           </div>
 
-          {registrationsClosed ? (
+          {session.google_form_link ? (
+            <a
+              href={session.google_form_link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary w-full text-center"
+            >
+              Register Now
+            </a>
+          ) : (
             <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6 text-center">
               <FiAlertCircle className="mx-auto h-12 w-12 text-yellow-500 mb-4" />
               <h2 className="text-xl font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
-                Registration Closed
+                Registration Not Available
               </h2>
               <p className="text-yellow-700 dark:text-yellow-300">
-                This session has reached its maximum capacity of {session.max_participants} participants.
+                Registration for this session is not yet open. Please check back later.
               </p>
-            </div>
-          ) : (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-6">Registration Form</h2>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {formFields.map((field) => (
-                  <div key={field.id}>
-                    <label
-                      htmlFor={field.field_name}
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                    >
-                      {field.field_label}
-                      {field.required && <span className="text-red-500">*</span>}
-                    </label>
-                    
-                    {field.field_type === 'text' && (
-                      <input
-                        type="text"
-                        id={field.field_name}
-                        name={field.field_name}
-                        value={formData[field.field_name] || ''}
-                        onChange={(e) => handleInputChange(field.field_name, e.target.value)}
-                        required={field.required}
-                        className="w-full px-4 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-primary-500 focus:border-primary-500"
-                      />
-                    )}
-                    
-                    {field.field_type === 'email' && (
-                      <input
-                        type="email"
-                        id={field.field_name}
-                        name={field.field_name}
-                        value={formData[field.field_name] || ''}
-                        onChange={(e) => handleInputChange(field.field_name, e.target.value)}
-                        required={field.required}
-                        className="w-full px-4 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-primary-500 focus:border-primary-500"
-                      />
-                    )}
-                    
-                    {field.field_type === 'textarea' && (
-                      <textarea
-                        id={field.field_name}
-                        name={field.field_name}
-                        value={formData[field.field_name] || ''}
-                        onChange={(e) => handleInputChange(field.field_name, e.target.value)}
-                        required={field.required}
-                        rows={4}
-                        className="w-full px-4 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-primary-500 focus:border-primary-500"
-                      />
-                    )}
-                    
-                    {field.field_type === 'select' && field.field_options && (
-                      <select
-                        id={field.field_name}
-                        name={field.field_name}
-                        value={formData[field.field_name] || ''}
-                        onChange={(e) => handleInputChange(field.field_name, e.target.value)}
-                        required={field.required}
-                        className="w-full px-4 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-primary-500 focus:border-primary-500"
-                      >
-                        <option value="">Select an option</option>
-                        {field.field_options.split(',').map((option) => (
-                          <option key={option.trim()} value={option.trim()}>
-                            {option.trim()}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                  </div>
-                ))}
-
-                {error && (
-                  <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 px-4 py-3 rounded-md">
-                    {error}
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="btn-primary w-full"
-                >
-                  {submitting ? 'Submitting...' : 'Register for Session'}
-                </button>
-              </form>
             </div>
           )}
         </div>
@@ -303,4 +198,4 @@ function SessionRegistrationPage() {
   )
 }
 
-export default SessionRegistrationPage
+export default SessionDetailPage

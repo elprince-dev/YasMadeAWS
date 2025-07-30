@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useSupabase } from '../../contexts/SupabaseContext'
-import { FiSave, FiX, FiPlus, FiTrash2, FiArrowUp, FiArrowDown, FiUpload } from 'react-icons/fi'
+import { FiSave, FiX, FiUpload } from 'react-icons/fi'
 import { useDropzone } from 'react-dropzone'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -18,9 +18,9 @@ function AdminSessionEdit() {
     location: '',
     price: 0,
     max_participants: '',
-    image_url: ''
+    image_url: '',
+    google_form_link: ''
   })
-  const [formFields, setFormFields] = useState([])
   const [loading, setLoading] = useState(id ? true : false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
@@ -96,21 +96,12 @@ function AdminSessionEdit() {
 
       if (sessionError) throw sessionError
 
-      const { data: fieldsData, error: fieldsError } = await supabase
-        .from('form_fields')
-        .select('*')
-        .eq('session_id', id)
-        .order('order_position')
-
-      if (fieldsError) throw fieldsError
-
       const formattedData = {
         ...sessionData,
         session_date: sessionData.session_date.split('T')[0]
       }
 
       setSession(formattedData)
-      setFormFields(fieldsData || [])
     } catch (error) {
       console.error('Error fetching session:', error)
       setError('Failed to load session')
@@ -127,94 +118,22 @@ function AdminSessionEdit() {
     }))
   }
 
-  const addFormField = () => {
-    setFormFields(prev => [
-      ...prev,
-      {
-        field_name: '',
-        field_label: '',
-        field_type: 'text',
-        field_options: '',
-        required: false,
-        order_position: prev.length
-      }
-    ])
-  }
-
-  const removeFormField = (index) => {
-    setFormFields(prev => prev.filter((_, i) => i !== index))
-  }
-
-  const handleFormFieldChange = (index, field, value) => {
-    setFormFields(prev => prev.map((item, i) => {
-      if (i === index) {
-        return { ...item, [field]: value }
-      }
-      return item
-    }))
-  }
-
-  const moveFormField = (index, direction) => {
-    setFormFields(prev => {
-      const newFields = [...prev]
-      const temp = newFields[index]
-      newFields[index] = newFields[index + direction]
-      newFields[index + direction] = temp
-      return newFields.map((field, i) => ({ ...field, order_position: i }))
-    })
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSaving(true)
     setError(null)
 
     try {
-      if (id) {
-        const { error: sessionError } = await supabase
-          .from('sessions')
-          .update(session)
-          .eq('id', id)
+      const { error } = id
+        ? await supabase
+            .from('sessions')
+            .update(session)
+            .eq('id', id)
+        : await supabase
+            .from('sessions')
+            .insert([session])
 
-        if (sessionError) throw sessionError
-
-        const { error: fieldsError } = await supabase
-          .from('form_fields')
-          .delete()
-          .eq('session_id', id)
-
-        if (fieldsError) throw fieldsError
-
-        if (formFields.length > 0) {
-          const { error: insertError } = await supabase
-            .from('form_fields')
-            .insert(formFields.map(field => ({
-              ...field,
-              session_id: id
-            })))
-
-          if (insertError) throw insertError
-        }
-      } else {
-        const { data: newSession, error: sessionError } = await supabase
-          .from('sessions')
-          .insert([session])
-          .select()
-          .single()
-
-        if (sessionError) throw sessionError
-
-        if (formFields.length > 0) {
-          const { error: fieldsError } = await supabase
-            .from('form_fields')
-            .insert(formFields.map(field => ({
-              ...field,
-              session_id: newSession.id
-            })))
-
-          if (fieldsError) throw fieldsError
-        }
-      }
+      if (error) throw error
 
       navigate('/admin/sessions')
     } catch (error) {
@@ -408,137 +327,18 @@ function AdminSessionEdit() {
                     />
                   </div>
                 </div>
-              </div>
-            </div>
-
-            {/* Registration Form Fields */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold">Registration Form Fields</h2>
-                <button
-                  type="button"
-                  onClick={addFormField}
-                  className="btn-secondary"
-                >
-                  <FiPlus className="w-5 h-5 mr-2" />
-                  Add Field
-                </button>
-              </div>
-
-              <div className="space-y-6">
-                {formFields.map((field, index) => (
-                  <div key={index} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                    <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-lg font-medium">Field {index + 1}</h3>
-                      <div className="flex space-x-2">
-                        {index > 0 && (
-                          <button
-                            type="button"
-                            onClick={() => moveFormField(index, -1)}
-                            className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
-                          >
-                            <FiArrowUp className="w-5 h-5" />
-                          </button>
-                        )}
-                        {index < formFields.length - 1 && (
-                          <button
-                            type="button"
-                            onClick={() => moveFormField(index, 1)}
-                            className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
-                          >
-                            <FiArrowDown className="w-5 h-5" />
-                          </button>
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => removeFormField(index)}
-                          className="p-2 text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
-                        >
-                          <FiTrash2 className="w-5 h-5" />
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                          Field Name
-                        </label>
-                        <input
-                          type="text"
-                          value={field.field_name}
-                          onChange={(e) => handleFormFieldChange(index, 'field_name', e.target.value)}
-                          required
-                          className="w-full px-4 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                          Field Label
-                        </label>
-                        <input
-                          type="text"
-                          value={field.field_label}
-                          onChange={(e) => handleFormFieldChange(index, 'field_label', e.target.value)}
-                          required
-                          className="w-full px-4 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                          Field Type
-                        </label>
-                        <select
-                          value={field.field_type}
-                          onChange={(e) => handleFormFieldChange(index, 'field_type', e.target.value)}
-                          className="w-full px-4 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
-                        >
-                          <option value="text">Text</option>
-                          <option value="email">Email</option>
-                          <option value="textarea">Text Area</option>
-                          <option value="select">Select</option>
-                        </select>
-                      </div>
-
-                      {field.field_type === 'select' && (
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Options (comma-separated)
-                          </label>
-                          <input
-                            type="text"
-                            value={field.field_options}
-                            onChange={(e) => handleFormFieldChange(index, 'field_options', e.target.value)}
-                            placeholder="Option 1, Option 2, Option 3"
-                            required
-                            className="w-full px-4 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
-                          />
-                        </div>
-                      )}
-
-                      <div className="flex items-center">
-                        <input
-                          type="checkbox"
-                          id={`required-${index}`}
-                          checked={field.required}
-                          onChange={(e) => handleFormFieldChange(index, 'required', e.target.checked)}
-                          className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-                        />
-                        <label htmlFor={`required-${index}`} className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
-                          Required field
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-
-                {formFields.length === 0 && (
-                  <div className="text-center py-4 text-gray-500 dark:text-gray-400">
-                    No form fields added yet. Click "Add Field" to create your registration form.
-                  </div>
-                )}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Google Form Link
+                  </label>
+                  <input
+                    type="url"
+                    name="google_form_link"
+                    value={session.google_form_link}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-primary-500 focus:border-primary-500"
+                  />
+                </div>
               </div>
             </div>
 

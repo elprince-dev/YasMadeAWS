@@ -10,7 +10,6 @@ function AdminDashboard() {
     products: 0,
     blogs: 0,
     sessions: 0,
-    registrations: 0,
     messages: 0,
     subscribers: 0,
   })
@@ -30,7 +29,6 @@ function AdminDashboard() {
           supabase.from('products').select('*', { count: 'exact', head: true }),
           supabase.from('blogs').select('*', { count: 'exact', head: true }),
           supabase.from('sessions').select('*', { count: 'exact', head: true }),
-          supabase.from('session_registrations').select('*', { count: 'exact', head: true }),
           supabase.from('contact_submissions').select('*', { count: 'exact', head: true }),
           supabase.from('subscribers').select('*', { count: 'exact', head: true }),
         ])
@@ -39,7 +37,6 @@ function AdminDashboard() {
           products: productsCount,
           blogs: blogsCount,
           sessions: sessionsCount,
-          registrations: registrationsCount,
           messages: messagesCount,
           subscribers: subscribersCount,
         })
@@ -74,13 +71,6 @@ function AdminDashboard() {
       icon: FiCalendar,
       link: '/admin/sessions',
       color: 'bg-blue-500',
-    },
-    {
-      title: 'Registrations',
-      count: stats.registrations,
-      icon: FiUsers,
-      link: '/admin/registrations',
-      color: 'bg-green-500',
     },
     {
       title: 'Messages',

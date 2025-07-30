@@ -33,6 +33,7 @@ function Hero() {
               
               <p className="text-lg md:text-xl text-gray-200 mb-8">
                 Handcrafted embroidery hoops, personalized designs, and creative workshops made with love and faith.
+                
               </p>
               
               <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 justify-center md:justify-start">

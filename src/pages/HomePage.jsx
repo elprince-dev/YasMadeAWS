@@ -296,7 +296,7 @@ function HomePage() {
                     variants={itemVariants}
                     className="card card-hover overflow-hidden"
                   >
-                    <Link to={`/sessions/register/${session.id}`}>
+                    <Link to={`/sessions/${session.id}`}>
                       {session.image_url && (
                         <div className="aspect-video overflow-hidden">
                           <img
