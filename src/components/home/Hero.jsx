@@ -26,13 +26,13 @@ function Hero() {
               className="text-center md:text-left"
             >
               <h1 className="heading-1 mb-6 text-white">
-                <span className="block">Handcrafted</span>
-                <span className="gradient-text">Islamic Embroidery</span>
-                <span className="block">With Love & Faith</span>
+                <span className="block">Where Every Stitch</span>
+                <span className="gradient-text">Tells a story</span>
+                {/* <span className="block">With Love & Faith</span> */}
               </h1>
               
               <p className="text-lg md:text-xl text-gray-200 mb-8">
-                Beautiful embroidery pieces inspired by Islamic art and calligraphy, created with love and devotion. Bring the beauty of Islamic art into your home.
+                Handcrafted embroidery hoops, personalized designs, and creative workshops made with love and faith.
               </p>
               
               <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 justify-center md:justify-start">
