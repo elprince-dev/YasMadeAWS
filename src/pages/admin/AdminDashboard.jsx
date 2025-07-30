@@ -19,12 +19,11 @@ function AdminDashboard() {
     async function fetchStats() {
       try {
         const [
-          { count: productsCount },
-          { count: blogsCount },
-          { count: sessionsCount },
-          { count: registrationsCount },
-          { count: messagesCount },
-          { count: subscribersCount },
+          { count: productsCount, error: productsError },
+          { count: blogsCount, error: blogsError },
+          { count: sessionsCount, error: sessionsError },
+          { count: messagesCount, error: messagesError },
+          { count: subscribersCount, error: subscribersError },
         ] = await Promise.all([
           supabase.from('products').select('*', { count: 'exact', head: true }),
           supabase.from('blogs').select('*', { count: 'exact', head: true }),
