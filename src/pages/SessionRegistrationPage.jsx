@@ -152,11 +152,11 @@ function SessionRegistrationPage() {
       <div className="container-custom">
         <div className="max-w-3xl mx-auto">
           {session.image_url && (
-            <div className="mb-8 rounded-lg overflow-hidden shadow-lg">
+            <div className="mb-8">
               <img
                 src={session.image_url}
                 alt={session.title}
-                className="w-full h-[400px] object-cover"
+                className="w-full rounded-lg shadow-lg"
               />
             </div>
           )}
