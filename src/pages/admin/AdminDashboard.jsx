@@ -65,7 +65,7 @@ function AdminDashboard() {
       color: 'bg-pink-500',
     },
     {
-      title: 'Sessions',
+      title: 'Workshops',
       count: stats.sessions,
       icon: FiCalendar,
       link: '/admin/sessions',

@@ -260,7 +260,7 @@ function HomePage() {
         <div className="container-custom">
           <div className="flex items-center justify-between mb-10">
             <div>
-              <h2 className="heading-2 section-title mb-2">Upcoming Sessions</h2>
+              <h2 className="heading-2 section-title mb-2">Upcoming Workshops</h2>
               <p className="text-gray-600 dark:text-gray-400">Join us for creative embroidery workshops</p>
             </div>
             <Link to="/sessions" className="btn-secondary">

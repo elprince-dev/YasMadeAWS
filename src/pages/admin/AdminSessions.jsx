@@ -59,10 +59,10 @@ function AdminSessions() {
     >
       <div className="container-custom">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="heading-2">Manage Sessions</h1>
+          <h1 className="heading-2">Manage Workshops</h1>
           <Link to="/admin/sessions/new" className="btn-primary">
             <FiPlus className="w-5 h-5 mr-2" />
-            Create New Session
+            Create a New Workshop
           </Link>
         </div>
 
@@ -87,7 +87,7 @@ function AdminSessions() {
               <thead className="bg-gray-50 dark:bg-gray-900">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Session
+                    Workshop
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Date

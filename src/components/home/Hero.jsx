@@ -50,7 +50,7 @@ function Hero() {
       </div>
 
       {/* Quranic Verse Section */}
-      <div className="py-12 bg-gray-50 dark:bg-gray-900">
+      {/* <div className="py-12 bg-gray-50 dark:bg-gray-900">
         <div className="container-custom">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -60,7 +60,7 @@ function Hero() {
             <QuranVerse />
           </motion.div>
         </div>
-      </div>
+      </div> */}
     </>
   )
 }
