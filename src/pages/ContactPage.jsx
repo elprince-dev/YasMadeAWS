@@ -120,7 +120,7 @@ function ContactPage() {
                 </div>
               </div>
 
-              <div className="flex items-start">
+              {/* <div className="flex items-start">
                 <div className="flex-shrink-0">
                   <FiPhone className="h-6 w-6 text-primary-600 dark:text-primary-400" />
                 </div>
@@ -132,7 +132,7 @@ function ContactPage() {
                     </a>
                   </p>
                 </div>
-              </div>
+              </div> */}
 
               <div className="flex items-start">
                 <div className="flex-shrink-0">

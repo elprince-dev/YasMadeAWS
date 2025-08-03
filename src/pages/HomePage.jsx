@@ -378,7 +378,7 @@ function HomePage() {
                   </div>
                 </div>
 
-                <div className="flex items-start">
+                {/* <div className="flex items-start">
                   <FiPhone className="w-6 h-6 text-primary-600 dark:text-primary-400 mt-1" />
                   <div className="ml-4">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Phone</h3>
@@ -386,7 +386,7 @@ function HomePage() {
                       +1 (234) 567-890
                     </a>
                   </div>
-                </div>
+                </div> */}
 
                 <div className="flex items-start">
                   <FiMapPin className="w-6 h-6 text-primary-600 dark:text-primary-400 mt-1" />
