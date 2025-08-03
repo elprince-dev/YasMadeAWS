@@ -45,7 +45,7 @@ function Header() {
     { name: 'Home', path: '/' },
     { name: 'Products', path: '/products' },
     { name: 'Blog', path: '/blog' },
-    { name: 'Sessions', path: '/sessions' },
+    { name: 'Workshops', path: '/sessions' },
     { name: 'Contact', path: '/contact' },
   ]
 
