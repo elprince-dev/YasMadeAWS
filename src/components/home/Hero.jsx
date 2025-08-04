@@ -8,10 +8,10 @@ function Hero() {
   const [isTransitioning, setIsTransitioning] = useState(false)
   
   const slides = [
-    '/slide-1.jpeg',
+    '/slide-4.jpeg',
     '/slide-2.jpeg',
     '/slide-3.jpeg',
-    '/slide-4.jpeg',
+    '/slide-1.jpeg',
     '/slide-5.jpeg',
     '/slide-6.jpeg',
     '/slide-7.jpeg',
