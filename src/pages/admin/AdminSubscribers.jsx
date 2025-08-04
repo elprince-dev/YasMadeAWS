@@ -4,6 +4,7 @@ import { useSupabase } from '../../contexts/SupabaseContext'
 import { FiUserPlus, FiTrash2, FiMail, FiDownload, FiSend, FiX, FiAlertCircle, FiInfo, FiImage } from 'react-icons/fi'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
+import { initCSRF, getCSRFToken } from '../../utils/csrf'
 
 function AdminSubscribers() {
   const { supabase } = useSupabase()
@@ -43,6 +44,7 @@ function AdminSubscribers() {
   ]
 
   useEffect(() => {
+    initCSRF()
     fetchSubscribers()
   }, [])
 
@@ -54,10 +56,10 @@ function AdminSubscribers() {
         .order('created_at', { ascending: false })
 
       if (error) throw error
-      console.log(data)
+
       setSubscribers(data)
     } catch (error) {
-      console.error('Error fetching subscribers:', error)
+      console.error('Error fetching subscribers:', encodeURIComponent(error.message || 'Unknown error'))
       setError('Failed to load subscribers')
     } finally {
       setLoading(false)
@@ -106,7 +108,7 @@ function AdminSubscribers() {
         editor.insertEmbed(range.index, 'image', publicUrl)
         editor.setSelection(range.index + 1)
       } catch (error) {
-        console.error('Error uploading image:', error)
+        console.error('Error uploading image:', encodeURIComponent(error.message || 'Unknown error'))
         alert('Failed to upload image. Please try again.')
       }
     }
@@ -125,7 +127,7 @@ function AdminSubscribers() {
 
       setSubscribers(subscribers.filter(sub => sub.id !== id))
     } catch (error) {
-      console.error('Error deleting subscriber:', error)
+      console.error('Error deleting subscriber:', encodeURIComponent(error.message || 'Unknown error'))
       alert('Failed to delete subscriber')
     }
   }
@@ -145,7 +147,7 @@ function AdminSubscribers() {
       setNewEmail('')
       setShowAddForm(false)
     } catch (error) {
-      console.error('Error adding subscriber:', error)
+      console.error('Error adding subscriber:', encodeURIComponent(error.message || 'Unknown error'))
       alert('Failed to add subscriber. The email might already be subscribed.')
     } finally {
       setAddingSubscriber(false)
@@ -189,13 +191,15 @@ function AdminSubscribers() {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${session.access_token}`,
-          'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY
+          'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+          'X-CSRF-Token': getCSRFToken()
         },
         body: JSON.stringify({
           subscribers: subscribers.map(sub => sub.email),
           subject: emailContent.subject.trim(),
           content: emailContent.content,
-          logoUrl
+          logoUrl,
+          csrfToken: getCSRFToken()
         })
       })
 
@@ -209,7 +213,7 @@ function AdminSubscribers() {
       setShowEmailForm(false)
       setEmailContent({ subject: '', content: '' })
     } catch (error) {
-      console.error('Error sending email:', error)
+      console.error('Error sending email:', encodeURIComponent(error.message || 'Unknown error'))
       setEmailError(error.message)
     } finally {
       setSendingEmail(false)

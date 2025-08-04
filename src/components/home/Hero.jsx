@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
+import LazyImage from '../common/LazyImage'
 import QuranVerse from '../common/QuranVerse'
 
 function Hero() {
@@ -56,7 +57,7 @@ function Hero() {
               }}
               className="absolute inset-0"
             >
-              <img 
+              <LazyImage 
                 src={slides[currentSlide]}
                 alt={`YasMade embroidery slide ${currentSlide + 1}`}
                 className="w-full h-full object-cover"
@@ -69,13 +70,30 @@ function Hero() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10" />
         </div>
 
+        {/* Tagline Overlay */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="bg-black/30 backdrop-blur-sm rounded-2xl px-8 py-6 md:px-12 md:py-8"
+          >
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-2xl">
+              Where Every Stitch
+            </h1>
+            <p className="text-xl md:text-2xl text-white/90 font-light drop-shadow-lg">
+              Tells a Story of Faith & Love
+            </p>
+          </motion.div>
+        </div>
+
         {/* Action Buttons */}
         <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-20">
           <motion.div 
             className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
           >
             <Link to="/products" className="btn-primary text-center shadow-2xl hover:shadow-violet-500/25">
               Shop Collection

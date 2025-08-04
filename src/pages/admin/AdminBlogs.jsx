@@ -32,7 +32,7 @@ function AdminBlogs() {
 
       setBlogs(data)
     } catch (error) {
-      console.error('Error fetching blogs:', error)
+      console.error('Error fetching blogs:', encodeURIComponent(error.message || 'Unknown error'))
       setError('Failed to load blog posts')
     } finally {
       setLoading(false)
@@ -52,7 +52,7 @@ function AdminBlogs() {
 
       setBlogs(blogs.filter(blog => blog.id !== id))
     } catch (error) {
-      console.error('Error deleting blog:', error)
+      console.error('Error deleting blog:', encodeURIComponent(error.message || 'Unknown error'))
       alert('Failed to delete blog post')
     }
   }
@@ -70,7 +70,7 @@ function AdminBlogs() {
         blog.id === id ? { ...blog, published: !currentStatus } : blog
       ))
     } catch (error) {
-      console.error('Error updating blog status:', error)
+      console.error('Error updating blog status:', encodeURIComponent(error.message || 'Unknown error'))
       alert('Failed to update blog status')
     }
   }

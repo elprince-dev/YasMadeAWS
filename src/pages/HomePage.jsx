@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useSupabase } from '../contexts/SupabaseContext'
 import Hero from '../components/home/Hero'
+import SectionProgress from '../components/common/SectionProgress'
+import LazyImage from '../components/common/LazyImage'
 import { FiBookOpen, FiCalendar, FiShoppingBag, FiMail, FiMapPin, FiPhone } from 'react-icons/fi'
 
 function HomePage() {
@@ -100,12 +102,20 @@ function HomePage() {
       className="min-h-screen"
     >
       {/* Hero Section */}
-      <Hero />
+      <section id="hero">
+        <Hero />
+      </section>
+      
+      {/* Section Progress Indicator */}
+      <SectionProgress />
+      
+      {/* Visual Separator */}
+      <div className="h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent"></div>
       
       {/* Featured Products Section */}
-      <section className="section bg-white dark:bg-gray-900">
+      <section id="products" className="py-20 md:py-32 bg-white dark:bg-gray-900">
         <div className="container-custom">
-          <div className="flex items-center justify-between mb-10">
+          <div className="flex items-center justify-between mb-16">
             <div>
               <h2 className="heading-2 section-title mb-2">Featured Products</h2>
               <p className="text-gray-600 dark:text-gray-400">Handcrafted with love and attention to detail</p>
@@ -118,11 +128,11 @@ function HomePage() {
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="animate-pulse card p-4 h-80">
-                  <div className="h-48 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2 w-2/3"></div>
-                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded mb-2 w-1/2"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>
+                <div key={i} className="card p-6 h-80">
+                  <div className="h-48 animate-shimmer rounded-lg mb-4"></div>
+                  <div className="h-4 animate-shimmer rounded mb-3 w-2/3"></div>
+                  <div className="h-3 animate-shimmer rounded mb-3 w-1/2"></div>
+                  <div className="h-4 animate-shimmer rounded w-1/4"></div>
                 </div>
               ))}
             </div>
@@ -143,7 +153,7 @@ function HomePage() {
                   >
                     <Link to={`/products/${product.id}`}>
                       <div className="h-56 overflow-hidden">
-                        <img 
+                        <LazyImage 
                           src={product.image_url || 'https://images.pexels.com/photos/4620467/pexels-photo-4620467.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'} 
                           alt={product.name} 
                           className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
@@ -169,10 +179,13 @@ function HomePage() {
         </div>
       </section>
       
+      {/* Visual Separator */}
+      <div className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent"></div>
+      
       {/* Latest Blog Posts Section */}
-      <section className="section bg-gray-50 dark:bg-gray-800">
+      <section id="blog" className="py-20 md:py-32 bg-gray-50 dark:bg-gray-800">
         <div className="container-custom">
-          <div className="flex items-center justify-between mb-10">
+          <div className="flex items-center justify-between mb-16">
             <div>
               <h2 className="heading-2 section-title mb-2">Latest From The Blog</h2>
               <p className="text-gray-600 dark:text-gray-400">Thoughts, inspirations, and creative journeys</p>
@@ -185,12 +198,12 @@ function HomePage() {
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {[1, 2].map((i) => (
-                <div key={i} className="animate-pulse card p-4">
-                  <div className="h-48 bg-gray-200 dark:bg-gray-700 rounded-lg mb-4"></div>
-                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded mb-4 w-5/6"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2 w-11/12"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mt-4"></div>
+                <div key={i} className="card p-6">
+                  <div className="h-48 animate-shimmer rounded-lg mb-4"></div>
+                  <div className="h-6 animate-shimmer rounded mb-4 w-5/6"></div>
+                  <div className="h-4 animate-shimmer rounded mb-3"></div>
+                  <div className="h-4 animate-shimmer rounded mb-3 w-11/12"></div>
+                  <div className="h-4 animate-shimmer rounded w-1/4 mt-4"></div>
                 </div>
               ))}
             </div>
@@ -212,7 +225,7 @@ function HomePage() {
                     <Link to={`/blog/${blog.id}`}>
                       {blog.image_url && (
                         <div className="aspect-video overflow-hidden">
-                          <img
+                          <LazyImage
                             src={blog.image_url}
                             alt={blog.title}
                             className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
@@ -255,10 +268,13 @@ function HomePage() {
         </div>
       </section>
       
+      {/* Visual Separator */}
+      <div className="h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent"></div>
+      
       {/* Upcoming Sessions Section */}
-      <section className="section bg-white dark:bg-gray-900">
+      <section id="workshops" className="py-20 md:py-32 bg-white dark:bg-gray-900">
         <div className="container-custom">
-          <div className="flex items-center justify-between mb-10">
+          <div className="flex items-center justify-between mb-16">
             <div>
               <h2 className="heading-2 section-title mb-2">Upcoming Workshops</h2>
               <p className="text-gray-600 dark:text-gray-400">Join us for creative embroidery workshops</p>
@@ -271,13 +287,13 @@ function HomePage() {
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {[1, 2].map((i) => (
-                <div key={i} className="animate-pulse card p-4 h-72">
-                  <div className="h-48 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
-                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded mb-4 w-2/3"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2 w-11/12"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-4 w-4/5"></div>
-                  <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
+                <div key={i} className="card p-6 h-72">
+                  <div className="h-48 animate-shimmer rounded-lg mb-4"></div>
+                  <div className="h-6 animate-shimmer rounded mb-4 w-2/3"></div>
+                  <div className="h-4 animate-shimmer rounded mb-3"></div>
+                  <div className="h-4 animate-shimmer rounded mb-3 w-11/12"></div>
+                  <div className="h-4 animate-shimmer rounded mb-4 w-4/5"></div>
+                  <div className="h-8 animate-shimmer rounded w-1/3"></div>
                 </div>
               ))}
             </div>
@@ -299,7 +315,7 @@ function HomePage() {
                     <Link to={`/sessions/${session.id}`}>
                       {session.image_url && (
                         <div className="aspect-video overflow-hidden">
-                          <img
+                          <LazyImage
                             src={session.image_url}
                             alt={session.title}
                             className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
@@ -347,13 +363,16 @@ function HomePage() {
         </div>
       </section>
 
+      {/* Visual Separator */}
+      <div className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent"></div>
+      
       {/* Get in Touch Section */}
-      <section className="section bg-gray-50 dark:bg-gray-800">
+      <section id="story" className="py-20 md:py-32 bg-gray-50 dark:bg-gray-800">
         <div className="container-custom">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Text Content */}
             <div>
-              <h2 className="heading-2 section-title mb-4">The YasMade Story</h2>
+              <h2 className="heading-2 section-title mb-6">The YasMade Story</h2>
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
                 YasMade began as a personal journey of faith expression through the art of embroidery. What started as a quiet evening hobby has blossomed into a passion for creating meaningful pieces that bring beauty and remembrance into Muslim homes.
               </p>

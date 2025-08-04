@@ -34,7 +34,7 @@ function AdminShippingRates() {
 
       setRates(data)
     } catch (error) {
-      console.error('Error fetching shipping rates:', error)
+      console.error('Error fetching shipping rates:', encodeURIComponent(error.message || 'Unknown error'))
       setError('Failed to load shipping rates')
     } finally {
       setLoading(false)
@@ -49,40 +49,44 @@ function AdminShippingRates() {
     }))
   }
 
+  const prepareRateData = () => ({
+    ...formData,
+    price: parseFloat(formData.price),
+    estimated_days_min: parseInt(formData.estimated_days_min),
+    estimated_days_max: parseInt(formData.estimated_days_max)
+  })
+
+  const saveRate = async (rateData) => {
+    return editingRate
+      ? await supabase.from('shipping_rates').update(rateData).eq('id', editingRate.id)
+      : await supabase.from('shipping_rates').insert([rateData])
+  }
+
+  const resetForm = () => {
+    setShowForm(false)
+    setEditingRate(null)
+    setFormData({
+      name: '',
+      description: '',
+      price: '',
+      estimated_days_min: '',
+      estimated_days_max: '',
+      is_active: true
+    })
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const rateData = {
-        ...formData,
-        price: parseFloat(formData.price),
-        estimated_days_min: parseInt(formData.estimated_days_min),
-        estimated_days_max: parseInt(formData.estimated_days_max)
-      }
-
-      const { error } = editingRate
-        ? await supabase
-            .from('shipping_rates')
-            .update(rateData)
-            .eq('id', editingRate.id)
-        : await supabase
-            .from('shipping_rates')
-            .insert([rateData])
-
+      const rateData = prepareRateData()
+      const { error } = await saveRate(rateData)
+      
       if (error) throw error
 
       await fetchRates()
-      setShowForm(false)
-      setEditingRate(null)
-      setFormData({
-        name: '',
-        description: '',
-        price: '',
-        estimated_days_min: '',
-        estimated_days_max: '',
-        is_active: true
-      })
+      resetForm()
     } catch (error) {
-      console.error('Error saving shipping rate:', error)
+      console.error('Error saving shipping rate:', encodeURIComponent(error.message || 'Unknown error'))
       setError('Failed to save shipping rate')
     }
   }
@@ -113,7 +117,7 @@ function AdminShippingRates() {
 
       setRates(rates.filter(rate => rate.id !== id))
     } catch (error) {
-      console.error('Error deleting shipping rate:', error)
+      console.error('Error deleting shipping rate:', encodeURIComponent(error.message || 'Unknown error'))
       setError('Failed to delete shipping rate')
     }
   }
@@ -131,14 +135,7 @@ function AdminShippingRates() {
           <button
             onClick={() => {
               setEditingRate(null)
-              setFormData({
-                name: '',
-                description: '',
-                price: '',
-                estimated_days_min: '',
-                estimated_days_max: '',
-                is_active: true
-              })
+              resetForm()
               setShowForm(true)
             }}
             className="btn-primary"

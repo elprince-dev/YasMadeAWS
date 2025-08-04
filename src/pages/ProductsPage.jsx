@@ -1,36 +1,14 @@
-import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { useSupabase } from '../contexts/SupabaseContext'
+import LazyImage from '../components/common/LazyImage'
+import LoadingState from '../components/common/LoadingState'
 import { FiShoppingBag } from 'react-icons/fi'
+import { useSupabaseQuery } from '../hooks/useSupabaseQuery'
 
 function ProductsPage() {
-  const { supabase } = useSupabase()
-  const [products, setProducts] = useState([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const { data, error } = await supabase
-          .from('products')
-          .select('*')
-          .order('created_at', { ascending: false })
-
-        if (error) {
-          throw error
-        }
-
-        setProducts(data || [])
-      } catch (error) {
-        console.error('Error fetching products:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchProducts()
-  }, [supabase])
+  const { data: products, loading, error } = useSupabaseQuery('products', {
+    orderBy: { column: 'created_at', ascending: false }
+  })
 
   return (
     <motion.div
@@ -48,19 +26,14 @@ function ProductsPage() {
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="animate-pulse card p-4">
-                <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
-                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2 w-2/3"></div>
-                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
-                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>
-              </div>
-            ))}
+          <LoadingState message="Loading products..." />
+        ) : error ? (
+          <div className="text-center py-12">
+            <p className="text-red-600 dark:text-red-400">Failed to load products</p>
           </div>
         ) : (
           <>
-            {products.length > 0 ? (
+            {products?.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {products.map((product) => (
                   <motion.div
@@ -71,7 +44,7 @@ function ProductsPage() {
                   >
                     <Link to={`/products/${product.id}`}>
                       <div className="aspect-square overflow-hidden">
-                        <img
+                        <LazyImage
                           src={product.image_url || 'https://images.pexels.com/photos/4620467/pexels-photo-4620467.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'}
                           alt={product.name}
                           className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"

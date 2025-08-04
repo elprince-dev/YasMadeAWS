@@ -27,7 +27,7 @@ function Footer() {
       if (error) throw error;
       setSettings(data[0] || []);
     } catch (error) {
-      console.error('Error fetching blogs:', error.message);
+      console.error('Error fetching settings:', encodeURIComponent(error.message || 'Unknown error'));
     } finally {
       setLoading(false);
     }
@@ -50,13 +50,13 @@ function Footer() {
       setSubscribeSuccess(true)
       setEmail('')
     } catch (error) {
-      console.error('Error subscribing:', error)
+      console.error('Error subscribing:', encodeURIComponent(error.message || 'Unknown error'))
       setSubscribeError('Failed to subscribe. You might already be subscribed.')
     } finally {
       setSubscribing(false)
     }
   }
-  console.log(settings?.social_links?.instagram)
+
   
   return (
     <footer className="bg-gray-50 dark:bg-gray-900 pt-12 pb-6 border-t border-gray-200 dark:border-gray-800">

@@ -23,32 +23,22 @@ function ProductDetailPage() {
   const { addToCart } = useCart();
 
   useEffect(() => {
-    async function fetchProduct() {
+    async function fetchProductData() {
       try {
-        // Fetch product details
-        const { data: productData, error: productError } = await supabase
-          .from('products')
-          .select('*')
-          .eq('id', id)
-          .single();
+        // Fetch product and images in parallel for better performance
+        const [productResult, imagesResult] = await Promise.all([
+          supabase.from('products').select('*').eq('id', id).single(),
+          supabase.from('product_images').select('*').eq('product_id', id).order('order_position')
+        ]);
 
-        if (productError) throw productError;
+        if (productResult.error) throw productResult.error;
+        if (imagesResult.error) throw imagesResult.error;
 
-        // Fetch product images
-        const { data: imagesData, error: imagesError } = await supabase
-          .from('product_images')
-          .select('*')
-          .eq('product_id', id)
-          .order('order_position');
-
-        if (imagesError) throw imagesError;
-
-        setProduct(productData);
-        // If no additional images found, use the main product image
+        setProduct(productResult.data);
         setProductImages(
-          imagesData.length > 0 
-            ? imagesData 
-            : [{ id: 'main', image_url: productData.image_url }]
+          imagesResult.data.length > 0 
+            ? imagesResult.data 
+            : [{ id: 'main', image_url: productResult.data.image_url }]
         );
       } catch (err) {
         setError(err.message);
@@ -57,7 +47,7 @@ function ProductDetailPage() {
       }
     }
 
-    fetchProduct();
+    fetchProductData();
   }, [id, supabase]);
 
   const handleQuantityChange = (change) => {

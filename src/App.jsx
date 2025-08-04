@@ -1,36 +1,32 @@
-import { useEffect } from 'react'
+import { useEffect, Suspense, lazy } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import Header from './components/layout/Header'
 import Footer from './components/layout/Footer'
-import HomePage from './pages/HomePage'
-import ProductsPage from './pages/ProductsPage'
-import ProductDetailPage from './pages/ProductDetailPage'
-import CartPage from './pages/CartPage'
-import BlogPage from './pages/BlogPage'
-import BlogPostPage from './pages/BlogPostPage'
-import SessionsPage from './pages/SessionsPage'
-import SessionDetailPage from './pages/SessionDetailPage'
-import ContactPage from './pages/ContactPage'
-import AboutPage from './pages/AboutPage'
-import AdminLoginPage from './pages/admin/AdminLoginPage'
-import AdminDashboard from './pages/admin/AdminDashboard'
-import AdminProducts from './pages/admin/AdminProducts'
-import AdminProductEdit from './pages/admin/AdminProductEdit'
-import AdminBlogs from './pages/admin/AdminBlogs'
-import AdminBlogEdit from './pages/admin/AdminBlogEdit'
-import AdminSessions from './pages/admin/AdminSessions'
-import AdminSessionEdit from './pages/admin/AdminSessionEdit'
-import AdminSettings from './pages/admin/AdminSettings'
-import AdminMessages from './pages/admin/AdminMessages'
-import AdminSubscribers from './pages/admin/AdminSubscribers'
-import AdminOrders from './pages/admin/AdminOrders'
-import AdminShippingRates from './pages/admin/AdminShippingRates'
-import AdminPromoCodes from './pages/admin/AdminPromoCodes'
-import OrderConfirmationPage from './pages/OrderConfirmationPage'
 import ProtectedRoute from './components/auth/ProtectedRoute'
-import NotFoundPage from './pages/NotFoundPage'
 import ScrollToTop from './components/utils/ScrollToTop'
+import Breadcrumb from './components/common/Breadcrumb'
+import PageLoader from './components/common/PageLoader'
+import ErrorBoundary from './components/common/ErrorBoundary'
+import SkipLink from './components/common/SkipLink'
+
+// Lazy load pages
+const HomePage = lazy(() => import('./pages/HomePage'))
+const ProductsPage = lazy(() => import('./pages/ProductsPage'))
+const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage'))
+const CartPage = lazy(() => import('./pages/CartPage'))
+const BlogPage = lazy(() => import('./pages/BlogPage'))
+const BlogPostPage = lazy(() => import('./pages/BlogPostPage'))
+const SessionsPage = lazy(() => import('./pages/SessionsPage'))
+const SessionDetailPage = lazy(() => import('./pages/SessionDetailPage'))
+const ContactPage = lazy(() => import('./pages/ContactPage'))
+const AboutPage = lazy(() => import('./pages/AboutPage'))
+const OrderConfirmationPage = lazy(() => import('./pages/OrderConfirmationPage'))
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
+
+// Admin pages
+const AdminLoginPage = lazy(() => import('./pages/admin/AdminLoginPage'))
+const AdminRoutes = lazy(() => import('./routes/AdminRoutes'))
 
 function App() {
   const location = useLocation()
@@ -41,12 +37,16 @@ function App() {
   }, [location.pathname])
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <ScrollToTop />
-      <Header />
-      <main className="flex-grow">
-        <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
+    <ErrorBoundary>
+      <div className="flex flex-col min-h-screen">
+        <SkipLink />
+        <ScrollToTop />
+        <Header />
+        <Breadcrumb />
+        <main id="main-content" className="flex-grow">
+          <Suspense fallback={<PageLoader />}>
+            <AnimatePresence mode="wait">
+              <Routes location={location} key={location.pathname}>
             {/* Public Routes */}
             <Route path="/" element={<HomePage />} />
             <Route path="/products" element={<ProductsPage />} />
@@ -60,32 +60,17 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/admin/login" element={<AdminLoginPage />} />
-            
-            {/* Protected Admin Routes */}
-            <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-            <Route path="/admin/products" element={<ProtectedRoute><AdminProducts /></ProtectedRoute>} />
-            <Route path="/admin/products/new" element={<ProtectedRoute><AdminProductEdit /></ProtectedRoute>} />
-            <Route path="/admin/products/:id" element={<ProtectedRoute><AdminProductEdit /></ProtectedRoute>} />
-            <Route path="/admin/blogs" element={<ProtectedRoute><AdminBlogs /></ProtectedRoute>} />
-            <Route path="/admin/blogs/new" element={<ProtectedRoute><AdminBlogEdit /></ProtectedRoute>} />
-            <Route path="/admin/blogs/:id" element={<ProtectedRoute><AdminBlogEdit /></ProtectedRoute>} />
-            <Route path="/admin/sessions" element={<ProtectedRoute><AdminSessions /></ProtectedRoute>} />
-            <Route path="/admin/sessions/new" element={<ProtectedRoute><AdminSessionEdit /></ProtectedRoute>} />
-            <Route path="/admin/sessions/:id" element={<ProtectedRoute><AdminSessionEdit /></ProtectedRoute>} />
-            <Route path="/admin/messages" element={<ProtectedRoute><AdminMessages /></ProtectedRoute>} />
-            <Route path="/admin/subscribers" element={<ProtectedRoute><AdminSubscribers /></ProtectedRoute>} />
-            <Route path="/admin/settings" element={<ProtectedRoute><AdminSettings /></ProtectedRoute>} />
-            <Route path="/admin/orders" element={<ProtectedRoute><AdminOrders /></ProtectedRoute>} />
-            <Route path="/admin/shipping" element={<ProtectedRoute><AdminShippingRates /></ProtectedRoute>} />
-            <Route path="/admin/promo-codes" element={<ProtectedRoute><AdminPromoCodes /></ProtectedRoute>} />
+            <Route path="/admin/*" element={<AdminRoutes />} />
             
             {/* 404 Page */}
             <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </AnimatePresence>
-      </main>
-      <Footer />
-    </div>
+              </Routes>
+            </AnimatePresence>
+          </Suspense>
+        </main>
+        <Footer />
+      </div>
+    </ErrorBoundary>
   )
 }
 

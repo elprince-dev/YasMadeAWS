@@ -5,6 +5,7 @@ import { useSupabase } from '../../contexts/SupabaseContext'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { FiSave, FiX } from 'react-icons/fi'
+import { useErrorHandler } from '../../hooks/useErrorHandler'
 
 function AdminBlogEdit() {
   const { id } = useParams()
@@ -19,7 +20,7 @@ function AdminBlogEdit() {
   })
   const [loading, setLoading] = useState(id ? true : false)
   const [saving, setSaving] = useState(false)
-  const [error, setError] = useState(null)
+  const { error, handleError, clearError } = useErrorHandler()
 
   useEffect(() => {
     if (id) {
@@ -39,8 +40,7 @@ function AdminBlogEdit() {
 
       setBlog(data)
     } catch (error) {
-      console.error('Error fetching blog:', error)
-      setError('Failed to load blog post')
+      handleError(error, 'fetchBlog')
     } finally {
       setLoading(false)
     }
@@ -64,7 +64,7 @@ function AdminBlogEdit() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSaving(true)
-    setError(null)
+    clearError()
 
     try {
       const { error } = id
@@ -80,8 +80,7 @@ function AdminBlogEdit() {
 
       navigate('/admin/blogs')
     } catch (error) {
-      console.error('Error saving blog:', error)
-      setError('Failed to save blog post')
+      handleError(error, 'saveBlog')
       setSaving(false)
     }
   }

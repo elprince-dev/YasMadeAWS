@@ -25,7 +25,7 @@ function AdminSessions() {
 
       setSessions(data)
     } catch (error) {
-      console.error('Error fetching sessions:', error)
+      console.error('Error fetching sessions:', encodeURIComponent(error.message || 'Unknown error'))
       setError('Failed to load sessions')
     } finally {
       setLoading(false)
@@ -45,7 +45,7 @@ function AdminSessions() {
 
       setSessions(sessions.filter(session => session.id !== id))
     } catch (error) {
-      console.error('Error deleting session:', error)
+      console.error('Error deleting session:', encodeURIComponent(error.message || 'Unknown error'))
       alert('Failed to delete session')
     }
   }

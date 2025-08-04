@@ -5,7 +5,8 @@ import { useTheme } from '../../contexts/ThemeContext'
 import { useSupabase } from '../../contexts/SupabaseContext'
 import { FiSun, FiMoon, FiMenu, FiX, FiLogOut, FiLogIn, FiShoppingCart } from 'react-icons/fi'
 import Logo from '../common/Logo'
-import { useCart } from '../../stores/cartStore';
+import { useCart } from '../../stores/cartStore'
+import { preloadRoute } from '../../utils/performance'
 
 function Header() {
   const { theme, toggleTheme } = useTheme()
@@ -42,17 +43,20 @@ function Header() {
   }
 
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Products', path: '/products' },
-    { name: 'Blog', path: '/blog' },
-    { name: 'Workshops', path: '/sessions' },
-    { name: 'Contact', path: '/contact' },
+    { name: 'Home', path: '/', preload: () => import('../../pages/HomePage') },
+    { name: 'Products', path: '/products', preload: () => import('../../pages/ProductsPage') },
+    { name: 'Blog', path: '/blog', preload: () => import('../../pages/BlogPage') },
+    { name: 'Workshops', path: '/sessions', preload: () => import('../../pages/SessionsPage') },
+    { name: 'Contact', path: '/contact', preload: () => import('../../pages/ContactPage') },
   ]
 
   const headerClasses = `fixed top-0 w-full z-50 transition-all duration-300 ${
     scrolled 
       ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm' 
       : 'bg-transparent'
+      // : location.pathname === '/'
+      //   ? 'bg-black/20 backdrop-blur-md'
+      //   : 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm'
   }`
 
   const getLinkClasses = (isActive) => `
@@ -72,7 +76,7 @@ function Header() {
       <div className="container-custom flex items-center justify-between py-4">
         {/* Logo */}
         <Link to="/" className="flex items-center">
-          <Logo className="h-16 w-auto" />
+          <Logo className="h-12 w-auto" />
           <span className={`ml-2 text-xl font-bold ${
             scrolled || location.pathname !== '/'
               ? 'text-gray-900 dark:text-white'
@@ -89,6 +93,7 @@ function Header() {
               key={link.path}
               to={link.path}
               className={({ isActive }) => getLinkClasses(isActive)}
+              onMouseEnter={() => link.preload && preloadRoute(link.preload)}
             >
               {link.name}
             </NavLink>
