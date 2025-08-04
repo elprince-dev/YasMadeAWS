@@ -1,6 +1,6 @@
 import { lazy } from 'react'
 import { Routes, Route } from 'react-router-dom'
-import ProtectedRoute from '../components/auth/ProtectedRoute'
+
 
 // Lazy load admin components
 const AdminDashboard = lazy(() => import('../pages/admin/AdminDashboard'))
@@ -20,22 +20,22 @@ const AdminPromoCodes = lazy(() => import('../pages/admin/AdminPromoCodes'))
 function AdminRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-      <Route path="/products" element={<ProtectedRoute><AdminProducts /></ProtectedRoute>} />
-      <Route path="/products/new" element={<ProtectedRoute><AdminProductEdit /></ProtectedRoute>} />
-      <Route path="/products/:id" element={<ProtectedRoute><AdminProductEdit /></ProtectedRoute>} />
-      <Route path="/blogs" element={<ProtectedRoute><AdminBlogs /></ProtectedRoute>} />
-      <Route path="/blogs/new" element={<ProtectedRoute><AdminBlogEdit /></ProtectedRoute>} />
-      <Route path="/blogs/:id" element={<ProtectedRoute><AdminBlogEdit /></ProtectedRoute>} />
-      <Route path="/sessions" element={<ProtectedRoute><AdminSessions /></ProtectedRoute>} />
-      <Route path="/sessions/new" element={<ProtectedRoute><AdminSessionEdit /></ProtectedRoute>} />
-      <Route path="/sessions/:id" element={<ProtectedRoute><AdminSessionEdit /></ProtectedRoute>} />
-      <Route path="/messages" element={<ProtectedRoute><AdminMessages /></ProtectedRoute>} />
-      <Route path="/subscribers" element={<ProtectedRoute><AdminSubscribers /></ProtectedRoute>} />
-      <Route path="/settings" element={<ProtectedRoute><AdminSettings /></ProtectedRoute>} />
-      <Route path="/orders" element={<ProtectedRoute><AdminOrders /></ProtectedRoute>} />
-      <Route path="/shipping" element={<ProtectedRoute><AdminShippingRates /></ProtectedRoute>} />
-      <Route path="/promo-codes" element={<ProtectedRoute><AdminPromoCodes /></ProtectedRoute>} />
+      <Route path="/" element={<AdminDashboard />} />
+      <Route path="/products" element={<AdminProducts />} />
+      <Route path="/products/new" element={<AdminProductEdit />} />
+      <Route path="/products/:id" element={<AdminProductEdit />} />
+      <Route path="/blogs" element={<AdminBlogs />} />
+      <Route path="/blogs/new" element={<AdminBlogEdit />} />
+      <Route path="/blogs/:id" element={<AdminBlogEdit />} />
+      <Route path="/sessions" element={<AdminSessions />} />
+      <Route path="/sessions/new" element={<AdminSessionEdit />} />
+      <Route path="/sessions/:id" element={<AdminSessionEdit />} />
+      <Route path="/messages" element={<AdminMessages />} />
+      <Route path="/subscribers" element={<AdminSubscribers />} />
+      <Route path="/settings" element={<AdminSettings />} />
+      <Route path="/orders" element={<AdminOrders />} />
+      <Route path="/shipping" element={<AdminShippingRates />} />
+      <Route path="/promo-codes" element={<AdminPromoCodes />} />
     </Routes>
   )
 }

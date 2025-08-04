@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useSupabase } from '../../contexts/SupabaseContext'
@@ -6,12 +6,18 @@ import Logo from '../../components/common/Logo'
 import { FiMail, FiLock } from 'react-icons/fi'
 
 function AdminLoginPage() {
-  const { supabase } = useSupabase()
+  const { supabase, user } = useSupabase()
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+
+  useEffect(() => {
+    if (user) {
+      navigate('/admin')
+    }
+  }, [user, navigate])
 
   async function handleLogin(e) {
     e.preventDefault()
