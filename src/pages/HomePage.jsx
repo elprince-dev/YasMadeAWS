@@ -187,7 +187,7 @@ function HomePage() {
         <div className="container-custom">
           <div className="flex items-center justify-between mb-16">
             <div>
-              <h2 className="heading-2 section-title mb-2">Latest From The Blog</h2>
+              <h2 className="heading-2 section-title mb-2">Latest Blogs</h2>
               <p className="text-gray-600 dark:text-gray-400">Thoughts, inspirations, and creative journeys</p>
             </div>
             <Link to="/blog" className="btn-secondary">
