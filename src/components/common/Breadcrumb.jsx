@@ -7,7 +7,6 @@ function Breadcrumb() {
   const location = useLocation()
   const { supabase } = useSupabase()
   const [dynamicNames, setDynamicNames] = useState({})
-  const pathnames = location.pathname.split('/').filter(x => x)
 
   const breadcrumbNames = {
     products: 'Products',
@@ -19,6 +18,8 @@ function Breadcrumb() {
   }
 
   useEffect(() => {
+    const pathnames = location.pathname.split('/').filter(x => x)
+    
     async function fetchDynamicNames() {
       const names = {}
       
@@ -75,9 +76,11 @@ function Breadcrumb() {
     if (pathnames.length > 0) {
       fetchDynamicNames()
     }
-  }, [location.pathname, pathnames, supabase])
+  }, [location.pathname, supabase])
 
   if (location.pathname === '/') return null
+
+  const pathnames = location.pathname.split('/').filter(x => x)
 
   return (
     <nav className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 mt-20">

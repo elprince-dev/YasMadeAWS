@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useSupabase } from '../../contexts/SupabaseContext'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-import { FiSave, FiX } from 'react-icons/fi'
+import { FiSave, FiX, FiUpload } from 'react-icons/fi'
+import { useDropzone } from 'react-dropzone'
+import { v4 as uuidv4 } from 'uuid'
 import { useErrorHandler } from '../../hooks/useErrorHandler'
 
 function AdminBlogEdit() {
@@ -20,6 +22,8 @@ function AdminBlogEdit() {
   })
   const [loading, setLoading] = useState(id ? true : false)
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
   const { error, handleError, clearError } = useErrorHandler()
 
   useEffect(() => {
@@ -60,6 +64,90 @@ function AdminBlogEdit() {
       content
     }))
   }
+
+  const onDrop = useCallback(async (acceptedFiles) => {
+    if (acceptedFiles.length === 0) return
+
+    const file = acceptedFiles[0]
+    if (!file.type.startsWith('image/')) {
+      handleError('Please upload an image file')
+      return
+    }
+
+    // // Check if Supabase client is available
+    // if (!supabase) {
+    //   handleError('Supabase client not initialized')
+    //   return
+    // }
+
+    try {
+      setUploading(true)
+      setUploadProgress(0)
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${uuidv4()}.${fileExt}`
+      const filePath = `blogs/${fileName}`
+
+      // // Check if storage is available
+      // if (!supabase.storage) {
+      //   throw new Error('Supabase storage not available')
+      // }
+
+      // // Check if images bucket exists
+      // const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets()
+      // if (bucketsError) {
+      //   console.error('Error listing buckets:', bucketsError)
+      //   throw new Error('Cannot access storage buckets')
+      // }
+
+      // const imagesBucket = buckets.find(b => b.name === 'images')
+      // if (!imagesBucket) {
+      //   throw new Error('Images bucket not found')
+      // }
+
+      const { error: uploadError } = await supabase.storage
+        .from('images')
+        .upload(filePath, file, {
+          onUploadProgress: (progress) => {
+            setUploadProgress(Math.round((progress.loaded / progress.total) * 100))
+          }
+        })
+
+      if (uploadError) throw uploadError
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('images')
+        .getPublicUrl(filePath)
+
+      setBlog(prev => ({
+        ...prev,
+        image_url: publicUrl
+      }))
+      clearError()
+    } catch (error) {
+      console.error('Error uploading image:', error)
+      console.error('Full error object:', JSON.stringify(error, null, 2))
+      // Check if it's a storage policy error
+      if (error.message?.includes('policy') || error.message?.includes('permission')) {
+        handleError('Upload failed: Check storage permissions or authentication')
+      } else if (error.message?.includes('bucket')) {
+        handleError('Upload failed: Storage bucket not found or inaccessible')
+      } else {
+        handleError(`Failed to upload image: ${error.message}`)
+      }
+    } finally {
+      setUploading(false)
+      setUploadProgress(0)
+    }
+  }, [supabase])
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      'image/*': ['.jpeg', '.jpg', '.png', '.gif']
+    },
+    maxFiles: 1,
+    disabled: uploading
+  })
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -138,15 +226,33 @@ function AdminBlogEdit() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Image URL
+                    Blog Image
                   </label>
-                  <input
-                    type="url"
-                    name="image_url"
-                    value={blog.image_url}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-primary-500 focus:border-primary-500"
-                  />
+                  <div {...getRootProps()} className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${isDragActive ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/10' : 'border-gray-300 dark:border-gray-700 hover:border-primary-500'} ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                    <input {...getInputProps()} />
+                    {blog.image_url ? (
+                      <div className="space-y-4">
+                        <img src={blog.image_url} alt="Blog" className="max-h-48 mx-auto rounded-lg" />
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          {uploading ? 'Uploading...' : 'Drag & drop a new image to replace, or click to select'}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <FiUpload className="w-8 h-8 mx-auto text-gray-400" />
+                        <p className="text-gray-600 dark:text-gray-400">
+                          {uploading ? 'Uploading...' : 'Drag & drop an image here, or click to select'}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  {uploadProgress > 0 && (
+                    <div className="mt-2">
+                      <div className="bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div className="bg-primary-600 h-2 rounded-full transition-all duration-300" style={{ width: `${uploadProgress}%` }}></div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div>
