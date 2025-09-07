@@ -1,32 +1,115 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useSupabase } from '../../contexts/SupabaseContext'
-import { FiSave, FiX } from 'react-icons/fi'
+import { useToast } from '../../contexts/ToastContext'
+import { FiSave, FiX, FiUpload } from 'react-icons/fi'
+import { useDropzone } from 'react-dropzone'
+import { v4 as uuidv4 } from 'uuid'
+import { testStorageConnection } from '../../utils/storageTest'
 
 function AdminProductEdit() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { supabase } = useSupabase()
+  const { addToast } = useToast()
   const [product, setProduct] = useState({
     name: '',
     description: '',
     price: 0,
     image_url: '',
     featured: false,
-    in_stock: true,
-    stripe_product_id: '',
-    stripe_price_id: ''
+    in_stock: true
   })
   const [loading, setLoading] = useState(id ? true : false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [uploading, setUploading] = useState(false)
 
   useEffect(() => {
     if (id) {
       fetchProduct()
     }
-  }, [id])
+    // Test storage connection on component mount
+    testStorageConnection(supabase)
+  }, [id, supabase])
+
+  const onDrop = useCallback(async (acceptedFiles) => {
+    if (acceptedFiles.length === 0) {
+      console.log('No files accepted')
+      return
+    }
+
+    const file = acceptedFiles[0]
+    console.log('File selected:', { name: file.name, size: file.size, type: file.type })
+    
+    if (!file.type.startsWith('image/')) {
+      setError('Please upload an image file')
+      return
+    }
+
+    try {
+      setUploading(true)
+      setUploadProgress(0)
+      setError(null)
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        throw new Error('File size must be less than 5MB')
+      }
+      
+      const fileExt = file.name.split('.').pop()?.toLowerCase()
+      if (!fileExt || !['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExt)) {
+        throw new Error('Invalid file type. Please use JPG, PNG, GIF, or WebP')
+      }
+      
+      const fileName = `${uuidv4()}.${fileExt}`
+      const filePath = `products/${fileName}`
+
+      console.log('Uploading file:', { fileName, filePath, fileSize: file.size, fileType: file.type })
+
+      const { data, error: uploadError } = await supabase.storage
+        .from('images')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        })
+
+      if (uploadError) {
+        console.error('Upload error details:', uploadError)
+        throw new Error(`Upload failed: ${uploadError.message}`)
+      }
+
+      console.log('Upload successful:', data)
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('images')
+        .getPublicUrl(filePath)
+
+      console.log('Public URL:', publicUrl)
+
+      setProduct(prev => ({
+        ...prev,
+        image_url: publicUrl
+      }))
+    } catch (error) {
+      console.error('Error uploading image:', error)
+      setError(error.message || 'Failed to upload image')
+    } finally {
+      setUploading(false)
+      setUploadProgress(0)
+    }
+  }, [supabase])
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      'image/*': ['.jpeg', '.jpg', '.png', '.gif']
+    },
+    maxFiles: 1,
+    disabled: uploading
+  })
 
   async function fetchProduct() {
     try {
@@ -61,46 +144,21 @@ function AdminProductEdit() {
     setError(null)
 
     try {
-      // Create or update Stripe product
-      const response = await fetch('/api/stripe/create-product', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          productId: id,
-          name: product.name,
-          description: product.description,
-          price: product.price,
-          image: product.image_url,
-          stripeProductId: product.stripe_product_id,
-          stripePriceId: product.stripe_price_id
-        }),
-      })
-
-      const stripeData = await response.json()
-      
-      if (!response.ok) {
-        throw new Error(stripeData.error || 'Failed to sync with Stripe')
-      }
-
-      const productData = {
-        ...product,
-        stripe_product_id: stripeData.productId,
-        stripe_price_id: stripeData.priceId
-      }
-
       const { error } = id
         ? await supabase
             .from('products')
-            .update(productData)
+            .update(product)
             .eq('id', id)
         : await supabase
             .from('products')
-            .insert([productData])
+            .insert([product])
 
       if (error) throw error
 
+      addToast(
+        id ? 'Product updated successfully!' : 'Product created successfully!',
+        'success'
+      )
       navigate('/admin/products')
     } catch (error) {
       console.error('Error saving product:', error)
@@ -189,17 +247,50 @@ function AdminProductEdit() {
                   />
                 </div>
 
+                {/* Image Upload */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Image URL
+                    Product Image
                   </label>
-                  <input
-                    type="url"
-                    name="image_url"
-                    value={product.image_url}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-primary-500 focus:border-primary-500"
-                  />
+                  <div
+                    {...getRootProps()}
+                    className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors
+                      ${isDragActive 
+                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/10' 
+                        : 'border-gray-300 dark:border-gray-700 hover:border-primary-500'}
+                      ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  >
+                    <input {...getInputProps()} />
+                    {product.image_url ? (
+                      <div className="space-y-4">
+                        <img
+                          src={product.image_url}
+                          alt="Product"
+                          className="max-h-48 mx-auto rounded-lg"
+                        />
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          {uploading ? 'Uploading...' : 'Drag & drop a new image to replace, or click to select'}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <FiUpload className="w-8 h-8 mx-auto text-gray-400" />
+                        <p className="text-gray-600 dark:text-gray-400">
+                          {uploading ? 'Uploading...' : 'Drag & drop an image here, or click to select'}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  {uploadProgress > 0 && (
+                    <div className="mt-2">
+                      <div className="bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div
+                          className="bg-primary-600 h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${uploadProgress}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex items-center space-x-6">
