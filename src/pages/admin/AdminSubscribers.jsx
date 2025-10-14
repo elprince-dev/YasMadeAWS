@@ -184,28 +184,45 @@ function AdminSubscribers() {
         .from('images')
         .getPublicUrl('yasmadeLogo.PNG')
 
+      // Check if Supabase Edge Functions are available
       const functionUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-newsletter`
-
-      const response = await fetch(functionUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
-          'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
-          'X-CSRF-Token': getCSRFToken()
-        },
-        body: JSON.stringify({
-          subscribers: subscribers.map(sub => sub.email),
-          subject: emailContent.subject.trim(),
-          content: emailContent.content,
-          logoUrl,
-          csrfToken: getCSRFToken()
-        })
-      })
-
-      const result = await response.json()
+      console.log('Attempting to call Edge Function at:', functionUrl)
       
-      if (!response.ok || !result.success) {
+      let response
+      try {
+        response = await fetch(functionUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`,
+            'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY
+          },
+          body: JSON.stringify({
+            subscribers: subscribers.map(sub => sub.email),
+            subject: emailContent.subject.trim(),
+            content: emailContent.content,
+            logoUrl
+          })
+        })
+        console.log('Response status:', response.status)
+      } catch (fetchError) {
+        console.error('Network error details:', fetchError)
+        throw new Error(`Network error: ${fetchError.message}. Check if Edge Function is deployed and accessible.`)
+      }
+
+      let result
+      try {
+        result = await response.json()
+      } catch (jsonError) {
+        console.error('JSON parse error:', jsonError)
+        throw new Error('Invalid response from email service. Please try again.')
+      }
+      
+      if (!response.ok) {
+        throw new Error(result?.error || `Email service error (${response.status}): ${response.statusText}`)
+      }
+      
+      if (!result.success) {
         throw new Error(result.error || 'Failed to send email')
       }
 
