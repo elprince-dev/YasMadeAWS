@@ -13,10 +13,27 @@ function OrderConfirmationPage() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [settings, setSettings] = useState([]);
 
   useEffect(() => {
     fetchOrder();
+    fetchSettings();
   }, [id]);
+
+  async function fetchSettings() {
+    try {
+      const { data, error } = await supabase
+        .from('settings')
+        .select('*');
+
+      if (error) throw error;
+      setSettings(data[0] || []);
+    } catch (error) {
+      console.error('Error fetching blogs:', error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function fetchOrder() {
     try {
@@ -144,7 +161,7 @@ function OrderConfirmationPage() {
               </p>
               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mt-2">
                 <p className="font-semibold">E-transfer Details:</p>
-                <p>Email: payment@yasmade.com</p>
+                <p>Email: <span>{settings?.social_links?.email}</span></p>
                 <p>Amount: ${order.total_amount.toFixed(2)} CAD</p>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                   Please include your order number in the e-transfer message.
