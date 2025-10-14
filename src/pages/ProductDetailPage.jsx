@@ -38,7 +38,7 @@ function ProductDetailPage() {
         setProductImages(
           imagesResult.data.length > 0 
             ? imagesResult.data 
-            : [{ id: 'main', image_url: productResult.data.image_url }]
+            : [{ id: 'main', image_url: productResult.data.image_url || './slide-4.jpeg' }]
         );
       } catch (err) {
         setError(err.message);
@@ -162,7 +162,7 @@ function ProductDetailPage() {
           </p>
           
           <div className="prose max-w-none mb-8">
-            <p>{product.description}</p>
+            <p className="whitespace-pre-wrap">{product.description}</p>
           </div>
 
           <div className="space-y-6">

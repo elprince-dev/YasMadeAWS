@@ -46,6 +46,7 @@ function Header() {
     { name: 'Home', path: '/', preload: () => import('../../pages/HomePage') },
     { name: 'Products', path: '/products', preload: () => import('../../pages/ProductsPage') },
     { name: 'Blog', path: '/blog', preload: () => import('../../pages/BlogPage') },
+    { name: 'Gallery', path: '/gallery', preload: () => import('../../pages/GalleryPage') },
     { name: 'Workshops', path: '/sessions', preload: () => import('../../pages/SessionsPage') },
     { name: 'Contact', path: '/contact', preload: () => import('../../pages/ContactPage') },
   ]
