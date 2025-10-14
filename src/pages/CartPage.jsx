@@ -10,6 +10,8 @@ function CartPage() {
   const { supabase } = useSupabase();
   const { items, removeFromCart, updateQuantity, getTotal, clearCart } = useCart();
   const [promoCode, setPromoCode] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState(null);
+  const [promoError, setPromoError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [shippingRate, setShippingRate] = useState(null);
@@ -50,6 +52,57 @@ function CartPage() {
     }
   };
 
+  const handleApplyPromo = async () => {
+    if (!promoCode.trim()) return;
+    
+    setPromoError(null);
+    try {
+      const { data, error } = await supabase
+        .from('promo_codes')
+        .select('*')
+        .eq('code', promoCode.trim().toUpperCase())
+        .eq('is_active', true)
+        .single();
+
+      if (error || !data) {
+        setPromoError('Invalid promo code');
+        return;
+      }
+
+      // Check if promo code is expired
+      if (data.expires_at && new Date(data.expires_at) < new Date()) {
+        setPromoError('This promo code has expired');
+        return;
+      }
+
+      setAppliedPromo(data);
+      setPromoError(null);
+    } catch (error) {
+      setPromoError('Failed to apply promo code');
+    }
+  };
+
+  const handleRemovePromo = () => {
+    setAppliedPromo(null);
+    setPromoCode('');
+    setPromoError(null);
+  };
+
+  const getDiscountAmount = () => {
+    if (!appliedPromo) return 0;
+    const subtotal = getTotal();
+    return appliedPromo.discount_type === 'percentage' 
+      ? (subtotal * appliedPromo.discount_value / 100)
+      : appliedPromo.discount_value;
+  };
+
+  const getFinalTotal = () => {
+    const subtotal = getTotal();
+    const shipping = shippingRates.find(rate => rate.id === shippingRate)?.price || 0;
+    const discount = getDiscountAmount();
+    return Math.max(0, subtotal - discount + shipping);
+  };
+
   const handleSubmitOrder = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -79,7 +132,9 @@ function CartPage() {
           shipping_rate_id: shippingRate,
           subtotal: getTotal(),
           shipping_fee: shippingRates.find(rate => rate.id === shippingRate)?.price || 0,
-          total_amount: getTotal() + (shippingRates.find(rate => rate.id === shippingRate)?.price || 0),
+          discount_amount: getDiscountAmount(),
+          promo_code_id: appliedPromo?.id || null,
+          total_amount: getFinalTotal(),
           status: 'pending',
           payment_status: 'pending'
         }])
@@ -316,6 +371,53 @@ function CartPage() {
                   </div>
                 </div>
 
+                {/* Promo Code */}
+                <div>
+                  <h3 className="text-lg font-medium mb-4">Promo Code</h3>
+                  {!appliedPromo ? (
+                    <div className="flex space-x-2">
+                      <input
+                        type="text"
+                        value={promoCode}
+                        onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                        placeholder="Enter promo code"
+                        className="flex-1 px-4 py-2 rounded-md border-gray-300 dark:border-gray-700"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleApplyPromo}
+                        className="btn-secondary"
+                      >
+                        Apply
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between bg-green-50 dark:bg-green-900/20 p-3 rounded-md">
+                      <div>
+                        <span className="text-sm font-medium text-green-800 dark:text-green-200">
+                          {appliedPromo.code} applied
+                        </span>
+                        <p className="text-xs text-green-600 dark:text-green-300">
+                          {appliedPromo.discount_type === 'percentage' 
+                            ? `${appliedPromo.discount_value}% off`
+                            : `$${appliedPromo.discount_value} off`
+                          }
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleRemovePromo}
+                        className="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-200 text-sm"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  )}
+                  {promoError && (
+                    <p className="text-red-600 dark:text-red-400 text-sm mt-2">{promoError}</p>
+                  )}
+                </div>
+
                 {/* Order Summary */}
                 <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
                   <div className="space-y-2">
@@ -323,6 +425,12 @@ function CartPage() {
                       <span>Subtotal</span>
                       <span>${getTotal().toFixed(2)} CAD</span>
                     </div>
+                    {appliedPromo && (
+                      <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
+                        <span>Discount ({appliedPromo.code})</span>
+                        <span>-${getDiscountAmount().toFixed(2)} CAD</span>
+                      </div>
+                    )}
                     <div className="flex justify-between text-sm">
                       <span>Shipping</span>
                       <span>
@@ -331,9 +439,7 @@ function CartPage() {
                     </div>
                     <div className="flex justify-between text-lg font-bold pt-2">
                       <span>Total</span>
-                      <span>
-                        ${(getTotal() + (shippingRates.find(rate => rate.id === shippingRate)?.price || 0)).toFixed(2)} CAD
-                      </span>
+                      <span>${getFinalTotal().toFixed(2)} CAD</span>
                     </div>
                   </div>
                 </div>

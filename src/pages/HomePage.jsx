@@ -374,11 +374,15 @@ function HomePage() {
             <div>
               <h2 className="heading-2 section-title mb-6">The YasMade Story</h2>
               <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
-                YasMade began as a personal journey of faith expression through the art of embroidery. What started as a quiet evening hobby has blossomed into a passion for creating meaningful pieces that bring beauty and remembrance into Muslim homes.
+                My love for embroidery began when I was a child, fascinated by the rhythm of the needle and the quiet joy of creating something by hand. Life took me on different paths, and I put my needle down for many years, until I found myself turning back to it during a difficult time.
+
+What started as a way to calm my mind and find peace soon became my favorite escape, a way to create small, meaningful pieces and share them as heartfelt gifts with loved ones.
+
+Today, Yasmade is more than just handmade embroidery, it’s about sharing that same comfort and creativity with others through workshops for kids, teens, and adults. Stitch by stitch, we create beauty, patience, and joy together.
               </p>
-              <p className="text-lg text-gray-700 dark:text-gray-300 mb-8">
+              {/* <p className="text-lg text-gray-700 dark:text-gray-300 mb-8">
                 Each piece is handcrafted with attention to detail and love, inspired by Islamic art and the beauty of our faith. Beyond creating products, YasMade has grown to include workshops where children can learn this traditional craft in a nurturing environment.
-              </p>
+              </p> */}
               <Link to="/contact" className="btn-primary">
                 Get in Touch
               </Link>
