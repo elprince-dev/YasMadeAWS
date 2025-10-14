@@ -61,7 +61,7 @@ function Footer() {
   return (
     <footer className="bg-gray-50 dark:bg-gray-900 pt-12 pb-6 border-t border-gray-200 dark:border-gray-800">
       <div className="container-custom">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
           {/* Logo and description */}
           <div className="md:col-span-1">
             <Link to="/" className="flex items-center mb-4">
@@ -100,7 +100,7 @@ function Footer() {
             </div>
           </div>
 
-          {/* Navigation */}
+          {/* Navigation & About */}
           <div className="md:col-span-1">
             <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Navigation</h4>
             <ul className="space-y-2">
@@ -129,36 +129,9 @@ function Footer() {
                   Contact
                 </Link>
               </li>
-            </ul>
-          </div>
-
-          {/* Quick Links */}
-          <div className="md:col-span-1">
-            <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Quick Links</h4>
-            <ul className="space-y-2">
               <li>
                 <Link to="/about" className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
                   About YasMade
-                </Link>
-              </li>
-              <li>
-                <Link to="/faq" className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                  FAQ
-                </Link>
-              </li>
-              <li>
-                <Link to="/shipping" className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                  Shipping Info
-                </Link>
-              </li>
-              <li>
-                <Link to="/terms" className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                  Terms & Conditions
-                </Link>
-              </li>
-              <li>
-                <Link to="/privacy" className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                  Privacy Policy
                 </Link>
               </li>
             </ul>

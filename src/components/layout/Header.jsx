@@ -50,24 +50,13 @@ function Header() {
     { name: 'Contact', path: '/contact', preload: () => import('../../pages/ContactPage') },
   ]
 
-  const headerClasses = `fixed top-0 w-full z-50 transition-all duration-300 ${
-    scrolled 
-      ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm' 
-      : 'bg-transparent'
-      // : location.pathname === '/'
-      //   ? 'bg-black/20 backdrop-blur-md'
-      //   : 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm'
-  }`
+  const headerClasses = 'fixed top-0 w-full z-50 bg-gray-50 dark:bg-gray-900/95 backdrop-blur-md shadow-sm'
 
   const getLinkClasses = (isActive) => `
     py-2 font-medium text-base transition-colors duration-300
     ${isActive 
       ? 'text-primary-600 dark:text-primary-400' 
-      : scrolled
-        ? 'text-gray-800 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400'
-        : location.pathname === '/' && !scrolled
-          ? 'text-white dark:text-gray-300 hover:text-primary-400 dark:hover:text-primary-400'
-          : 'text-gray-800 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400'
+      : 'text-gray-800 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400'
     }
   `
 
@@ -77,11 +66,7 @@ function Header() {
         {/* Logo */}
         <Link to="/" className="flex items-center">
           <Logo className="h-12 w-auto" />
-          <span className={`ml-2 text-xl font-bold ${
-            scrolled || location.pathname !== '/'
-              ? 'text-gray-900 dark:text-white'
-              : 'text-white dark:text-white'
-          }`}>
+          <span className="ml-2 text-xl font-bold text-gray-900 dark:text-white">
             YasMade
           </span>
         </Link>
@@ -127,11 +112,7 @@ function Header() {
           {/* Theme toggle */}
           <button
             onClick={toggleTheme}
-            className={`p-2 rounded-full transition-colors duration-300 ${
-              scrolled || location.pathname !== '/'
-                ? 'text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-                : 'text-white dark:text-gray-300 hover:bg-white/10 dark:hover:bg-gray-800'
-            }`}
+            className="p-2 rounded-full transition-colors duration-300 text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
             aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
           >
             {theme === 'light' ? <FiMoon size={20} /> : <FiSun size={20} />}
@@ -155,11 +136,7 @@ function Header() {
 
           <button
             onClick={toggleTheme}
-            className={`p-2 mr-2 rounded-full transition-colors duration-300 ${
-              scrolled || location.pathname !== '/'
-                ? 'text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-                : 'text-white dark:text-gray-300 hover:bg-white/10 dark:hover:bg-gray-800'
-            }`}
+            className="p-2 mr-2 rounded-full transition-colors duration-300 text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
             aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
           >
             {theme === 'light' ? <FiMoon size={20} /> : <FiSun size={20} />}
@@ -167,11 +144,7 @@ function Header() {
           
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className={`p-2 rounded-full transition-colors duration-300 ${
-              scrolled || location.pathname !== '/'
-                ? 'text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-                : 'text-white dark:text-gray-300 hover:bg-white/10 dark:hover:bg-gray-800'
-            }`}
+            className="p-2 rounded-full transition-colors duration-300 text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
             aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           >
             {isMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}

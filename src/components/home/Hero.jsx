@@ -42,7 +42,7 @@ function Hero() {
 
   return (
     <>
-      <div className="relative min-h-[100vh] flex items-center overflow-hidden">
+      <div className="relative min-h-[100vh] flex items-center overflow-hidden pt-20">
         {/* Slideshow Background */}
         <div className="absolute inset-0">
           <AnimatePresence mode="wait">
