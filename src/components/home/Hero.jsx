@@ -90,7 +90,7 @@ function Hero() {
         {/* Action Buttons */}
         <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-20">
           <motion.div 
-            className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4"
+            className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
@@ -100,6 +100,9 @@ function Hero() {
             </Link>
             <Link to="/sessions" className="btn-secondary text-center bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20">
               Join a Workshop
+            </Link>
+            <Link to="/links" className="btn-secondary text-center bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20">
+              YasMade Links
             </Link>
           </motion.div>
         </div>

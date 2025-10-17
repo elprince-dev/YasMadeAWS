@@ -22,6 +22,8 @@ const SessionsPage = lazy(() => import('./pages/SessionsPage'))
 const SessionDetailPage = lazy(() => import('./pages/SessionDetailPage'))
 const ContactPage = lazy(() => import('./pages/ContactPage'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
+const SocialLinksPage = lazy(() => import('./pages/SocialLinksPage'))
+const TestimonialsPage = lazy(() => import('./pages/TestimonialsPage'))
 const OrderConfirmationPage = lazy(() => import('./pages/OrderConfirmationPage'))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 
@@ -61,6 +63,8 @@ function App() {
             <Route path="/sessions/:id" element={<SessionDetailPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/testimonials" element={<TestimonialsPage />} />
+            <Route path="/links" element={<SocialLinksPage />} />
             <Route path="/admin/login" element={<AdminLoginPage />} />
             <Route path="/admin/*" element={<ProtectedRoute><AdminRoutes /></ProtectedRoute>} />
             

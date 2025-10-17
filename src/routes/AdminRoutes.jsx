@@ -17,6 +17,8 @@ const AdminOrders = lazy(() => import('../pages/admin/AdminOrders'))
 const AdminShippingRates = lazy(() => import('../pages/admin/AdminShippingRates'))
 const AdminPromoCodes = lazy(() => import('../pages/admin/AdminPromoCodes'))
 const AdminGallery = lazy(() => import('../pages/admin/AdminGallery'))
+const AdminSocialLinks = lazy(() => import('../pages/admin/AdminSocialLinks'))
+const AdminTestimonials = lazy(() => import('../pages/admin/AdminTestimonials'))
 
 function AdminRoutes() {
   return (
@@ -38,6 +40,8 @@ function AdminRoutes() {
       <Route path="/shipping" element={<AdminShippingRates />} />
       <Route path="/promo-codes" element={<AdminPromoCodes />} />
       <Route path="/gallery" element={<AdminGallery />} />
+      <Route path="/social-links" element={<AdminSocialLinks />} />
+      <Route path="/testimonials" element={<AdminTestimonials />} />
     </Routes>
   )
 }

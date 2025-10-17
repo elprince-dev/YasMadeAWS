@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { useSupabase } from '../../contexts/SupabaseContext'
-import { FiPackage, FiEdit3, FiCalendar, FiUsers, FiSettings, FiMail, FiUserPlus, FiTruck, FiTag, FiImage } from 'react-icons/fi'
+import { FiPackage, FiEdit3, FiCalendar, FiUsers, FiSettings, FiMail, FiUserPlus, FiTruck, FiTag, FiImage, FiLink, FiHeart } from 'react-icons/fi'
 
 function AdminDashboard() {
   const { supabase } = useSupabase()
@@ -136,6 +136,18 @@ function AdminDashboard() {
       link: '/admin/gallery',
       icon: FiImage,
       color: 'bg-teal-500',
+    },
+    {
+      title: 'Social Links',
+      link: '/admin/social-links',
+      icon: FiLink,
+      color: 'bg-violet-500',
+    },
+    {
+      title: 'Testimonials',
+      link: '/admin/testimonials',
+      icon: FiHeart,
+      color: 'bg-pink-500',
     },
     {
       title: 'Update Settings',

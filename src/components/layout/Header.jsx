@@ -48,6 +48,7 @@ function Header() {
     { name: 'Blog', path: '/blog', preload: () => import('../../pages/BlogPage') },
     { name: 'Gallery', path: '/gallery', preload: () => import('../../pages/GalleryPage') },
     { name: 'Workshops', path: '/sessions', preload: () => import('../../pages/SessionsPage') },
+    { name: 'Testimonials', path: '/testimonials', preload: () => import('../../pages/TestimonialsPage') },
     { name: 'Contact', path: '/contact', preload: () => import('../../pages/ContactPage') },
   ]
 
