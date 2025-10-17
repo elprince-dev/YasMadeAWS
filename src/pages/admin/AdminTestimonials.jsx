@@ -27,15 +27,24 @@ function AdminTestimonials() {
 
   async function fetchTestimonials() {
     try {
+      console.log('Fetching testimonials...')
       const { data, error } = await supabase
         .from('testimonials')
         .select('*')
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      console.log('Supabase response:', { data, error })
+      
+      if (error) {
+        console.error('Database error details:', error)
+        addToast(`Database error: ${error.message} (Code: ${error.code})`, 'error')
+        throw error
+      }
       setTestimonials(data || [])
+      console.log('Testimonials loaded successfully:', data?.length || 0)
     } catch (error) {
-      console.error('Error fetching testimonials:', error)
+      console.error('Fetch error details:', error)
+      addToast(`Failed to load testimonials: ${error.message}`, 'error')
     } finally {
       setLoading(false)
     }
@@ -45,6 +54,8 @@ function AdminTestimonials() {
     if (acceptedFiles.length === 0) return
 
     const file = acceptedFiles[0]
+    console.log('File selected:', { name: file.name, size: file.size, type: file.type })
+    
     if (!file.type.startsWith('image/')) {
       addToast('Please upload an image file', 'error')
       return
@@ -55,20 +66,32 @@ function AdminTestimonials() {
       const fileExt = file.name.split('.').pop()?.toLowerCase()
       const fileName = `${uuidv4()}.${fileExt}`
       const filePath = `testimonials/${fileName}`
+      
+      console.log('Uploading to:', filePath)
 
-      const { error: uploadError } = await supabase.storage
+      const { data, error: uploadError } = await supabase.storage
         .from('images')
         .upload(filePath, file)
 
-      if (uploadError) throw uploadError
+      console.log('Upload response:', { data, error: uploadError })
+
+      
+      if (uploadError) {
+        console.error('Upload error details:', uploadError)
+        throw uploadError
+      }
 
       const { data: { publicUrl } } = supabase.storage
         .from('images')
         .getPublicUrl(filePath)
+        
+      console.log('Public URL:', publicUrl)
 
       setFormData(prev => ({ ...prev, image_url: publicUrl }))
+      addToast('Image uploaded successfully!', 'success')
     } catch (error) {
-      addToast('Failed to upload image', 'error')
+      console.error('Image upload error:', error)
+      addToast(`Failed to upload image: ${error.message}`, 'error')
     } finally {
       setUploading(false)
     }
@@ -85,17 +108,23 @@ function AdminTestimonials() {
     e.preventDefault()
     
     try {
+      console.log('Submitting testimonial:', formData)
+      
       if (editingId) {
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('testimonials')
           .update(formData)
           .eq('id', editingId)
+          .select()
+        console.log('Update response:', { data, error })
         if (error) throw error
         addToast('Testimonial updated successfully!', 'success')
       } else {
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('testimonials')
           .insert([formData])
+          .select()
+        console.log('Insert response:', { data, error })
         if (error) throw error
         addToast('Testimonial added successfully!', 'success')
       }
@@ -103,7 +132,8 @@ function AdminTestimonials() {
       resetForm()
       fetchTestimonials()
     } catch (error) {
-      addToast('Failed to save testimonial', 'error')
+      console.error('Save error details:', error)
+      addToast(`Failed to save testimonial: ${error.message} (Code: ${error.code || 'unknown'})`, 'error')
     }
   }
 

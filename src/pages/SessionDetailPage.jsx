@@ -162,9 +162,15 @@ function SessionDetailPage() {
                 {session.max_participants ? `${session.max_participants} spots available` : 'Unlimited spots'}
               </div>
             </div>
-            <div className="mt-4 text-gray-600 dark:text-gray-400">
-              {session.description}
-            </div>
+            <div 
+              className="mt-4 text-gray-600 dark:text-gray-400"
+              dangerouslySetInnerHTML={{ 
+                __html: session.description
+                  .replace(/\r\n/g, '<br>')
+                  .replace(/\n/g, '<br>')
+                  .replace(/\r/g, '<br>')
+              }}
+            />
             {session.price > 0 && (
               <div className="mt-4 text-lg font-semibold text-primary-600 dark:text-primary-400">
                 Price: ${session.price.toFixed(2)}
