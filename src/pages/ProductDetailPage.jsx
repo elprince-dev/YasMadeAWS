@@ -35,11 +35,15 @@ function ProductDetailPage() {
         if (imagesResult.error) throw imagesResult.error;
 
         setProduct(productResult.data);
-        setProductImages(
-          imagesResult.data.length > 0 
-            ? imagesResult.data 
-            : [{ id: 'main', image_url: productResult.data.image_url || './slide-4.jpeg' }]
-        );
+        
+        // Handle images: use product_images if available, otherwise fallback to product.image_url
+        if (imagesResult.data.length > 0) {
+          setProductImages(imagesResult.data);
+        } else if (productResult.data.image_url) {
+          setProductImages([{ id: 'main', image_url: productResult.data.image_url }]);
+        } else {
+          setProductImages([{ id: 'fallback', image_url: './slide-4.jpeg' }]);
+        }
       } catch (err) {
         setError(err.message);
       } finally {
