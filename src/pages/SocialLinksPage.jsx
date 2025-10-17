@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useSupabase } from '../contexts/SupabaseContext'
 import { FiMail, FiMapPin, FiInstagram, FiFacebook, FiTwitter, FiYoutube, FiLinkedin, FiGithub, FiGlobe, FiLink, FiExternalLink } from 'react-icons/fi'
+import Logo from '../components/common/Logo'
 
 function SocialLinksPage() {
   const { supabase } = useSupabase()
@@ -110,8 +111,8 @@ function SocialLinksPage() {
             transition={{ duration: 0.6 }}
             className="text-center mb-8"
           >
-            <div className="w-20 h-20 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl font-bold text-white">Y</span>
+            <div className="w-32 h-32 flex items-center justify-center mx-auto mb-4">
+              <Logo className="w-full h-full" />
             </div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">YasMade</h1>
             <p className="text-gray-600 dark:text-gray-400">Handmade Embroidery & Creative Sessions</p>
