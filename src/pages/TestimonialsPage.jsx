@@ -140,14 +140,9 @@ function TestimonialsPage() {
                         {testimonial.name.charAt(0).toUpperCase()}
                       </span>
                     </div>
-                    <div>
-                      <p className="font-semibold text-gray-900 dark:text-white">
-                        {testimonial.name}
-                      </p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        Workshop Participant
-                      </p>
-                    </div>
+                    <p className="font-semibold text-gray-900 dark:text-white">
+                      {testimonial.name}
+                    </p>
                   </div>
                 </div>
               </motion.div>
