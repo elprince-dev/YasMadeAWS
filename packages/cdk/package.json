@@ -1,14 +1,19 @@
 {
   "name": "cdk",
   "version": "0.1.0",
+  "private": true,
   "bin": {
     "cdk": "bin/cdk.js"
   },
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
+    "build": "tsc -p tsconfig.json",
+    "synth": "cdk synth",
+    "deploy": "cdk deploy ",
     "test": "jest",
-    "cdk": "cdk"
+    "lint": "eslint .",
+    "destroy": "cdk destroy",
+    "cdk": "cdk",
+    "watch": "tsc -w"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
@@ -22,5 +27,23 @@
   "dependencies": {
     "aws-cdk-lib": "2.211.0",
     "constructs": "^10.0.0"
+  },
+  "nx": {
+    "name": "cdk",
+    "metadata": {
+      "description": "CDK package of the website"
+    },
+    "projectType": "application",
+    "targets": {
+      "build":{
+        "cache": true,
+        "dependsOn": ["frontend:build"]
+      },
+      "deploy": {
+        "cache": true,
+        "dependsOn": ["build", "synth"]
+
+      }
+    }
   }
 }
