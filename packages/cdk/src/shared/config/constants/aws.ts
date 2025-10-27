@@ -1,4 +1,5 @@
 // AWS-specific constants used across all infrastructure
+export const APP_NAME = 'yasmade' as const
 export const AWS_REGIONS = {
     // Primary region for most resources
     PRIMARY: 'us-east-1',
@@ -19,7 +20,7 @@ export const CLOUDFRONT_SETTINGS = {
 } as const
 
 // S3 bucket configuration
-export const SE_SETTINGS = {
+export const S3_SETTINGS = {
     // Block all public access (CloudFront will serve content)
     BLOCK_PUBLIC_ACCESS: true,
     // Enable versioning for rollback capability
@@ -61,4 +62,4 @@ export const LIMITS = {
     CLOUDFRONT_DEPLOYMENT_TIMEOUT: 30,
     // Maximum number of origins per distribution
     MAX_ORIGINS: 25
-}
+} as const
