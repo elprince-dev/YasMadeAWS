@@ -1,13 +1,17 @@
-# SSL Certificate Construct - Theory & Concepts
+# Frontend Constructs - Theory & Concepts
 
 ## Table of Contents
-1. [SSL/TLS Fundamentals](#ssltls-fundamentals)
-2. [AWS Certificate Manager (ACM)](#aws-certificate-manager-acm)
-3. [DNS Validation Process](#dns-validation-process)
-4. [Subject Alternative Names (SAN)](#subject-alternative-names-san)
-5. [CloudFront Certificate Requirements](#cloudfront-certificate-requirements)
-6. [CDK Construct Patterns](#cdk-construct-patterns)
-7. [Security Best Practices](#security-best-practices)
+1. [SSL Certificate Construct](#ssl-certificate-construct)
+2. [Static Website S3 Construct](#static-website-s3-construct)
+3. [S3 Fundamentals](#s3-fundamentals)
+4. [Origin Access Control (OAC)](#origin-access-control-oac)
+5. [S3 Security & Best Practices](#s3-security--best-practices)
+6. [Cost Optimization](#cost-optimization)
+7. [CDK Construct Patterns](#cdk-construct-patterns)
+
+---
+
+# SSL Certificate Construct
 
 ## SSL/TLS Fundamentals
 
