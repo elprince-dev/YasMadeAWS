@@ -22,9 +22,7 @@ export interface StaticWebsiteProps {
 export class StaticWebsite extends Construct {
     // The S3 bucket for static assets
     public readonly bucket: Bucket;
-    // Origin Access Control for CloudFront
-    public readonly originAccessControl: CfnOriginAccessControl;
-
+ 
     constructor(scope: Construct, id: string, props: StaticWebsiteProps){
         super(scope, id)
 
@@ -74,17 +72,6 @@ export class StaticWebsite extends Construct {
                 noncurrentVersionExpiration: Duration.days(90)
             })
         }
-
-        // Create Origin Access Control for CloudFront
-        this.originAccessControl = new CfnOriginAccessControl(this, 'OAC', {
-            originAccessControlConfig: {
-                name: `${props.bucketName}-oac`,
-                originAccessControlOriginType: 's3',
-                signingBehavior: 'always',
-                signingProtocol: 'sigv4',
-                description: `Origin Access Control for ${props.bucketName}`
-            }
-        })
 
         // Apply tags if provided
         if (props.tags) {
