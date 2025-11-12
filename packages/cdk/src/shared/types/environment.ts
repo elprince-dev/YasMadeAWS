@@ -1,5 +1,7 @@
 // Environment configuration type definitions
 
+import { ErrorResponse } from "aws-cdk-lib/aws-cloudfront";
+
 // Domain configuration interface
 export interface DomainConfig {
     readonly name: string;
@@ -25,7 +27,7 @@ export interface CloudFrontConfig {
     readonly enabled: boolean;
     readonly comment: string;
     readonly defaultRootObject: string;
-    readonly errorConfigurations: ErrorConfiguration[];
+    readonly errorConfigurations: ErrorResponse[];
 }
 
 // Resource tags interface
@@ -42,7 +44,7 @@ export interface EnvironmentConfig {
     readonly account: string | undefined;
     readonly region: string;
     readonly domain: DomainConfig;
-    readonly bucket: BucketConfig;
+    readonly buckets: BucketConfig;
     readonly cloudFront: CloudFrontConfig;
     readonly tags: ResourceTags;
 }
