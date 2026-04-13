@@ -8,7 +8,7 @@
     "dev": "nx run-many -t dev --nxBail --all",
     "lint": "nx run-many -t lint --nxBail --all",
     "format": "nx format",
-    "deploy": "nx run cdk:deploy",
+    "deploy": "nx run cdk:deploy"
   },
   "private": true,
   "devDependencies": {

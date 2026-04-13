@@ -80,17 +80,6 @@ export class StaticWebsite extends Construct {
             })
         }
 
-        // Output bucket information
-        new CfnOutput(this, 'BucketArn', {
-            value: this.bucket.bucketArn,
-            description: 'S3 Bucket ARN',
-            exportName: `${Stack.of(this).stackName}-BucketArn`
-        })
-
-        new CfnOutput(this, 'BucketName', {
-            value: this.bucket.bucketName,
-            description: 'S3 Bucket Name',
-            exportName: `${Stack.of(this).stackName}-BucketName`
-        })
+        // Bucket outputs are exported by the parent stack
     }
 }

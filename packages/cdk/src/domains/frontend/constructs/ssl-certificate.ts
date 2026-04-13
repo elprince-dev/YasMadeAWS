@@ -53,11 +53,6 @@ export class SslCertificate extends Construct {
             })
         }
 
-        // Output certificate ARN for reference
-        new CfnOutput(this, 'CertificateArn', {
-            value: this.certificate.certificateArn,
-            description: 'ACM Certificate ARN',
-            exportName: `${Stack.of(this).stackName}-CertificateArn}`
-        })
+        // Certificate ARN is exported by the parent stack
     }
 }

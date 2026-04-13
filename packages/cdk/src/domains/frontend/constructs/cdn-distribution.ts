@@ -1,14 +1,14 @@
 import { CfnOutput, Stack, Tags } from "aws-cdk-lib"
 import { Certificate } from "aws-cdk-lib/aws-certificatemanager"
-import { AllowedMethods, CachePolicy, CfnOriginAccessControl, Distribution, ErrorResponse, HttpVersion, PriceClass, SecurityPolicyProtocol, ViewerProtocolPolicy } from "aws-cdk-lib/aws-cloudfront"
+import { AllowedMethods, CachePolicy, Distribution, ErrorResponse, HttpVersion, PriceClass, SecurityPolicyProtocol, ViewerProtocolPolicy } from "aws-cdk-lib/aws-cloudfront"
 import { S3BucketOrigin } from "aws-cdk-lib/aws-cloudfront-origins"
-import { Bucket } from "aws-cdk-lib/aws-s3"
+import { Bucket, IBucket } from "aws-cdk-lib/aws-s3"
 import { Construct } from "constructs"
 
 // Props for CDN Distribution construct
 export interface CdnDistributionProps {
   // S3 bucket origin
-  readonly originBucket:Bucket
+  readonly originBucket: IBucket
   // SSL certificate for custom domain
   readonly certificate?: Certificate
   // Custom domain names
@@ -34,8 +34,17 @@ export class CdnDistribution extends Construct {
     constructor(scope: Construct, id: string, props: CdnDistributionProps){
         super(scope, id)
 
-        // Create S3 origin using the correct static method
-        const s3Origin = S3BucketOrigin.withOriginAccessControl(props.originBucket)
+        // Import the bucket by attributes to avoid cross-stack cyclic dependency.
+        // When using S3BucketOrigin.withOriginAccessControl with a direct bucket
+        // reference from another stack, CDK adds a bucket policy that references
+        // the distribution, creating a circular dependency.
+        const importedBucket = Bucket.fromBucketAttributes(this, 'ImportedBucket', {
+            bucketName: props.originBucket.bucketName,
+            bucketArn: props.originBucket.bucketArn,
+            bucketRegionalDomainName: props.originBucket.bucketRegionalDomainName,
+        })
+
+        const s3Origin = S3BucketOrigin.withOriginAccessControl(importedBucket)
         
         //Create CloudFront distribution
         this.distribution = new Distribution(this, 'Distribution', {
@@ -93,18 +102,7 @@ export class CdnDistribution extends Construct {
             })
         }
 
-        // Output distribution information
-        new CfnOutput(this, 'DistributionId', {
-        value: this.distribution.distributionId,
-        description: 'CloudFront Distribution ID',
-        exportName: `${Stack.of(this).stackName}-DistributionId`
-        })
-
-        new CfnOutput(this, 'DistributionDomainName', {
-        value: this.distribution.distributionDomainName,
-        description: 'CloudFront Distribution Domain Name',
-        exportName: `${Stack.of(this).stackName}-DistributionDomainName`
-        })
+        // Distribution outputs are exported by the parent stack
     }
 
 }

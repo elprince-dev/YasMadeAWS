@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useCart } from '../stores/cartStore';
 import { useSupabase } from '../contexts/SupabaseContext';
 import { FiMinus, FiPlus, FiTrash2, FiShoppingBag, FiUpload } from 'react-icons/fi';
+import { sendOrderConfirmation } from '../utils/emailApi';
 
 function CartPage() {
   const navigate = useNavigate();
@@ -156,6 +157,38 @@ function CartPage() {
         );
 
       if (itemsError) throw itemsError;
+
+      // Send order confirmation email (best-effort — order is already saved)
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        await sendOrderConfirmation(
+          {
+            orderId: order.id,
+            customerEmail: orderDetails.email,
+            customerName: orderDetails.name,
+            items: items.map(item => ({
+              name: item.name,
+              quantity: item.quantity,
+              price: item.price,
+            })),
+            shippingAddress: {
+              street: orderDetails.shipping_address,
+              city: orderDetails.city,
+              state: orderDetails.state,
+              postal_code: orderDetails.postal_code,
+              country: orderDetails.country,
+            },
+            subtotal: getTotal(),
+            shippingFee: shippingRates.find(rate => rate.id === shippingRate)?.price || 0,
+            discountAmount: getDiscountAmount(),
+            totalAmount: getFinalTotal(),
+            paymentProofUrl: `${window.location.origin}/order-confirmation/${order.id}`,
+          },
+          session?.access_token,
+        );
+      } catch (emailErr) {
+        console.error('Order confirmation email failed:', emailErr);
+      }
 
       // Clear cart and redirect to upload page
       clearCart();

@@ -1,8 +1,8 @@
 import { useRef, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import emailjs from "@emailjs/browser";
 import { FiMail, FiMapPin, FiPhone } from 'react-icons/fi'
 import { useSupabase } from '../contexts/SupabaseContext'
+import { sendContactNotification } from '../utils/emailApi'
 
 function ContactPage() {
   const { supabase } = useSupabase()
@@ -57,12 +57,14 @@ function ContactPage() {
         .from('contact_submissions')
         .insert([formData])
 
-      emailjs
-      .sendForm("service_676jq1b", "template_gkx8coy", formRef.current, {
-        publicKey: "eROk87p11QxZz_T1d",
-      })
-
       if (error) throw error
+
+      // Send email notification via Email API (fire-and-forget — form is already saved)
+      try {
+        await sendContactNotification(formData)
+      } catch (emailErr) {
+        console.error('Email notification failed:', emailErr)
+      }
 
       setSuccess(true)
       setFormData({

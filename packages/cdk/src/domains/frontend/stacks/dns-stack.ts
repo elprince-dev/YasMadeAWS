@@ -1,79 +1,66 @@
-
 import { Construct } from 'constructs'
-import { SslCertificate } from '../constructs/ssl-certificate'
-import { DomainSetup } from '../constructs/domain-setup'
 import { EnvironmentConfig } from '../../../shared/types/environment'
-import { CfnOutput, Fn, Stack, StackProps } from 'aws-cdk-lib'
+import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib'
 import { Distribution } from 'aws-cdk-lib/aws-cloudfront'
-import { IHostedZone } from 'aws-cdk-lib/aws-route53'
+import { AaaaRecord, ARecord, IHostedZone, RecordTarget } from 'aws-cdk-lib/aws-route53'
+import { CloudFrontTarget } from 'aws-cdk-lib/aws-route53-targets'
 
-// Props for DNS Stack
 export interface DnsStackProps extends StackProps {
-  // Environment configuration
   readonly environmentConfig: EnvironmentConfig
-  // CloudFront distribution from CDN stack
+  /** CloudFront distribution to point DNS records at */
   readonly distribution: Distribution
+  /** Route53 hosted zone from CertificateStack */
+  readonly hostedZone: IHostedZone
 }
 
 /**
  * DNS Stack
- * Creates SSL certificate, hosted zone, and DNS records
+ * Creates A, AAAA, and www DNS records pointing to the CloudFront distribution.
+ * The hosted zone and certificate are created separately in CertificateStack.
  */
 export class DnsStack extends Stack {
-  // The SSL certificate construct
-  public readonly sslCertificate: SslCertificate
-  // The domain setup construct
-  public readonly domainSetup: DomainSetup
-  // The hosted zone
-  public readonly hostedZone: IHostedZone
+  public readonly aRecord: ARecord
+  public readonly aaaaRecord: AaaaRecord
+  public readonly wwwRecord: ARecord
 
   constructor(scope: Construct, id: string, props: DnsStackProps) {
-    super(scope, id, {
-      ...props,
-      // Certificate must be in us-east-1 for CloudFront
-      env: {
-        account: props.environmentConfig.account,
-        region: props.environmentConfig.domain.certificateRegion
-      }
+    super(scope, id, props)
+
+    const domainName = props.environmentConfig.domain.name
+
+    // A record (IPv4) pointing to CloudFront
+    this.aRecord = new ARecord(this, 'ARecord', {
+      zone: props.hostedZone,
+      recordName: domainName,
+      target: RecordTarget.fromAlias(new CloudFrontTarget(props.distribution)),
+      comment: `A record for ${domainName} pointing to CloudFront`,
     })
 
-    // Create domain setup (hosted zone and DNS records)
-    this.domainSetup = new DomainSetup(this, 'DomainSetup', {
-      domainName: props.environmentConfig.domain.name,
-      distribution: props.distribution,
-      createHostedZone: props.environmentConfig.domain.createHostedZone,
-      includeWwwRedirect: true,
-      tags: props.environmentConfig.tags
+    // AAAA record (IPv6) pointing to CloudFront
+    this.aaaaRecord = new AaaaRecord(this, 'AAAARecord', {
+      zone: props.hostedZone,
+      recordName: domainName,
+      target: RecordTarget.fromAlias(new CloudFrontTarget(props.distribution)),
+      comment: `AAAA record for ${domainName} pointing to CloudFront`,
     })
 
-    // Store hosted zone reference
-    this.hostedZone = this.domainSetup.hostedZone
-
-    // Create SSL certificate with DNS validation
-    this.sslCertificate = new SslCertificate(this, 'SslCertificate', {
-      domainName: props.environmentConfig.domain.name,
-      hostedZone: this.hostedZone,
-      region: props.environmentConfig.domain.certificateRegion,
-      tags: props.environmentConfig.tags
+    // www subdomain redirect to apex
+    this.wwwRecord = new ARecord(this, 'WwwRecord', {
+      zone: props.hostedZone,
+      recordName: `www.${domainName}`,
+      target: RecordTarget.fromAlias(new CloudFrontTarget(props.distribution)),
+      comment: `WWW redirect for www.${domainName} pointing to CloudFront`,
     })
 
     // Stack outputs
-    new CfnOutput(this, 'CertificateArn', {
-      value: this.sslCertificate.certificate.certificateArn,
-      description: 'SSL Certificate ARN',
-      exportName: `${this.stackName}-CertificateArn`
+    new CfnOutput(this, 'ARecordDomain', {
+      value: domainName,
+      description: 'A record domain name',
     })
 
-    new CfnOutput(this, 'HostedZoneId', {
-      value: this.hostedZone.hostedZoneId,
-      description: 'Route53 Hosted Zone ID',
-      exportName: `${this.stackName}-HostedZoneId`
-    })
-
-    new CfnOutput(this, 'NameServers', {
-      value: Fn.join(', ', this.hostedZone.hostedZoneNameServers || []),
-      description: 'Route53 Name Servers (update in domain registrar)',
-      exportName: `${this.stackName}-NameServers`
+    new CfnOutput(this, 'WwwRecordDomain', {
+      value: `www.${domainName}`,
+      description: 'WWW record domain name',
     })
   }
 }

@@ -4,7 +4,8 @@ import { useSupabase } from '../../contexts/SupabaseContext'
 import { FiUserPlus, FiTrash2, FiMail, FiDownload, FiSend, FiX, FiAlertCircle, FiInfo, FiImage } from 'react-icons/fi'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-import { initCSRF, getCSRFToken } from '../../utils/csrf'
+import { initCSRF } from '../../utils/csrf'
+import { sendNewsletter } from '../../utils/emailApi'
 
 function AdminSubscribers() {
   const { supabase } = useSupabase()
@@ -21,7 +22,30 @@ function AdminSubscribers() {
   })
   const [sendingEmail, setSendingEmail] = useState(false)
   const [emailError, setEmailError] = useState(null)
+  const [selectedSubscribers, setSelectedSubscribers] = useState(new Set())
   const quillRef = useRef(null)
+
+  const allSelected = subscribers.length > 0 && selectedSubscribers.size === subscribers.length
+
+  const toggleSelectAll = () => {
+    if (allSelected) {
+      setSelectedSubscribers(new Set())
+    } else {
+      setSelectedSubscribers(new Set(subscribers.map(s => s.id)))
+    }
+  }
+
+  const toggleSubscriber = (id) => {
+    setSelectedSubscribers(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
+      return next
+    })
+  }
 
   // Quill editor configuration
   const modules = {
@@ -63,54 +87,6 @@ function AdminSubscribers() {
       setError('Failed to load subscribers')
     } finally {
       setLoading(false)
-    }
-  }
-
-  const handleImageUpload = async () => {
-    const input = document.createElement('input')
-    input.setAttribute('type', 'file')
-    input.setAttribute('accept', 'image/*')
-    input.click()
-
-    input.onchange = async () => {
-      const file = input.files?.[0]
-      if (!file) return
-
-      try {
-        const editor = quillRef.current?.getEditor()
-        if (!editor) return
-
-        const range = editor.getSelection(true)
-
-        // Insert temporary placeholder
-        editor.insertText(range.index, 'Uploading image...', { 'color': '#999' })
-        editor.setSelection(range.index + 1)
-
-        // Generate unique filename
-        const fileName = `email-images/${Date.now()}-${file.name}`
-
-        // Upload image to Supabase Storage
-        const { error: uploadError } = await supabase.storage
-          .from('images')
-          .upload(fileName, file)
-
-        if (uploadError) throw uploadError
-
-        // Get public URL
-        const { data: { publicUrl } } = supabase.storage
-          .from('images')
-          .getPublicUrl(fileName)
-
-        // Remove placeholder text
-        editor.deleteText(range.index, 'Uploading image...'.length)
-
-        // Insert image
-        editor.insertEmbed(range.index, 'image', publicUrl)
-        editor.setSelection(range.index + 1)
-      } catch (error) {
-        console.error('Error uploading image:', encodeURIComponent(error.message || 'Unknown error'))
-        alert('Failed to upload image. Please try again.')
-      }
     }
   }
 
@@ -160,6 +136,10 @@ function AdminSubscribers() {
     setEmailError(null)
 
     try {
+      if (selectedSubscribers.size === 0) {
+        throw new Error('Please select at least one subscriber')
+      }
+
       // Validate subject
       if (!emailContent.subject?.trim()) {
         throw new Error('Please provide a subject for the email')
@@ -184,46 +164,22 @@ function AdminSubscribers() {
         .from('images')
         .getPublicUrl('yasmadeLogo.PNG')
 
-      // Check if Supabase Edge Functions are available
-      const functionUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-newsletter`
-      console.log('Attempting to call Edge Function at:', functionUrl)
-      
-      let response
-      try {
-        response = await fetch(functionUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session.access_token}`,
-            'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY
-          },
-          body: JSON.stringify({
-            subscribers: subscribers.map(sub => sub.email),
-            subject: emailContent.subject.trim(),
-            content: emailContent.content,
-            logoUrl
-          })
-        })
-        console.log('Response status:', response.status)
-      } catch (fetchError) {
-        console.error('Network error details:', fetchError)
-        throw new Error(`Network error: ${fetchError.message}. Check if Edge Function is deployed and accessible.`)
-      }
+      const recipientEmails = subscribers
+        .filter(sub => selectedSubscribers.has(sub.id))
+        .map(sub => sub.email)
 
-      let result
-      try {
-        result = await response.json()
-      } catch (jsonError) {
-        console.error('JSON parse error:', jsonError)
-        throw new Error('Invalid response from email service. Please try again.')
-      }
-      
-      if (!response.ok) {
-        throw new Error(result?.error || `Email service error (${response.status}): ${response.statusText}`)
-      }
-      
-      if (!result.success) {
-        throw new Error(result.error || 'Failed to send email')
+      const result = await sendNewsletter(
+        {
+          subscribers: recipientEmails,
+          subject: emailContent.subject.trim(),
+          content: emailContent.content,
+          logoUrl,
+        },
+        session.access_token,
+      )
+
+      if (result.failedRecipients?.length) {
+        console.warn('Failed to send to:', result.failedRecipients)
       }
 
       alert('Email sent successfully!')
@@ -271,11 +227,11 @@ function AdminSubscribers() {
             <button
               onClick={() => setShowEmailForm(true)}
               className="btn-primary"
-              disabled={subscribers.length === 0}
-              title={subscribers.length === 0 ? 'No subscribers to email' : undefined}
+              disabled={selectedSubscribers.size === 0}
+              title={selectedSubscribers.size === 0 ? 'Select subscribers first' : `Send to ${selectedSubscribers.size} subscriber(s)`}
             >
               <FiSend className="w-5 h-5 mr-2" />
-              <span className="hidden sm:inline">Send Email</span>
+              <span className="hidden sm:inline">Send Email{selectedSubscribers.size > 0 ? ` (${selectedSubscribers.size})` : ''}</span>
             </button>
             <button
               onClick={() => setShowAddForm(true)}
@@ -352,7 +308,7 @@ function AdminSubscribers() {
                 <div>
                   <h2 className="text-xl font-semibold">Send Email to Subscribers</h2>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    Sending to {subscribers.length} subscriber{subscribers.length !== 1 ? 's' : ''}
+                    Sending to {selectedSubscribers.size} of {subscribers.length} subscriber{subscribers.length !== 1 ? 's' : ''}
                   </p>
                 </div>
                 <button
@@ -429,7 +385,7 @@ function AdminSubscribers() {
                   </button>
                   <button
                     onClick={handleSendEmail}
-                    disabled={sendingEmail || subscribers.length === 0}
+                    disabled={sendingEmail || selectedSubscribers.size === 0}
                     className="btn-primary min-w-[100px]"
                   >
                     {sendingEmail ? (
@@ -471,6 +427,19 @@ function AdminSubscribers() {
               <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead className="bg-gray-50 dark:bg-gray-900">
                   <tr>
+                    <th className="px-6 py-3 text-left">
+                      <label className="flex items-center cursor-pointer" title={allSelected ? 'Deselect all' : 'Select all'}>
+                        <input
+                          type="checkbox"
+                          checked={allSelected}
+                          onChange={toggleSelectAll}
+                          className="w-4 h-4 rounded border-gray-300 text-violet-600 focus:ring-violet-500"
+                        />
+                        <span className="ml-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                          All
+                        </span>
+                      </label>
+                    </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Email
                     </th>
@@ -484,7 +453,15 @@ function AdminSubscribers() {
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                   {subscribers.map((subscriber) => (
-                    <tr key={subscriber.id}>
+                    <tr key={subscriber.id} className={selectedSubscribers.has(subscriber.id) ? 'bg-violet-50 dark:bg-violet-900/10' : ''}>
+                      <td className="px-6 py-4">
+                        <input
+                          type="checkbox"
+                          checked={selectedSubscribers.has(subscriber.id)}
+                          onChange={() => toggleSubscriber(subscriber.id)}
+                          className="w-4 h-4 rounded border-gray-300 text-violet-600 focus:ring-violet-500 cursor-pointer"
+                        />
+                      </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center">
                           <FiMail className="w-5 h-5 text-gray-400 mr-3" />
@@ -509,7 +486,7 @@ function AdminSubscribers() {
                   ))}
                   {subscribers.length === 0 && (
                     <tr>
-                      <td colSpan="3" className="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                      <td colSpan="4" className="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
                         <FiMail className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
                         <p className="text-lg font-medium">No subscribers yet</p>
                         <p className="text-sm">New subscribers will appear here when people sign up for your newsletter.</p>
