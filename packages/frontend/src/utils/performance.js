@@ -1,4 +1,6 @@
 // Performance monitoring utilities
+import { UI_CONFIG } from '../constants'
+
 export const measurePerformance = (name, fn) => {
   return async (...args) => {
     const start = performance.now()

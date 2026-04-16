@@ -13,10 +13,10 @@ function Footer() {
   const [subscribeSuccess, setSubscribeSuccess] = useState(false)
   //---------------------
   const [settings, setSettings] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // eslint-disable-line no-unused-vars
   useEffect(() => {
     fetchSettings();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function fetchSettings() {
     try {

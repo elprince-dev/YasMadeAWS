@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useCart } from '../stores/cartStore';
 import { useSupabase } from '../contexts/SupabaseContext';
-import { FiMinus, FiPlus, FiTrash2, FiShoppingBag, FiUpload } from 'react-icons/fi';
+import { FiMinus, FiPlus, FiTrash2, FiShoppingBag } from 'react-icons/fi';
 import { sendOrderConfirmation } from '../utils/emailApi';
 
 function CartPage() {
@@ -78,7 +78,7 @@ function CartPage() {
 
       setAppliedPromo(data);
       setPromoError(null);
-    } catch (error) {
+    } catch {
       setPromoError('Failed to apply promo code');
     }
   };

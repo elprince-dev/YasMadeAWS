@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import LazyImage from '../common/LazyImage'
-import QuranVerse from '../common/QuranVerse'
 
 function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0)

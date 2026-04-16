@@ -46,11 +46,21 @@
           "frontend:build"
         ]
       },
-      "deploy": {
+      "synth": {
         "cache": true,
+        "dependsOn": [
+          "build"
+        ]
+      },
+      "deploy": {
         "dependsOn": [
           "build",
           "synth"
+        ]
+      },
+      "destroy": {
+        "dependsOn": [
+          "build"
         ]
       }
     }

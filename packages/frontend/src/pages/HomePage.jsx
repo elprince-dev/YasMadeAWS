@@ -5,7 +5,7 @@ import { useSupabase } from '../contexts/SupabaseContext'
 import Hero from '../components/home/Hero'
 import SectionProgress from '../components/common/SectionProgress'
 import LazyImage from '../components/common/LazyImage'
-import { FiBookOpen, FiCalendar, FiShoppingBag, FiMail, FiMapPin, FiPhone } from 'react-icons/fi'
+import { FiBookOpen, FiCalendar, FiShoppingBag, FiMail, FiMapPin } from 'react-icons/fi'
 
 function HomePage() {
   const { supabase } = useSupabase()

@@ -14,7 +14,7 @@ export const useKeyboardNavigation = (isOpen, onClose, onConfirm) => {
             onConfirm?.()
           }
           break
-        case 'Tab':
+        case 'Tab': {
           // Trap focus within modal/dialog
           const focusableElements = document.querySelectorAll(
             'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -30,6 +30,7 @@ export const useKeyboardNavigation = (isOpen, onClose, onConfirm) => {
             firstElement?.focus()
           }
           break
+        }
       }
     }
 

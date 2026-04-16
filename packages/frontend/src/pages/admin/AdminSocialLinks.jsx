@@ -44,7 +44,7 @@ function AdminSocialLinks() {
       } else {
         // Migrate old object format to new array format
         const migratedLinks = Object.entries(links)
-          .filter(([key, value]) => value)
+          .filter(([, value]) => value)
           .map(([key, value], index) => ({
             id: Date.now() + index,
             title: key.charAt(0).toUpperCase() + key.slice(1),
@@ -142,7 +142,7 @@ function AdminSocialLinks() {
               </div>
 
               <div className="space-y-4">
-                {socialLinks.map((link, index) => {
+                {socialLinks.map((link) => {
                   const IconComponent = iconOptions.find(opt => opt.value === link.icon)?.icon || FiLink
                   return (
                     <div key={link.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">

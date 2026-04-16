@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { FiMail, FiMapPin, FiPhone } from 'react-icons/fi'
+import { FiMail, FiMapPin } from 'react-icons/fi'
 import { useSupabase } from '../contexts/SupabaseContext'
 import { sendContactNotification } from '../utils/emailApi'
 

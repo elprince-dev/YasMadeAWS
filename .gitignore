@@ -37,6 +37,10 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+*.pngZone.Identifier
+
+# Supabase CLI temp
+supabase/.temp
 
 .nx/cache
 .nx/workspace-data

@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { FiHeart, FiUsers, FiStar, FiArrowRight } from 'react-icons/fi'
+import { FiHeart, FiStar, FiArrowRight } from 'react-icons/fi'
 
 function AboutPage() {
   const containerVariants = {

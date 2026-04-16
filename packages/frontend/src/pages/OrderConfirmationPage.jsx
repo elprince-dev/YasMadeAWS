@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useSupabase } from '../contexts/SupabaseContext';
 import { FiUpload, FiCheck, FiAlertCircle } from 'react-icons/fi';
 
 function OrderConfirmationPage() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { supabase } = useSupabase();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);

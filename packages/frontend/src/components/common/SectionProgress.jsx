@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
 
 function SectionProgress() {
   const [activeSection, setActiveSection] = useState(0)
@@ -13,10 +12,11 @@ function SectionProgress() {
   ]
 
   useEffect(() => {
+    const sectionList = sections
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 100
       
-      sections.forEach((section, index) => {
+      sectionList.forEach((section, index) => {
         const element = document.getElementById(section.id)
         if (element) {
           const { offsetTop, offsetHeight } = element

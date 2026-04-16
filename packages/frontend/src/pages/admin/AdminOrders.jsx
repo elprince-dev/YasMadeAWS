@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useSupabase } from '../../contexts/SupabaseContext'
-import { FiPackage, FiTruck, FiCheck, FiX, FiFilter, FiDownload, FiEye } from 'react-icons/fi'
+import { FiX, FiFilter, FiDownload, FiEye } from 'react-icons/fi'
 
 function AdminOrders() {
   const { supabase } = useSupabase()

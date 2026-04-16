@@ -64,7 +64,7 @@ function SocialLinksPage() {
   } else {
     // Legacy support for old object format
     linkItems = Object.entries(socialLinks)
-      .filter(([key, value]) => value)
+      .filter(([, value]) => value)
       .map(([key, value]) => ({
         title: key.charAt(0).toUpperCase() + key.slice(1),
         url: key === 'email' ? `mailto:${value}` : value,

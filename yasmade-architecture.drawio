@@ -1,0 +1,144 @@
+<mxfile>
+  <diagram name="YasMade Architecture" id="yasmade-arch">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Users Group -->
+        <mxCell id="users-group" value="Users" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;fontStyle=1;fontSize=14;spacingTop=5;container=1;collapsible=0;" vertex="1" parent="1">
+          <mxGeometry x="50" y="30" width="400" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="browser" value="🌐 Browser&lt;br&gt;(React SPA)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4A90D9;fontColor=#ffffff;strokeColor=#2C5F8A;fontSize=12;fontStyle=1;" vertex="1" parent="users-group">
+          <mxGeometry x="30" y="40" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="admin" value="👤 Admin&lt;br&gt;(Dashboard)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4A90D9;fontColor=#ffffff;strokeColor=#2C5F8A;fontSize=12;fontStyle=1;" vertex="1" parent="users-group">
+          <mxGeometry x="220" y="40" width="150" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- AWS Group -->
+        <mxCell id="aws-group" value="AWS (us-east-1)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;verticalAlign=top;fontStyle=1;fontSize=14;spacingTop=5;container=1;collapsible=0;" vertex="1" parent="1">
+          <mxGeometry x="50" y="200" width="700" height="380" as="geometry" />
+        </mxCell>
+
+        <!-- DNS & CDN sub-group -->
+        <mxCell id="dns-group" value="DNS &amp; CDN" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff;strokeColor=#d6b656;verticalAlign=top;fontStyle=1;fontSize=11;container=1;collapsible=0;dashed=1;" vertex="1" parent="aws-group">
+          <mxGeometry x="20" y="40" width="300" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="route53" value="Route53&lt;br&gt;dev.yasmade.net" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FF9900;fontColor=#232F3E;strokeColor=#232F3E;fontSize=11;fontStyle=1;" vertex="1" parent="dns-group">
+          <mxGeometry x="20" y="35" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cloudfront" value="CloudFront&lt;br&gt;Distribution" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FF9900;fontColor=#232F3E;strokeColor=#232F3E;fontSize=11;fontStyle=1;" vertex="1" parent="dns-group">
+          <mxGeometry x="160" y="35" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="acm" value="ACM&lt;br&gt;Certificate" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FF9900;fontColor=#232F3E;strokeColor=#232F3E;fontSize=11;fontStyle=1;" vertex="1" parent="dns-group">
+          <mxGeometry x="90" y="95" width="120" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- Static Hosting -->
+        <mxCell id="s3" value="S3 Bucket&lt;br&gt;(Static Website)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FF9900;fontColor=#232F3E;strokeColor=#232F3E;fontSize=11;fontStyle=1;" vertex="1" parent="aws-group">
+          <mxGeometry x="90" y="210" width="150" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Email Service sub-group -->
+        <mxCell id="email-group" value="Email Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff;strokeColor=#d6b656;verticalAlign=top;fontStyle=1;fontSize=11;container=1;collapsible=0;dashed=1;" vertex="1" parent="aws-group">
+          <mxGeometry x="370" y="40" width="310" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="apigw" value="API Gateway v2&lt;br&gt;(HTTP API)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FF9900;fontColor=#232F3E;strokeColor=#232F3E;fontSize=11;fontStyle=1;" vertex="1" parent="email-group">
+          <mxGeometry x="90" y="35" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="lambda" value="Lambda&lt;br&gt;(Node.js 20.x)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FF9900;fontColor=#232F3E;strokeColor=#232F3E;fontSize=11;fontStyle=1;" vertex="1" parent="email-group">
+          <mxGeometry x="90" y="130" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ses" value="SES&lt;br&gt;dev.yasmade.net" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FF9900;fontColor=#232F3E;strokeColor=#232F3E;fontSize=11;fontStyle=1;" vertex="1" parent="email-group">
+          <mxGeometry x="90" y="230" width="130" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- APIGW to Lambda -->
+        <mxCell id="edge-apigw-lambda" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="apigw" target="lambda" parent="email-group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Lambda to SES -->
+        <mxCell id="edge-lambda-ses" value="SendEmail" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;" edge="1" source="lambda" target="ses" parent="email-group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Supabase Group -->
+        <mxCell id="supa-group" value="Supabase" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;verticalAlign=top;fontStyle=1;fontSize=14;spacingTop=5;container=1;collapsible=0;" vertex="1" parent="1">
+          <mxGeometry x="820" y="200" width="180" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="supa-auth" value="Auth&lt;br&gt;(JWT)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#3ECF8E;fontColor=#1A1A2E;strokeColor=#1A1A2E;fontSize=11;fontStyle=1;" vertex="1" parent="supa-group">
+          <mxGeometry x="30" y="40" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="supa-db" value="PostgreSQL&lt;br&gt;(Database)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#3ECF8E;fontColor=#1A1A2E;strokeColor=#1A1A2E;fontSize=11;fontStyle=1;" vertex="1" parent="supa-group">
+          <mxGeometry x="30" y="110" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="supa-storage" value="Storage&lt;br&gt;(Images)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#3ECF8E;fontColor=#1A1A2E;strokeColor=#1A1A2E;fontSize=11;fontStyle=1;" vertex="1" parent="supa-group">
+          <mxGeometry x="30" y="180" width="120" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Recipients -->
+        <mxCell id="recipients" value="📬 Recipients" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="650" width="130" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- === EDGES === -->
+
+        <!-- Browser to Route53 -->
+        <mxCell id="edge-browser-route53" value="HTTPS" style="fontSize=10;" edge="1" source="browser" target="route53" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Route53 to CloudFront -->
+        <mxCell id="edge-route53-cf" style="" edge="1" source="route53" target="cloudfront" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- CloudFront to S3 -->
+        <mxCell id="edge-cf-s3" value="Origin" style="fontSize=10;" edge="1" source="cloudfront" target="s3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- CloudFront to ACM -->
+        <mxCell id="edge-cf-acm" value="SSL" style="dashed=1;fontSize=10;" edge="1" source="cloudfront" target="acm" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Browser to Supabase -->
+        <mxCell id="edge-browser-supa-auth" value="Auth" style="fontSize=10;strokeColor=#82b366;" edge="1" source="browser" target="supa-auth" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-browser-supa-db" value="Queries" style="fontSize=10;strokeColor=#82b366;" edge="1" source="browser" target="supa-db" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-browser-supa-storage" value="Images" style="fontSize=10;strokeColor=#82b366;" edge="1" source="browser" target="supa-storage" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Admin to Supabase -->
+        <mxCell id="edge-admin-supa-auth" value="Auth" style="fontSize=10;strokeColor=#82b366;" edge="1" source="admin" target="supa-auth" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-admin-supa-db" value="Queries" style="fontSize=10;strokeColor=#82b366;" edge="1" source="admin" target="supa-db" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-admin-supa-storage" value="Upload" style="fontSize=10;strokeColor=#82b366;" edge="1" source="admin" target="supa-storage" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Admin to API Gateway -->
+        <mxCell id="edge-admin-apigw" value="Email API" style="fontSize=10;strokeColor=#d6b656;fontStyle=1;" edge="1" source="admin" target="apigw" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Lambda to Supabase Auth (JWT verify) -->
+        <mxCell id="edge-lambda-supa" value="Verify JWT" style="fontSize=10;dashed=1;strokeColor=#82b366;" edge="1" source="lambda" target="supa-auth" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- SES to Recipients -->
+        <mxCell id="edge-ses-recipients" value="📧 Email" style="fontSize=10;" edge="1" source="ses" target="recipients" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

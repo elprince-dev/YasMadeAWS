@@ -55,7 +55,7 @@ export const useSupabaseQuery = (table, options = {}) => {
     }
 
     fetchData()
-  }, [supabase, table, JSON.stringify(options)])
+  }, [supabase, table, JSON.stringify(options)]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return { data, loading, error }
 }

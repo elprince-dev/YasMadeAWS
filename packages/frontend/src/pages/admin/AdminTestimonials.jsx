@@ -155,7 +155,7 @@ function AdminTestimonials() {
       if (error) throw error
       addToast('Testimonial deleted successfully!', 'success')
       fetchTestimonials()
-    } catch (error) {
+    } catch {
       addToast('Failed to delete testimonial', 'error')
     }
   }

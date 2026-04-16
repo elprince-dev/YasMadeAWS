@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { useSupabase } from '../../contexts/SupabaseContext'
-import { FiPackage, FiEdit3, FiCalendar, FiUsers, FiSettings, FiMail, FiUserPlus, FiTruck, FiTag, FiImage, FiLink, FiHeart } from 'react-icons/fi'
+import { FiPackage, FiEdit3, FiCalendar, FiSettings, FiMail, FiUserPlus, FiTruck, FiTag, FiImage, FiLink, FiHeart } from 'react-icons/fi'
 
 function AdminDashboard() {
   const { supabase } = useSupabase()
@@ -19,11 +19,11 @@ function AdminDashboard() {
     async function fetchStats() {
       try {
         const [
-          { count: productsCount, error: productsError },
-          { count: blogsCount, error: blogsError },
-          { count: sessionsCount, error: sessionsError },
-          { count: messagesCount, error: messagesError },
-          { count: subscribersCount, error: subscribersError },
+          { count: productsCount },
+          { count: blogsCount },
+          { count: sessionsCount },
+          { count: messagesCount },
+          { count: subscribersCount },
         ] = await Promise.all([
           supabase.from('products').select('*', { count: 'exact', head: true }),
           supabase.from('blogs').select('*', { count: 'exact', head: true }),

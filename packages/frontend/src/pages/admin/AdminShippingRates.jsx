@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useSupabase } from '../../contexts/SupabaseContext'
-import { FiPlus, FiEdit2, FiTrash2, FiCheck, FiX } from 'react-icons/fi'
+import { FiPlus, FiEdit2, FiTrash2 } from 'react-icons/fi'
 
 function AdminShippingRates() {
   const { supabase } = useSupabase()

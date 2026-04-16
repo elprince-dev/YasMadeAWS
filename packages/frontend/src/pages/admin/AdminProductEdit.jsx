@@ -25,7 +25,6 @@ function AdminProductEdit() {
   const [loading, setLoading] = useState(id ? true : false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
-  const [uploadProgress, setUploadProgress] = useState(0)
   const [uploading, setUploading] = useState(false)
 
   useEffect(() => {
@@ -162,7 +161,7 @@ function AdminProductEdit() {
       const newIndex = direction === 'up' ? index - 1 : index + 1
       if (newIndex < 0 || newIndex >= images.length) return images
       
-      [images[index], images[newIndex]] = [images[newIndex], images[index]]
+      ;[images[index], images[newIndex]] = [images[newIndex], images[index]]
       const reordered = images.map((img, i) => ({ ...img, order_position: i }))
       
       // Update main image_url to first image

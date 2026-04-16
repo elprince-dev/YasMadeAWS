@@ -35,46 +35,6 @@ function SessionDetailPage() {
     fetchSessionData()
   }, [id, supabase])
 
-  const handleInputChange = (fieldName, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [fieldName]: value
-    }))
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setSubmitting(true)
-    setError(null)
-
-    try {
-      const { count } = await supabase
-        .from('session_registrations')
-        .select('*', { count: 'exact' })
-        .eq('session_id', id)
-
-      if (session.max_participants && count >= session.max_participants) {
-        throw new Error('Sorry, this session is now full')
-      }
-
-      const { error } = await supabase
-        .from('session_registrations')
-        .insert([{
-          session_id: id,
-          form_data: formData
-        }])
-
-      if (error) throw error
-
-      navigate('/sessions/registration-success')
-    } catch (error) {
-      console.error('Error submitting registration:', error)
-      setError(error.message)
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
   if (loading) {
     return (
       <div className="min-h-screen py-24">

@@ -1,5 +1,5 @@
 // Image optimization utilities
-export const getOptimizedImageUrl = (originalUrl, options = {}) => {
+export const getOptimizedImageUrl = (originalUrl) => {
   if (!originalUrl) return ''
   
   // Supabase storage does not support image transformation query params
