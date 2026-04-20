@@ -1,52 +1,56 @@
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
-import { useSupabase } from '../../contexts/SupabaseContext'
-import { FiPlus, FiEdit2, FiTrash2 } from 'react-icons/fi'
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { useSupabase } from '../../contexts/SupabaseContext';
+import { FiPlus, FiEdit2, FiTrash2 } from 'react-icons/fi';
 
 function AdminSessions() {
-  const { supabase } = useSupabase()
-  const [sessions, setSessions] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const { supabase } = useSupabase();
+  const [sessions, setSessions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchSessions()
-  }, [])
+    fetchSessions();
+  }, []);
 
   async function fetchSessions() {
     try {
       const { data, error } = await supabase
         .from('sessions')
         .select('*')
-        .order('session_date', { ascending: false })
+        .order('session_date', { ascending: false });
 
-      if (error) throw error
+      if (error) throw error;
 
-      setSessions(data)
+      setSessions(data);
     } catch (error) {
-      console.error('Error fetching sessions:', encodeURIComponent(error.message || 'Unknown error'))
-      setError('Failed to load sessions')
+      console.error(
+        'Error fetching sessions:',
+        encodeURIComponent(error.message || 'Unknown error')
+      );
+      setError('Failed to load sessions');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   async function handleDelete(id) {
-    if (!window.confirm('Are you sure you want to delete this session?')) return
+    if (!window.confirm('Are you sure you want to delete this session?'))
+      return;
 
     try {
-      const { error } = await supabase
-        .from('sessions')
-        .delete()
-        .eq('id', id)
+      const { error } = await supabase.from('sessions').delete().eq('id', id);
 
-      if (error) throw error
+      if (error) throw error;
 
-      setSessions(sessions.filter(session => session.id !== id))
+      setSessions(sessions.filter((session) => session.id !== id));
     } catch (error) {
-      console.error('Error deleting session:', encodeURIComponent(error.message || 'Unknown error'))
-      alert('Failed to delete session')
+      console.error(
+        'Error deleting session:',
+        encodeURIComponent(error.message || 'Unknown error')
+      );
+      alert('Failed to delete session');
     }
   }
 
@@ -75,7 +79,10 @@ function AdminSessions() {
         {loading ? (
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="animate-pulse bg-white dark:bg-gray-800 rounded-lg p-4">
+              <div
+                key={i}
+                className="animate-pulse bg-white dark:bg-gray-800 rounded-lg p-4"
+              >
                 <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
                 <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
               </div>
@@ -163,7 +170,7 @@ function AdminSessions() {
         )}
       </div>
     </motion.div>
-  )
+  );
 }
 
-export default AdminSessions
+export default AdminSessions;

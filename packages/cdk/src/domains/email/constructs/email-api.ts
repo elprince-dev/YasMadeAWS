@@ -1,5 +1,5 @@
-import { CfnOutput, Duration, Stack, Tags } from 'aws-cdk-lib'
-import { Construct } from 'constructs'
+import { CfnOutput, Duration, Stack, Tags } from 'aws-cdk-lib';
+import { Construct } from 'constructs';
 import {
   HttpApi,
   HttpMethod,
@@ -7,32 +7,32 @@ import {
   HttpRouteIntegration,
   HttpIntegrationType,
   PayloadFormatVersion,
-} from 'aws-cdk-lib/aws-apigatewayv2'
+} from 'aws-cdk-lib/aws-apigatewayv2';
 import type {
   HttpRouteIntegrationConfig,
   HttpRouteIntegrationBindOptions,
-} from 'aws-cdk-lib/aws-apigatewayv2'
-import { Runtime } from 'aws-cdk-lib/aws-lambda'
-import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs'
-import { PolicyStatement, Effect, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
-import { EmailIdentity } from 'aws-cdk-lib/aws-ses'
-import * as path from 'path'
+} from 'aws-cdk-lib/aws-apigatewayv2';
+import { Runtime } from 'aws-cdk-lib/aws-lambda';
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+import { PolicyStatement, Effect, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
+import { EmailIdentity } from 'aws-cdk-lib/aws-ses';
+import * as path from 'path';
 
 export interface EmailApiProps {
   /** SES email identity for granting send permissions */
-  readonly sesIdentity: EmailIdentity
+  readonly sesIdentity: EmailIdentity;
   /** Root domain name (e.g. yasmade.net) */
-  readonly domainName: string
+  readonly domainName: string;
   /** Allowed CORS origins (e.g. ['https://yasmade.net']) */
-  readonly allowedOrigins: string[]
+  readonly allowedOrigins: string[];
   /** Admin email address for notifications */
-  readonly adminEmail: string
+  readonly adminEmail: string;
   /** Supabase project URL for JWT verification */
-  readonly supabaseUrl?: string
+  readonly supabaseUrl?: string;
   /** Supabase anon key for JWT verification */
-  readonly supabaseAnonKey?: string
+  readonly supabaseAnonKey?: string;
   /** Resource tags */
-  readonly tags?: Record<string, string>
+  readonly tags?: Record<string, string>;
 }
 
 /**
@@ -40,23 +40,20 @@ export interface EmailApiProps {
  * Avoids the need for the alpha @aws-cdk/aws-apigatewayv2-integrations package.
  */
 class LambdaProxyIntegration extends HttpRouteIntegration {
-  constructor(
-    id: string,
-    private readonly handler: NodejsFunction,
-  ) {
-    super(id)
+  constructor(id: string, private readonly handler: NodejsFunction) {
+    super(id);
   }
 
   bind(options: HttpRouteIntegrationBindOptions): HttpRouteIntegrationConfig {
     this.handler.addPermission(`${options.route.node.id}-Invoke`, {
       principal: new ServicePrincipal('apigateway.amazonaws.com'),
       sourceArn: options.route.httpApi.arnForExecuteApi(),
-    })
+    });
     return {
       type: HttpIntegrationType.AWS_PROXY,
       uri: this.handler.functionArn,
       payloadFormatVersion: PayloadFormatVersion.VERSION_2_0,
-    }
+    };
   }
 }
 
@@ -72,11 +69,11 @@ class LambdaProxyIntegration extends HttpRouteIntegration {
  *  - POST /order-confirmation (admin-authenticated)
  */
 export class EmailApi extends Construct {
-  public readonly httpApi: HttpApi
-  public readonly emailHandler: NodejsFunction
+  public readonly httpApi: HttpApi;
+  public readonly emailHandler: NodejsFunction;
 
   constructor(scope: Construct, id: string, props: EmailApiProps) {
-    super(scope, id)
+    super(scope, id);
 
     // Lambda function bundled from the email handler source
     this.emailHandler = new NodejsFunction(this, 'EmailHandler', {
@@ -96,7 +93,7 @@ export class EmailApi extends Construct {
         sourceMap: false,
         externalModules: ['@aws-sdk/*'],
       },
-    })
+    });
 
     // Grant SES send permissions
     this.emailHandler.addToRolePolicy(
@@ -104,10 +101,12 @@ export class EmailApi extends Construct {
         effect: Effect.ALLOW,
         actions: ['ses:SendEmail', 'ses:SendRawEmail'],
         resources: [
-          `arn:aws:ses:${Stack.of(this).region}:${Stack.of(this).account}:identity/${props.domainName}`,
+          `arn:aws:ses:${Stack.of(this).region}:${
+            Stack.of(this).account
+          }:identity/${props.domainName}`,
         ],
-      }),
-    )
+      })
+    );
 
     // HTTP API with CORS and stage-level throttling (10 req/s, burst 20)
     // Stage throttle applies to all routes; the /contact endpoint is the
@@ -121,39 +120,39 @@ export class EmailApi extends Construct {
         allowHeaders: ['Content-Type', 'Authorization'],
         maxAge: Duration.hours(1),
       },
-    })
+    });
 
     const lambdaIntegration = new LambdaProxyIntegration(
       'EmailHandlerIntegration',
-      this.emailHandler,
-    )
+      this.emailHandler
+    );
 
     // POST /newsletter
     this.httpApi.addRoutes({
       path: '/newsletter',
       methods: [HttpMethod.POST],
       integration: lambdaIntegration,
-    })
+    });
 
     // POST /contact
     this.httpApi.addRoutes({
       path: '/contact',
       methods: [HttpMethod.POST],
       integration: lambdaIntegration,
-    })
+    });
 
     // POST /order-confirmation
     this.httpApi.addRoutes({
       path: '/order-confirmation',
       methods: [HttpMethod.POST],
       integration: lambdaIntegration,
-    })
+    });
 
     // Apply tags
     if (props.tags) {
       Object.entries(props.tags).forEach(([key, value]) => {
-        Tags.of(this).add(key, value)
-      })
+        Tags.of(this).add(key, value);
+      });
     }
 
     // Outputs
@@ -161,6 +160,6 @@ export class EmailApi extends Construct {
       value: this.httpApi.apiEndpoint,
       description: 'Email API endpoint URL',
       exportName: `${Stack.of(this).stackName}-EmailApiUrl`,
-    })
+    });
   }
 }

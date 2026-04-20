@@ -1,12 +1,12 @@
-import { useState, useEffect, useCallback } from 'react'
-import { Link } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
-import LazyImage from '../common/LazyImage'
+import { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import LazyImage from '../common/LazyImage';
 
 function Hero() {
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const [isTransitioning, setIsTransitioning] = useState(false)
-  
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
   const slides = [
     '/slide-4.jpeg',
     '/slide-2.jpeg',
@@ -15,29 +15,32 @@ function Hero() {
     '/slide-5.jpeg',
     '/slide-6.jpeg',
     '/slide-7.jpeg',
-    '/slide-8.jpeg'
-  ]
+    '/slide-8.jpeg',
+  ];
 
   const nextSlide = useCallback(() => {
     if (!isTransitioning) {
-      setIsTransitioning(true)
-      setCurrentSlide((prev) => (prev + 1) % slides.length)
-      setTimeout(() => setIsTransitioning(false), 800)
+      setIsTransitioning(true);
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+      setTimeout(() => setIsTransitioning(false), 800);
     }
-  }, [isTransitioning, slides.length])
+  }, [isTransitioning, slides.length]);
 
-  const goToSlide = useCallback((index) => {
-    if (!isTransitioning && index !== currentSlide) {
-      setIsTransitioning(true)
-      setCurrentSlide(index)
-      setTimeout(() => setIsTransitioning(false), 800)
-    }
-  }, [isTransitioning, currentSlide])
+  const goToSlide = useCallback(
+    (index) => {
+      if (!isTransitioning && index !== currentSlide) {
+        setIsTransitioning(true);
+        setCurrentSlide(index);
+        setTimeout(() => setIsTransitioning(false), 800);
+      }
+    },
+    [isTransitioning, currentSlide]
+  );
 
   useEffect(() => {
-    const timer = setInterval(nextSlide, 5000)
-    return () => clearInterval(timer)
-  }, [nextSlide])
+    const timer = setInterval(nextSlide, 5000);
+    return () => clearInterval(timer);
+  }, [nextSlide]);
 
   return (
     <>
@@ -50,13 +53,13 @@ function Hero() {
               initial={{ opacity: 0, scale: 1.1 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ 
-                duration: 0.8, 
-                ease: [0.25, 0.46, 0.45, 0.94]
+              transition={{
+                duration: 0.8,
+                ease: [0.25, 0.46, 0.45, 0.94],
               }}
               className="absolute inset-0"
             >
-              <LazyImage 
+              <LazyImage
                 src={slides[currentSlide]}
                 alt={`YasMade embroidery slide ${currentSlide + 1}`}
                 className="w-full h-full object-cover"
@@ -64,7 +67,7 @@ function Hero() {
               />
             </motion.div>
           </AnimatePresence>
-          
+
           {/* Subtle vignette effect */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10" />
         </div>
@@ -88,19 +91,28 @@ function Hero() {
 
         {/* Action Buttons */}
         <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-20">
-          <motion.div 
+          <motion.div
             className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            <Link to="/products" className="btn-primary text-center shadow-2xl hover:shadow-violet-500/25">
+            <Link
+              to="/products"
+              className="btn-primary text-center shadow-2xl hover:shadow-violet-500/25"
+            >
               Shop Collection
             </Link>
-            <Link to="/sessions" className="btn-secondary text-center bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20">
+            <Link
+              to="/sessions"
+              className="btn-secondary text-center bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20"
+            >
               Join a Workshop
             </Link>
-            <Link to="/links" className="btn-secondary text-center bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20">
+            <Link
+              to="/links"
+              className="btn-secondary text-center bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20"
+            >
               YasMade Links
             </Link>
           </motion.div>
@@ -115,8 +127,8 @@ function Hero() {
                 onClick={() => goToSlide(index)}
                 disabled={isTransitioning}
                 className={`w-2 h-2 rounded-full transition-all duration-500 ease-out ${
-                  index === currentSlide 
-                    ? 'bg-white scale-150 shadow-lg' 
+                  index === currentSlide
+                    ? 'bg-white scale-150 shadow-lg'
                     : 'bg-white/40 hover:bg-white/70 hover:scale-125'
                 } disabled:cursor-not-allowed`}
                 aria-label={`Go to slide ${index + 1}`}
@@ -139,7 +151,7 @@ function Hero() {
         </div>
       </div> */}
     </>
-  )
+  );
 }
 
-export default Hero
+export default Hero;

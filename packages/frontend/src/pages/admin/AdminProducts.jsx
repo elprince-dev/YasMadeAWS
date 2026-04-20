@@ -1,52 +1,50 @@
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
-import { useSupabase } from '../../contexts/SupabaseContext'
-import { FiPlus, FiEdit2, FiTrash2 } from 'react-icons/fi'
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { useSupabase } from '../../contexts/SupabaseContext';
+import { FiPlus, FiEdit2, FiTrash2 } from 'react-icons/fi';
 
 function AdminProducts() {
-  const { supabase } = useSupabase()
-  const [products, setProducts] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const { supabase } = useSupabase();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchProducts()
-  }, [])
+    fetchProducts();
+  }, []);
 
   async function fetchProducts() {
     try {
       const { data, error } = await supabase
         .from('products')
         .select('*')
-        .order('created_at', { ascending: false })
+        .order('created_at', { ascending: false });
 
-      if (error) throw error
+      if (error) throw error;
 
-      setProducts(data)
+      setProducts(data);
     } catch (error) {
-      console.error('Error fetching products:', error)
-      setError('Failed to load products')
+      console.error('Error fetching products:', error);
+      setError('Failed to load products');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   async function handleDelete(id) {
-    if (!window.confirm('Are you sure you want to delete this product?')) return
+    if (!window.confirm('Are you sure you want to delete this product?'))
+      return;
 
     try {
-      const { error } = await supabase
-        .from('products')
-        .delete()
-        .eq('id', id)
+      const { error } = await supabase.from('products').delete().eq('id', id);
 
-      if (error) throw error
+      if (error) throw error;
 
-      setProducts(products.filter(product => product.id !== id))
+      setProducts(products.filter((product) => product.id !== id));
     } catch (error) {
-      console.error('Error deleting product:', error)
-      alert('Failed to delete product')
+      console.error('Error deleting product:', error);
+      alert('Failed to delete product');
     }
   }
 
@@ -75,7 +73,10 @@ function AdminProducts() {
         {loading ? (
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="animate-pulse bg-white dark:bg-gray-800 rounded-lg p-4">
+              <div
+                key={i}
+                className="animate-pulse bg-white dark:bg-gray-800 rounded-lg p-4"
+              >
                 <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
                 <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
               </div>
@@ -131,11 +132,13 @@ function AdminProducts() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        product.in_stock
-                          ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                          : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                      }`}>
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          product.in_stock
+                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                            : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                        }`}
+                      >
                         {product.in_stock ? 'In Stock' : 'Out of Stock'}
                       </span>
                     </td>
@@ -164,7 +167,7 @@ function AdminProducts() {
         )}
       </div>
     </motion.div>
-  )
+  );
 }
 
-export default AdminProducts
+export default AdminProducts;

@@ -1,14 +1,18 @@
-import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import LazyImage from '../components/common/LazyImage'
-import LoadingState from '../components/common/LoadingState'
-import { FiShoppingBag } from 'react-icons/fi'
-import { useSupabaseQuery } from '../hooks/useSupabaseQuery'
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import LazyImage from '../components/common/LazyImage';
+import LoadingState from '../components/common/LoadingState';
+import { FiShoppingBag } from 'react-icons/fi';
+import { useSupabaseQuery } from '../hooks/useSupabaseQuery';
 
 function ProductsPage() {
-  const { data: products, loading, error } = useSupabaseQuery('products', {
-    orderBy: { column: 'created_at', ascending: false }
-  })
+  const {
+    data: products,
+    loading,
+    error,
+  } = useSupabaseQuery('products', {
+    orderBy: { column: 'created_at', ascending: false },
+  });
 
   return (
     <motion.div
@@ -21,7 +25,8 @@ function ProductsPage() {
         <div className="text-center mb-12">
           <h1 className="heading-1 mb-4">Handmade Embroidery</h1>
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Each piece is carefully crafted with love and attention to detail, bringing beauty and warmth to your home.
+            Each piece is carefully crafted with love and attention to detail,
+            bringing beauty and warmth to your home.
           </p>
         </div>
 
@@ -29,7 +34,9 @@ function ProductsPage() {
           <LoadingState message="Loading products..." />
         ) : error ? (
           <div className="text-center py-12">
-            <p className="text-red-600 dark:text-red-400">Failed to load products</p>
+            <p className="text-red-600 dark:text-red-400">
+              Failed to load products
+            </p>
           </div>
         ) : (
           <>
@@ -87,7 +94,7 @@ function ProductsPage() {
         )}
       </div>
     </motion.div>
-  )
+  );
 }
 
-export default ProductsPage
+export default ProductsPage;

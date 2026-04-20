@@ -3,3 +3,7 @@
 /coverage
 /.nx/cache
 /.nx/workspace-data
+**/cdk.out
+**/dist
+packages/cdk/**/*.js
+packages/cdk/**/*.d.ts

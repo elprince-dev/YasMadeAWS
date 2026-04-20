@@ -6,7 +6,7 @@ function SkipLink() {
     >
       Skip to main content
     </a>
-  )
+  );
 }
 
-export default SkipLink
+export default SkipLink;

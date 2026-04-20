@@ -1,19 +1,31 @@
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
-import { useSupabase } from '../../contexts/SupabaseContext'
-import { FiPackage, FiEdit3, FiCalendar, FiSettings, FiMail, FiUserPlus, FiTruck, FiTag, FiImage, FiLink, FiHeart } from 'react-icons/fi'
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { useSupabase } from '../../contexts/SupabaseContext';
+import {
+  FiPackage,
+  FiEdit3,
+  FiCalendar,
+  FiSettings,
+  FiMail,
+  FiUserPlus,
+  FiTruck,
+  FiTag,
+  FiImage,
+  FiLink,
+  FiHeart,
+} from 'react-icons/fi';
 
 function AdminDashboard() {
-  const { supabase } = useSupabase()
+  const { supabase } = useSupabase();
   const [stats, setStats] = useState({
     products: 0,
     blogs: 0,
     sessions: 0,
     messages: 0,
     subscribers: 0,
-  })
-  const [loading, setLoading] = useState(true)
+  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchStats() {
@@ -28,9 +40,13 @@ function AdminDashboard() {
           supabase.from('products').select('*', { count: 'exact', head: true }),
           supabase.from('blogs').select('*', { count: 'exact', head: true }),
           supabase.from('sessions').select('*', { count: 'exact', head: true }),
-          supabase.from('contact_submissions').select('*', { count: 'exact', head: true }),
-          supabase.from('subscribers').select('*', { count: 'exact', head: true }),
-        ])
+          supabase
+            .from('contact_submissions')
+            .select('*', { count: 'exact', head: true }),
+          supabase
+            .from('subscribers')
+            .select('*', { count: 'exact', head: true }),
+        ]);
 
         setStats({
           products: productsCount,
@@ -38,16 +54,16 @@ function AdminDashboard() {
           sessions: sessionsCount,
           messages: messagesCount,
           subscribers: subscribersCount,
-        })
+        });
       } catch (error) {
-        console.error('Error fetching stats:', error)
+        console.error('Error fetching stats:', error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
 
-    fetchStats()
-  }, [supabase])
+    fetchStats();
+  }, [supabase]);
 
   const cards = [
     {
@@ -92,7 +108,7 @@ function AdminDashboard() {
       link: '/admin/orders',
       color: 'bg-orange-500',
     },
-  ]
+  ];
 
   const quickActions = [
     {
@@ -155,7 +171,7 @@ function AdminDashboard() {
       icon: FiSettings,
       color: 'bg-gray-500',
     },
-  ]
+  ];
 
   return (
     <motion.div
@@ -176,11 +192,7 @@ function AdminDashboard() {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {cards.map((card) => (
-            <Link
-              key={card.title}
-              to={card.link}
-              className="block"
-            >
+            <Link key={card.title} to={card.link} className="block">
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
                 <div className="flex items-center">
                   <div className={`${card.color} p-3 rounded-lg`}>
@@ -206,7 +218,9 @@ function AdminDashboard() {
 
         {/* Quick Actions */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">Quick Actions</h2>
+          <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">
+            Quick Actions
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {quickActions.map((action) => (
               <Link
@@ -226,7 +240,7 @@ function AdminDashboard() {
         </div>
       </div>
     </motion.div>
-  )
+  );
 }
 
-export default AdminDashboard
+export default AdminDashboard;

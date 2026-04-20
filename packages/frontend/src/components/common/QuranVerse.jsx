@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { useSupabase } from '../../contexts/SupabaseContext'
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { useSupabase } from '../../contexts/SupabaseContext';
 
 function QuranVerse() {
-  const { supabase } = useSupabase()
+  const { supabase } = useSupabase();
   const [verse, setVerse] = useState({
     text: 'Indeed, Allah is with the patient.',
     source: "Qur'an 2:153",
-  })
-  const [loading, setLoading] = useState(true)
+  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchVerse() {
@@ -17,29 +17,29 @@ function QuranVerse() {
         const { data, error } = await supabase
           .from('settings')
           .select('quran_verse, quran_verse_source')
-          .single()
-        
+          .single();
+
         if (error) {
-          console.error('Error fetching verse:', error)
-          setLoading(false)
-          return
+          console.error('Error fetching verse:', error);
+          setLoading(false);
+          return;
         }
-        
+
         if (data) {
           setVerse({
             text: data.quran_verse,
             source: data.quran_verse_source,
-          })
+          });
         }
       } catch (error) {
-        console.error('Error:', error)
+        console.error('Error:', error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
-    
-    fetchVerse()
-  }, [supabase])
+
+    fetchVerse();
+  }, [supabase]);
 
   return (
     <motion.div
@@ -68,7 +68,7 @@ function QuranVerse() {
         </div>
       )}
     </motion.div>
-  )
+  );
 }
 
-export default QuranVerse
+export default QuranVerse;

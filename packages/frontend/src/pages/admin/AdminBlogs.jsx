@@ -1,59 +1,72 @@
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
-import { useSupabase } from '../../contexts/SupabaseContext'
-import { FiPlus, FiEdit2, FiTrash2, FiEye, FiEyeOff, FiSearch, FiFilter, FiX } from 'react-icons/fi'
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { useSupabase } from '../../contexts/SupabaseContext';
+import {
+  FiPlus,
+  FiEdit2,
+  FiTrash2,
+  FiEye,
+  FiEyeOff,
+  FiSearch,
+  FiFilter,
+  FiX,
+} from 'react-icons/fi';
 
 function AdminBlogs() {
-  const { supabase } = useSupabase()
-  const [blogs, setBlogs] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  
+  const { supabase } = useSupabase();
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   // Filter states
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({
     status: 'all', // all, published, draft
-    sortBy: 'newest' // newest, oldest, title
-  })
+    sortBy: 'newest', // newest, oldest, title
+  });
 
   useEffect(() => {
-    fetchBlogs()
-  }, [])
+    fetchBlogs();
+  }, []);
 
   async function fetchBlogs() {
     try {
       const { data, error } = await supabase
         .from('blogs')
         .select('*')
-        .order('created_at', { ascending: false })
+        .order('created_at', { ascending: false });
 
-      if (error) throw error
+      if (error) throw error;
 
-      setBlogs(data)
+      setBlogs(data);
     } catch (error) {
-      console.error('Error fetching blogs:', encodeURIComponent(error.message || 'Unknown error'))
-      setError('Failed to load blog posts')
+      console.error(
+        'Error fetching blogs:',
+        encodeURIComponent(error.message || 'Unknown error')
+      );
+      setError('Failed to load blog posts');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   async function handleDelete(id) {
-    if (!window.confirm('Are you sure you want to delete this blog post?')) return
+    if (!window.confirm('Are you sure you want to delete this blog post?'))
+      return;
 
     try {
-      const { error } = await supabase
-        .from('blogs')
-        .delete()
-        .eq('id', id)
+      const { error } = await supabase.from('blogs').delete().eq('id', id);
 
-      if (error) throw error
+      if (error) throw error;
 
-      setBlogs(blogs.filter(blog => blog.id !== id))
+      setBlogs(blogs.filter((blog) => blog.id !== id));
     } catch (error) {
-      console.error('Error deleting blog:', encodeURIComponent(error.message || 'Unknown error'))
-      alert('Failed to delete blog post')
+      console.error(
+        'Error deleting blog:',
+        encodeURIComponent(error.message || 'Unknown error')
+      );
+      alert('Failed to delete blog post');
     }
   }
 
@@ -62,55 +75,62 @@ function AdminBlogs() {
       const { error } = await supabase
         .from('blogs')
         .update({ published: !currentStatus })
-        .eq('id', id)
+        .eq('id', id);
 
-      if (error) throw error
+      if (error) throw error;
 
-      setBlogs(blogs.map(blog => 
-        blog.id === id ? { ...blog, published: !currentStatus } : blog
-      ))
+      setBlogs(
+        blogs.map((blog) =>
+          blog.id === id ? { ...blog, published: !currentStatus } : blog
+        )
+      );
     } catch (error) {
-      console.error('Error updating blog status:', encodeURIComponent(error.message || 'Unknown error'))
-      alert('Failed to update blog status')
+      console.error(
+        'Error updating blog status:',
+        encodeURIComponent(error.message || 'Unknown error')
+      );
+      alert('Failed to update blog status');
     }
   }
 
   // Reset all filters
   const resetFilters = () => {
-    setSearchTerm('')
+    setSearchTerm('');
     setFilters({
       status: 'all',
-      sortBy: 'newest'
-    })
-  }
+      sortBy: 'newest',
+    });
+  };
 
   // Filter and sort blogs
-  const filteredBlogs = blogs.filter(blog => {
-    // Text search
-    const searchMatch = 
-      blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      blog.excerpt?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      blog.content.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredBlogs = blogs
+    .filter((blog) => {
+      // Text search
+      const searchMatch =
+        blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        blog.excerpt?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        blog.content.toLowerCase().includes(searchTerm.toLowerCase());
 
-    // Status filter
-    const statusMatch = 
-      filters.status === 'all' ||
-      (filters.status === 'published' && blog.published) ||
-      (filters.status === 'draft' && !blog.published)
+      // Status filter
+      const statusMatch =
+        filters.status === 'all' ||
+        (filters.status === 'published' && blog.published) ||
+        (filters.status === 'draft' && !blog.published);
 
-    return searchMatch && statusMatch
-  }).sort((a, b) => {
-    // Sort blogs
-    switch (filters.sortBy) {
-      case 'oldest':
-        return new Date(a.created_at) - new Date(b.created_at)
-      case 'title':
-        return a.title.localeCompare(b.title)
-      case 'newest':
-      default:
-        return new Date(b.created_at) - new Date(a.created_at)
-    }
-  })
+      return searchMatch && statusMatch;
+    })
+    .sort((a, b) => {
+      // Sort blogs
+      switch (filters.sortBy) {
+        case 'oldest':
+          return new Date(a.created_at) - new Date(b.created_at);
+        case 'title':
+          return a.title.localeCompare(b.title);
+        case 'newest':
+        default:
+          return new Date(b.created_at) - new Date(a.created_at);
+      }
+    });
 
   return (
     <motion.div
@@ -147,7 +167,9 @@ function AdminBlogs() {
             <div className="flex flex-wrap items-center gap-4">
               <select
                 value={filters.status}
-                onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
+                onChange={(e) =>
+                  setFilters((prev) => ({ ...prev, status: e.target.value }))
+                }
                 className="px-4 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-primary-500 focus:border-primary-500"
               >
                 <option value="all">All Posts</option>
@@ -157,7 +179,9 @@ function AdminBlogs() {
 
               <select
                 value={filters.sortBy}
-                onChange={(e) => setFilters(prev => ({ ...prev, sortBy: e.target.value }))}
+                onChange={(e) =>
+                  setFilters((prev) => ({ ...prev, sortBy: e.target.value }))
+                }
                 className="px-4 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-primary-500 focus:border-primary-500"
               >
                 <option value="newest">Newest First</option>
@@ -179,7 +203,8 @@ function AdminBlogs() {
           <div className="mt-4 flex items-center text-sm text-gray-600 dark:text-gray-400">
             <FiFilter className="w-4 h-4 mr-2" />
             <span>
-              Showing {filteredBlogs.length} {filters.status !== 'all' ? filters.status : ''} posts
+              Showing {filteredBlogs.length}{' '}
+              {filters.status !== 'all' ? filters.status : ''} posts
               {searchTerm && ` matching "${searchTerm}"`}
             </span>
           </div>
@@ -194,7 +219,10 @@ function AdminBlogs() {
         {loading ? (
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="animate-pulse bg-white dark:bg-gray-800 rounded-lg p-4">
+              <div
+                key={i}
+                className="animate-pulse bg-white dark:bg-gray-800 rounded-lg p-4"
+              >
                 <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
                 <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
               </div>
@@ -221,7 +249,10 @@ function AdminBlogs() {
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {filteredBlogs.map((blog) => (
-                  <tr key={blog.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
+                  <tr
+                    key={blog.id}
+                    className="hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-200 dark:border-gray-700"
+                  >
                     <td className="px-6 py-4">
                       <div className="flex items-center">
                         {blog.image_url && (
@@ -242,11 +273,13 @@ function AdminBlogs() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        blog.published
-                          ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                          : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                      }`}>
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          blog.published
+                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                            : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                        }`}
+                      >
                         {blog.published ? 'Published' : 'Draft'}
                       </span>
                     </td>
@@ -282,7 +315,10 @@ function AdminBlogs() {
                 ))}
                 {filteredBlogs.length === 0 && (
                   <tr>
-                    <td colSpan="4" className="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                    <td
+                      colSpan="4"
+                      className="px-6 py-4 text-center text-gray-500 dark:text-gray-400"
+                    >
                       No blog posts found
                       {searchTerm && ' matching your search criteria'}
                     </td>
@@ -294,7 +330,7 @@ function AdminBlogs() {
         )}
       </div>
     </motion.div>
-  )
+  );
 }
 
-export default AdminBlogs
+export default AdminBlogs;

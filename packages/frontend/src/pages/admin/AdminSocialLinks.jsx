@@ -1,15 +1,29 @@
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { useSupabase } from '../../contexts/SupabaseContext'
-import { useToast } from '../../contexts/ToastContext'
-import { FiSave, FiPlus, FiTrash2, FiLink, FiMail, FiMapPin, FiInstagram, FiFacebook, FiTwitter, FiYoutube, FiLinkedin, FiGithub, FiGlobe } from 'react-icons/fi'
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { useSupabase } from '../../contexts/SupabaseContext';
+import { useToast } from '../../contexts/ToastContext';
+import {
+  FiSave,
+  FiPlus,
+  FiTrash2,
+  FiLink,
+  FiMail,
+  FiMapPin,
+  FiInstagram,
+  FiFacebook,
+  FiTwitter,
+  FiYoutube,
+  FiLinkedin,
+  FiGithub,
+  FiGlobe,
+} from 'react-icons/fi';
 
 function AdminSocialLinks() {
-  const { supabase } = useSupabase()
-  const { addToast } = useToast()
-  const [socialLinks, setSocialLinks] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
+  const { supabase } = useSupabase();
+  const { addToast } = useToast();
+  const [socialLinks, setSocialLinks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const iconOptions = [
     { value: 'FiMail', label: 'Email', icon: FiMail },
@@ -21,26 +35,26 @@ function AdminSocialLinks() {
     { value: 'FiGithub', label: 'GitHub', icon: FiGithub },
     { value: 'FiMapPin', label: 'Location', icon: FiMapPin },
     { value: 'FiGlobe', label: 'Website', icon: FiGlobe },
-    { value: 'FiLink', label: 'Other', icon: FiLink }
-  ]
+    { value: 'FiLink', label: 'Other', icon: FiLink },
+  ];
 
   useEffect(() => {
-    fetchSettings()
-  }, [])
+    fetchSettings();
+  }, []);
 
   async function fetchSettings() {
     try {
       const { data, error } = await supabase
         .from('settings')
         .select('social_links')
-        .single()
+        .single();
 
-      if (error) throw error
-      
+      if (error) throw error;
+
       // Convert old format to new array format if needed
-      const links = data.social_links || {}
+      const links = data.social_links || {};
       if (Array.isArray(links)) {
-        setSocialLinks(links)
+        setSocialLinks(links);
       } else {
         // Migrate old object format to new array format
         const migratedLinks = Object.entries(links)
@@ -49,59 +63,68 @@ function AdminSocialLinks() {
             id: Date.now() + index,
             title: key.charAt(0).toUpperCase() + key.slice(1),
             url: key === 'email' ? `mailto:${value}` : value,
-            icon: key === 'email' ? 'FiMail' : 
-                  key === 'instagram' ? 'FiInstagram' :
-                  key === 'facebook' ? 'FiFacebook' :
-                  key === 'location' ? 'FiMapPin' : 'FiLink'
-          }))
-        setSocialLinks(migratedLinks)
+            icon:
+              key === 'email'
+                ? 'FiMail'
+                : key === 'instagram'
+                ? 'FiInstagram'
+                : key === 'facebook'
+                ? 'FiFacebook'
+                : key === 'location'
+                ? 'FiMapPin'
+                : 'FiLink',
+          }));
+        setSocialLinks(migratedLinks);
       }
     } catch (error) {
-      console.error('Error fetching settings:', error)
+      console.error('Error fetching settings:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   const addLink = () => {
-    setSocialLinks(prev => [...prev, {
-      id: Date.now(),
-      title: '',
-      url: '',
-      icon: 'FiLink'
-    }])
-  }
+    setSocialLinks((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        title: '',
+        url: '',
+        icon: 'FiLink',
+      },
+    ]);
+  };
 
   const updateLink = (id, field, value) => {
-    setSocialLinks(prev => prev.map(link => 
-      link.id === id ? { ...link, [field]: value } : link
-    ))
-  }
+    setSocialLinks((prev) =>
+      prev.map((link) => (link.id === id ? { ...link, [field]: value } : link))
+    );
+  };
 
   const removeLink = (id) => {
-    setSocialLinks(prev => prev.filter(link => link.id !== id))
-  }
+    setSocialLinks((prev) => prev.filter((link) => link.id !== id));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setSaving(true)
+    e.preventDefault();
+    setSaving(true);
 
     try {
       const { error } = await supabase
         .from('settings')
         .update({ social_links: socialLinks })
-        .eq('id', '00000000-0000-0000-0000-000000000000')
+        .eq('id', '00000000-0000-0000-0000-000000000000');
 
-      if (error) throw error
+      if (error) throw error;
 
-      addToast('Social links updated successfully!', 'success')
+      addToast('Social links updated successfully!', 'success');
     } catch (error) {
-      console.error('Error updating social links:', error)
-      addToast('Failed to update social links', 'error')
+      console.error('Error updating social links:', error);
+      addToast('Failed to update social links', 'error');
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -113,7 +136,7 @@ function AdminSocialLinks() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -130,7 +153,9 @@ function AdminSocialLinks() {
           <div className="space-y-6">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Social Links</h2>
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Social Links
+                </h2>
                 <button
                   type="button"
                   onClick={addLink}
@@ -143,9 +168,14 @@ function AdminSocialLinks() {
 
               <div className="space-y-4">
                 {socialLinks.map((link) => {
-                  const IconComponent = iconOptions.find(opt => opt.value === link.icon)?.icon || FiLink
+                  const IconComponent =
+                    iconOptions.find((opt) => opt.value === link.icon)?.icon ||
+                    FiLink;
                   return (
-                    <div key={link.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                    <div
+                      key={link.id}
+                      className="border border-gray-200 dark:border-gray-700 rounded-lg p-4"
+                    >
                       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -154,12 +184,14 @@ function AdminSocialLinks() {
                           <input
                             type="text"
                             value={link.title}
-                            onChange={(e) => updateLink(link.id, 'title', e.target.value)}
+                            onChange={(e) =>
+                              updateLink(link.id, 'title', e.target.value)
+                            }
                             className="w-full px-3 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
                             placeholder="Link title"
                           />
                         </div>
-                        
+
                         <div className="md:col-span-2">
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             URL
@@ -167,12 +199,14 @@ function AdminSocialLinks() {
                           <input
                             type="url"
                             value={link.url}
-                            onChange={(e) => updateLink(link.id, 'url', e.target.value)}
+                            onChange={(e) =>
+                              updateLink(link.id, 'url', e.target.value)
+                            }
                             className="w-full px-3 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
                             placeholder="https://example.com or mailto:email@domain.com"
                           />
                         </div>
-                        
+
                         <div className="flex items-end space-x-2">
                           <div className="flex-1">
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -180,10 +214,12 @@ function AdminSocialLinks() {
                             </label>
                             <select
                               value={link.icon}
-                              onChange={(e) => updateLink(link.id, 'icon', e.target.value)}
+                              onChange={(e) =>
+                                updateLink(link.id, 'icon', e.target.value)
+                              }
                               className="w-full px-3 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
                             >
-                              {iconOptions.map(option => (
+                              {iconOptions.map((option) => (
                                 <option key={option.value} value={option.value}>
                                   {option.label}
                                 </option>
@@ -200,19 +236,22 @@ function AdminSocialLinks() {
                           </button>
                         </div>
                       </div>
-                      
+
                       <div className="mt-3 flex items-center text-sm text-gray-500 dark:text-gray-400">
                         <IconComponent className="w-4 h-4 mr-2" />
                         Preview: {link.title || 'Untitled'}
                       </div>
                     </div>
-                  )
+                  );
                 })}
-                
+
                 {socialLinks.length === 0 && (
                   <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                     <FiLink className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p>No social links added yet. Click "Add Link" to get started.</p>
+                    <p>
+                      No social links added yet. Click "Add Link" to get
+                      started.
+                    </p>
                   </div>
                 )}
               </div>
@@ -230,7 +269,7 @@ function AdminSocialLinks() {
         </div>
       </div>
     </motion.div>
-  )
+  );
 }
 
-export default AdminSocialLinks
+export default AdminSocialLinks;

@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { useSupabase } from '../../contexts/SupabaseContext'
-import { FiPlus, FiEdit2, FiTrash2 } from 'react-icons/fi'
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { useSupabase } from '../../contexts/SupabaseContext';
+import { FiPlus, FiEdit2, FiTrash2 } from 'react-icons/fi';
 
 function AdminPromoCodes() {
-  const { supabase } = useSupabase()
-  const [promoCodes, setPromoCodes] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [showForm, setShowForm] = useState(false)
-  const [editingCode, setEditingCode] = useState(null)
+  const { supabase } = useSupabase();
+  const [promoCodes, setPromoCodes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [editingCode, setEditingCode] = useState(null);
   const [formData, setFormData] = useState({
     code: '',
     discount_type: 'percentage',
@@ -19,64 +19,66 @@ function AdminPromoCodes() {
     starts_at: '',
     expires_at: '',
     max_uses: '',
-    is_active: true
-  })
+    is_active: true,
+  });
 
   useEffect(() => {
-    fetchPromoCodes()
-  }, [])
+    fetchPromoCodes();
+  }, []);
 
   async function fetchPromoCodes() {
     try {
       const { data, error } = await supabase
         .from('promo_codes')
         .select('*')
-        .order('created_at', { ascending: false })
+        .order('created_at', { ascending: false });
 
-      if (error) throw error
+      if (error) throw error;
 
-      setPromoCodes(data)
+      setPromoCodes(data);
     } catch (error) {
-      console.error('Error fetching promo codes:', error)
-      setError('Failed to load promo codes')
+      console.error('Error fetching promo codes:', error);
+      setError('Failed to load promo codes');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target
-    setFormData(prev => ({
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }))
-  }
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       const codeData = {
         ...formData,
         discount_value: parseFloat(formData.discount_value),
-        min_purchase_amount: formData.min_purchase_amount ? parseFloat(formData.min_purchase_amount) : null,
-        max_discount_amount: formData.max_discount_amount ? parseFloat(formData.max_discount_amount) : null,
-        max_uses: formData.max_uses ? parseInt(formData.max_uses) : null
-      }
+        min_purchase_amount: formData.min_purchase_amount
+          ? parseFloat(formData.min_purchase_amount)
+          : null,
+        max_discount_amount: formData.max_discount_amount
+          ? parseFloat(formData.max_discount_amount)
+          : null,
+        max_uses: formData.max_uses ? parseInt(formData.max_uses) : null,
+      };
 
       const { error } = editingCode
         ? await supabase
             .from('promo_codes')
             .update(codeData)
             .eq('id', editingCode.id)
-        : await supabase
-            .from('promo_codes')
-            .insert([codeData])
+        : await supabase.from('promo_codes').insert([codeData]);
 
-      if (error) throw error
+      if (error) throw error;
 
-      await fetchPromoCodes()
-      setShowForm(false)
-      setEditingCode(null)
+      await fetchPromoCodes();
+      setShowForm(false);
+      setEditingCode(null);
       setFormData({
         code: '',
         discount_type: 'percentage',
@@ -86,16 +88,16 @@ function AdminPromoCodes() {
         starts_at: '',
         expires_at: '',
         max_uses: '',
-        is_active: true
-      })
+        is_active: true,
+      });
     } catch (error) {
-      console.error('Error saving promo code:', error)
-      setError('Failed to save promo code')
+      console.error('Error saving promo code:', error);
+      setError('Failed to save promo code');
     }
-  }
+  };
 
   const handleEdit = (code) => {
-    setEditingCode(code)
+    setEditingCode(code);
     setFormData({
       code: code.code,
       discount_type: code.discount_type,
@@ -103,30 +105,33 @@ function AdminPromoCodes() {
       min_purchase_amount: code.min_purchase_amount?.toString() || '',
       max_discount_amount: code.max_discount_amount?.toString() || '',
       starts_at: new Date(code.starts_at).toISOString().split('T')[0],
-      expires_at: code.expires_at ? new Date(code.expires_at).toISOString().split('T')[0] : '',
+      expires_at: code.expires_at
+        ? new Date(code.expires_at).toISOString().split('T')[0]
+        : '',
       max_uses: code.max_uses?.toString() || '',
-      is_active: code.is_active
-    })
-    setShowForm(true)
-  }
+      is_active: code.is_active,
+    });
+    setShowForm(true);
+  };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this promo code?')) return
+    if (!window.confirm('Are you sure you want to delete this promo code?'))
+      return;
 
     try {
       const { error } = await supabase
         .from('promo_codes')
         .delete()
-        .eq('id', id)
+        .eq('id', id);
 
-      if (error) throw error
+      if (error) throw error;
 
-      setPromoCodes(promoCodes.filter(code => code.id !== id))
+      setPromoCodes(promoCodes.filter((code) => code.id !== id));
     } catch (error) {
-      console.error('Error deleting promo code:', error)
-      setError('Failed to delete promo code')
+      console.error('Error deleting promo code:', error);
+      setError('Failed to delete promo code');
     }
-  }
+  };
 
   return (
     <motion.div
@@ -140,7 +145,7 @@ function AdminPromoCodes() {
           <h1 className="heading-2">Manage Promo Codes</h1>
           <button
             onClick={() => {
-              setEditingCode(null)
+              setEditingCode(null);
               setFormData({
                 code: '',
                 discount_type: 'percentage',
@@ -150,9 +155,9 @@ function AdminPromoCodes() {
                 starts_at: '',
                 expires_at: '',
                 max_uses: '',
-                is_active: true
-              })
-              setShowForm(true)
+                is_active: true,
+              });
+              setShowForm(true);
             }}
             className="btn-primary"
           >
@@ -206,7 +211,8 @@ function AdminPromoCodes() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Discount Value {formData.discount_type === 'percentage' ? '(%)' : '(CAD)'}
+                    Discount Value{' '}
+                    {formData.discount_type === 'percentage' ? '(%)' : '(CAD)'}
                   </label>
                   <input
                     type="number"
@@ -215,8 +221,14 @@ function AdminPromoCodes() {
                     onChange={handleInputChange}
                     required
                     min="0"
-                    step={formData.discount_type === 'percentage' ? '1' : '0.01'}
-                    max={formData.discount_type === 'percentage' ? '100' : undefined}
+                    step={
+                      formData.discount_type === 'percentage' ? '1' : '0.01'
+                    }
+                    max={
+                      formData.discount_type === 'percentage'
+                        ? '100'
+                        : undefined
+                    }
                     className="w-full px-4 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
                   />
                 </div>
@@ -303,7 +315,10 @@ function AdminPromoCodes() {
                     onChange={handleInputChange}
                     className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                   />
-                  <label htmlFor="is_active" className="ml-2 block text-sm text-gray-900 dark:text-gray-100">
+                  <label
+                    htmlFor="is_active"
+                    className="ml-2 block text-sm text-gray-900 dark:text-gray-100"
+                  >
                     Active
                   </label>
                 </div>
@@ -316,10 +331,7 @@ function AdminPromoCodes() {
                   >
                     Cancel
                   </button>
-                  <button
-                    type="submit"
-                    className="btn-primary"
-                  >
+                  <button type="submit" className="btn-primary">
                     {editingCode ? 'Update' : 'Add'} Code
                   </button>
                 </div>
@@ -331,7 +343,10 @@ function AdminPromoCodes() {
         {loading ? (
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="animate-pulse bg-white dark:bg-gray-800 rounded-lg p-4">
+              <div
+                key={i}
+                className="animate-pulse bg-white dark:bg-gray-800 rounded-lg p-4"
+              >
                 <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
                 <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
               </div>
@@ -395,13 +410,18 @@ function AdminPromoCodes() {
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        code.is_active && (!code.expires_at || new Date(code.expires_at) > new Date())
-                          ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                          : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                      }`}>
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          code.is_active &&
+                          (!code.expires_at ||
+                            new Date(code.expires_at) > new Date())
+                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                            : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                        }`}
+                      >
                         {code.is_active
-                          ? code.expires_at && new Date(code.expires_at) <= new Date()
+                          ? code.expires_at &&
+                            new Date(code.expires_at) <= new Date()
                             ? 'Expired'
                             : 'Active'
                           : 'Inactive'}
@@ -425,7 +445,10 @@ function AdminPromoCodes() {
                 ))}
                 {promoCodes.length === 0 && (
                   <tr>
-                    <td colSpan="5" className="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                    <td
+                      colSpan="5"
+                      className="px-6 py-4 text-center text-gray-500 dark:text-gray-400"
+                    >
                       No promo codes found
                     </td>
                   </tr>
@@ -436,7 +459,7 @@ function AdminPromoCodes() {
         )}
       </div>
     </motion.div>
-  )
+  );
 }
 
-export default AdminPromoCodes
+export default AdminPromoCodes;

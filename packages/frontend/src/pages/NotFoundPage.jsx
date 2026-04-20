@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 function NotFoundPage() {
   return (
@@ -10,14 +10,17 @@ function NotFoundPage() {
       className="flex min-h-screen items-center justify-center px-4 py-24"
     >
       <div className="text-center">
-        <h1 className="text-9xl font-bold text-primary-600 dark:text-primary-400">404</h1>
-        <h2 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl">Page not found</h2>
-        <p className="mt-6 text-base leading-7 text-gray-600 dark:text-gray-400">Sorry, we couldn't find the page you're looking for.</p>
+        <h1 className="text-9xl font-bold text-primary-600 dark:text-primary-400">
+          404
+        </h1>
+        <h2 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
+          Page not found
+        </h2>
+        <p className="mt-6 text-base leading-7 text-gray-600 dark:text-gray-400">
+          Sorry, we couldn't find the page you're looking for.
+        </p>
         <div className="mt-10 flex items-center justify-center gap-x-6">
-          <Link
-            to="/"
-            className="btn-primary"
-          >
+          <Link to="/" className="btn-primary">
             Go back home
           </Link>
           <Link
@@ -29,7 +32,7 @@ function NotFoundPage() {
         </div>
       </div>
     </motion.div>
-  )
+  );
 }
 
-export default NotFoundPage
+export default NotFoundPage;

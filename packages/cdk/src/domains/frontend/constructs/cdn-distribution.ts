@@ -1,26 +1,35 @@
-import { CfnOutput, Stack, Tags } from "aws-cdk-lib"
-import { Certificate } from "aws-cdk-lib/aws-certificatemanager"
-import { AllowedMethods, CachePolicy, Distribution, ErrorResponse, HttpVersion, PriceClass, SecurityPolicyProtocol, ViewerProtocolPolicy } from "aws-cdk-lib/aws-cloudfront"
-import { S3BucketOrigin } from "aws-cdk-lib/aws-cloudfront-origins"
-import { Bucket, IBucket } from "aws-cdk-lib/aws-s3"
-import { Construct } from "constructs"
+import { CfnOutput, Stack, Tags } from 'aws-cdk-lib';
+import { Certificate } from 'aws-cdk-lib/aws-certificatemanager';
+import {
+  AllowedMethods,
+  CachePolicy,
+  Distribution,
+  ErrorResponse,
+  HttpVersion,
+  PriceClass,
+  SecurityPolicyProtocol,
+  ViewerProtocolPolicy,
+} from 'aws-cdk-lib/aws-cloudfront';
+import { S3BucketOrigin } from 'aws-cdk-lib/aws-cloudfront-origins';
+import { Bucket, IBucket } from 'aws-cdk-lib/aws-s3';
+import { Construct } from 'constructs';
 
 // Props for CDN Distribution construct
 export interface CdnDistributionProps {
   // S3 bucket origin
-  readonly originBucket: IBucket
+  readonly originBucket: IBucket;
   // SSL certificate for custom domain
-  readonly certificate?: Certificate
+  readonly certificate?: Certificate;
   // Custom domain names
-  readonly domainNames?: string[]
+  readonly domainNames?: string[];
   // Distribution comment/description
-  readonly comment: string
+  readonly comment: string;
   // Default root object (usually index.html)
-  readonly defaultRootObject: string
+  readonly defaultRootObject: string;
   // Error page configurations for SPA routing
-  readonly errorConfigurations: ErrorResponse[]
+  readonly errorConfigurations: ErrorResponse[];
   // Resource tags
-  readonly tags?: { [key: string]: string }
+  readonly tags?: { [key: string]: string };
 }
 
 /**
@@ -28,81 +37,80 @@ export interface CdnDistributionProps {
  * Creates CDN distribution optimized for React SPA hosting
  */
 export class CdnDistribution extends Construct {
-    // The CloudFront distribution
-    public readonly distribution: Distribution;
+  // The CloudFront distribution
+  public readonly distribution: Distribution;
 
-    constructor(scope: Construct, id: string, props: CdnDistributionProps){
-        super(scope, id)
+  constructor(scope: Construct, id: string, props: CdnDistributionProps) {
+    super(scope, id);
 
-        // Import the bucket by attributes to avoid cross-stack cyclic dependency.
-        // When using S3BucketOrigin.withOriginAccessControl with a direct bucket
-        // reference from another stack, CDK adds a bucket policy that references
-        // the distribution, creating a circular dependency.
-        const importedBucket = Bucket.fromBucketAttributes(this, 'ImportedBucket', {
-            bucketName: props.originBucket.bucketName,
-            bucketArn: props.originBucket.bucketArn,
-            bucketRegionalDomainName: props.originBucket.bucketRegionalDomainName,
-        })
+    // Import the bucket by attributes to avoid cross-stack cyclic dependency.
+    // When using S3BucketOrigin.withOriginAccessControl with a direct bucket
+    // reference from another stack, CDK adds a bucket policy that references
+    // the distribution, creating a circular dependency.
+    const importedBucket = Bucket.fromBucketAttributes(this, 'ImportedBucket', {
+      bucketName: props.originBucket.bucketName,
+      bucketArn: props.originBucket.bucketArn,
+      bucketRegionalDomainName: props.originBucket.bucketRegionalDomainName,
+    });
 
-        const s3Origin = S3BucketOrigin.withOriginAccessControl(importedBucket)
-        
-        //Create CloudFront distribution
-        this.distribution = new Distribution(this, 'Distribution', {
-            // Default behavior for all requests
-            defaultBehavior: {
-                origin: s3Origin,
-                // Redirect HTTP to HTTPS
-                viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-                // Allow GET and HEAD methods
-                allowedMethods: AllowedMethods.ALLOW_GET_HEAD,
-                // Optimized caching for static assets
-                cachePolicy: CachePolicy.CACHING_OPTIMIZED,
-                // Enable compression
-                compress: true
-            },
-            // Additional cache behaviors for different file types
-            additionalBehaviors: {
-                // Cache static assets longer (CSS, JS, images)
-                '/static/*': {
-                    origin: s3Origin,
-                    viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-                    cachePolicy: CachePolicy.CACHING_OPTIMIZED,
-                    compress: true
-                },
-                // Don't cache service worker (for PWA updates)
-                '/service-worker.js': {
-                    origin: s3Origin,
-                    viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-                    cachePolicy: CachePolicy.CACHING_DISABLED,
-                    compress: false
-                }
-            },
-            // Custom domain configuration
-            domainNames: props.domainNames,
-            certificate: props.certificate,
-            
-            // Default file to serve
-            defaultRootObject: props.defaultRootObject,
+    const s3Origin = S3BucketOrigin.withOriginAccessControl(importedBucket);
 
-            // Error responses for SPA routing (404 -> index.html)
-            errorResponses: props.errorConfigurations,
+    //Create CloudFront distribution
+    this.distribution = new Distribution(this, 'Distribution', {
+      // Default behavior for all requests
+      defaultBehavior: {
+        origin: s3Origin,
+        // Redirect HTTP to HTTPS
+        viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        // Allow GET and HEAD methods
+        allowedMethods: AllowedMethods.ALLOW_GET_HEAD,
+        // Optimized caching for static assets
+        cachePolicy: CachePolicy.CACHING_OPTIMIZED,
+        // Enable compression
+        compress: true,
+      },
+      // Additional cache behaviors for different file types
+      additionalBehaviors: {
+        // Cache static assets longer (CSS, JS, images)
+        '/static/*': {
+          origin: s3Origin,
+          viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+          cachePolicy: CachePolicy.CACHING_OPTIMIZED,
+          compress: true,
+        },
+        // Don't cache service worker (for PWA updates)
+        '/service-worker.js': {
+          origin: s3Origin,
+          viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+          cachePolicy: CachePolicy.CACHING_DISABLED,
+          compress: false,
+        },
+      },
+      // Custom domain configuration
+      domainNames: props.domainNames,
+      certificate: props.certificate,
 
-            // Distribution settings
-            comment: props.comment,
-            enabled: true,
-            httpVersion: HttpVersion.HTTP2_AND_3,
-            priceClass: PriceClass.PRICE_CLASS_100, // US, Canada, Europe
-            minimumProtocolVersion: SecurityPolicyProtocol.TLS_V1_2_2021
-        })
+      // Default file to serve
+      defaultRootObject: props.defaultRootObject,
 
-        // Apply tags if provided
-        if (props.tags) {
-            Object.entries(props.tags).forEach(([key, value]) => {
-                Tags.of(this.distribution).add(key, value)
-            })
-        }
+      // Error responses for SPA routing (404 -> index.html)
+      errorResponses: props.errorConfigurations,
 
-        // Distribution outputs are exported by the parent stack
+      // Distribution settings
+      comment: props.comment,
+      enabled: true,
+      httpVersion: HttpVersion.HTTP2_AND_3,
+      priceClass: PriceClass.PRICE_CLASS_100, // US, Canada, Europe
+      minimumProtocolVersion: SecurityPolicyProtocol.TLS_V1_2_2021,
+    });
+
+    // Apply tags if provided
+    if (props.tags) {
+      Object.entries(props.tags).forEach(([key, value]) => {
+        Tags.of(this.distribution).add(key, value);
+      });
     }
 
+    // Distribution outputs are exported by the parent stack
+  }
 }

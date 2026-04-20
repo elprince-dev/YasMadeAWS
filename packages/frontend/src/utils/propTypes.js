@@ -6,8 +6,8 @@ export const ProductType = {
   price: 'number',
   image_url: 'string',
   in_stock: 'boolean',
-  created_at: 'string'
-}
+  created_at: 'string',
+};
 
 export const SessionType = {
   id: 'string',
@@ -17,8 +17,8 @@ export const SessionType = {
   session_time: 'string',
   price: 'number',
   image_url: 'string',
-  created_at: 'string'
-}
+  created_at: 'string',
+};
 
 export const BlogType = {
   id: 'string',
@@ -27,11 +27,11 @@ export const BlogType = {
   excerpt: 'string',
   image_url: 'string',
   published: 'boolean',
-  created_at: 'string'
-}
+  created_at: 'string',
+};
 
 export const UserType = {
   id: 'string',
   email: 'string',
-  created_at: 'string'
-}
+  created_at: 'string',
+};

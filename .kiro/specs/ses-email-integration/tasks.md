@@ -7,6 +7,7 @@ Build on the existing CDK scaffolding to wire up frontend hosting stacks, add SE
 ## Tasks
 
 - [x] 1. Refactor CDK stack structure and wire app entry point
+
   - [x] 1.1 Create CertificateStack that creates the Route53 hosted zone and ACM certificate (refactored from DnsStack to break circular dependency)
     - Reuse existing `SslCertificate` and `DomainSetup` constructs (split hosted zone creation from DNS record creation)
     - Certificate must be in us-east-1 for CloudFront
@@ -23,9 +24,11 @@ Build on the existing CDK scaffolding to wire up frontend hosting stacks, add SE
     - _Requirements: 1.1, 1.2, 2.1, 2.2, 2.3, 3.1, 3.2_
 
 - [x] 2. Checkpoint - Ensure CDK synth succeeds and all tests pass
+
   - Ensure all tests pass, ask the user if questions arise.
 
 - [x] 3. Create SES domain identity construct
+
   - [x] 3.1 Create `packages/cdk/src/domains/email/constructs/ses-identity.ts`
     - Create EmailIdentity for yasmade.net domain with DKIM
     - Configure MAIL FROM subdomain (mail.yasmade.net) for SPF alignment
@@ -36,6 +39,7 @@ Build on the existing CDK scaffolding to wire up frontend hosting stacks, add SE
     - _Requirements: 4.1, 4.2, 4.3_
 
 - [x] 4. Create Lambda email handler
+
   - [x] 4.1 Create `packages/cdk/src/domains/email/lambda/email-handler.ts` with route-based dispatch
     - Implement request validation for all three endpoint types (newsletter, contact, order-confirmation)
     - Implement JWT validation for admin endpoints using Supabase JWT verification
@@ -83,9 +87,11 @@ Build on the existing CDK scaffolding to wire up frontend hosting stacks, add SE
     - **Validates: Requirements 8.1, 8.2, 8.3, 8.4**
 
 - [x] 5. Checkpoint - Ensure all Lambda handler tests pass
+
   - Ensure all tests pass, ask the user if questions arise.
 
 - [x] 6. Create Email API construct and Email Stack
+
   - [x] 6.1 Create `packages/cdk/src/domains/email/constructs/email-api.ts`
     - Create Lambda function with Node.js 20.x runtime bundled with the email handler
     - Grant Lambda ses:SendEmail and ses:SendRawEmail permissions
@@ -106,9 +112,11 @@ Build on the existing CDK scaffolding to wire up frontend hosting stacks, add SE
     - _Requirements: 5.1, 5.7, 5.9_
 
 - [x] 7. Checkpoint - Ensure CDK synth succeeds with all stacks and tests pass
+
   - Ensure all tests pass, ask the user if questions arise.
 
 - [x] 8. Update frontend to use Email API
+
   - [x] 8.1 Add `VITE_EMAIL_API_URL` to `.env.example` and create an email API utility module
     - Create `packages/frontend/src/utils/emailApi.js` with functions: sendNewsletter, sendContactNotification, sendOrderConfirmation
     - _Requirements: 9.6_
@@ -126,6 +134,7 @@ Build on the existing CDK scaffolding to wire up frontend hosting stacks, add SE
     - _Requirements: 9.3_
 
 - [x] 9. Remove dead code and dependencies
+
   - [x] 9.1 Remove Stripe dependencies and edge functions
     - Remove `@stripe/stripe-js` and `stripe` from `packages/frontend/package.json`
     - Delete `packages/frontend/supabase/functions/stripe-product/`
@@ -137,6 +146,7 @@ Build on the existing CDK scaffolding to wire up frontend hosting stacks, add SE
     - _Requirements: 9.4, 9.5_
 
 - [x] 10. Update environment configuration
+
   - [x] 10.1 Add production environment config to CDK
     - Create `packages/cdk/src/shared/config/environments/prod.ts` with `yasmade.net` domain
     - Update dev config if needed

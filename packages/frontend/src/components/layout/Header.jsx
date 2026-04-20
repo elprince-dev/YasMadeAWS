@@ -1,66 +1,100 @@
-import { useState, useEffect } from 'react'
-import { NavLink, Link, useLocation } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { useTheme } from '../../contexts/ThemeContext'
-import { useSupabase } from '../../contexts/SupabaseContext'
-import { FiSun, FiMoon, FiMenu, FiX, FiLogOut, FiLogIn, FiShoppingCart } from 'react-icons/fi'
-import Logo from '../common/Logo'
-import { useCart } from '../../stores/cartStore'
-import { preloadRoute } from '../../utils/performance'
+import { useState, useEffect } from 'react';
+import { NavLink, Link, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { useTheme } from '../../contexts/ThemeContext';
+import { useSupabase } from '../../contexts/SupabaseContext';
+import {
+  FiSun,
+  FiMoon,
+  FiMenu,
+  FiX,
+  FiLogOut,
+  FiLogIn,
+  FiShoppingCart,
+} from 'react-icons/fi';
+import Logo from '../common/Logo';
+import { useCart } from '../../stores/cartStore';
+import { preloadRoute } from '../../utils/performance';
 
 function Header() {
-  const { theme, toggleTheme } = useTheme()
-  const { user, supabase } = useSupabase()
-  const location = useLocation()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
+  const { theme, toggleTheme } = useTheme();
+  const { user, supabase } = useSupabase();
+  const location = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { getItemCount } = useCart();
   const cartItemCount = getItemCount();
 
   useEffect(() => {
     const handleScroll = () => {
-      const isScrolled = window.scrollY > 10
+      const isScrolled = window.scrollY > 10;
       if (isScrolled !== scrolled) {
-        setScrolled(isScrolled)
+        setScrolled(isScrolled);
       }
-    }
+    };
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [scrolled])
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [scrolled]);
 
   useEffect(() => {
-    setIsMenuOpen(false)
-  }, [location.pathname])
+    setIsMenuOpen(false);
+  }, [location.pathname]);
 
   const handleSignOut = async () => {
     try {
-      const { error } = await supabase.auth.signOut()
-      if (error) throw error
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
     } catch (error) {
-      console.error('Error signing out:', error)
+      console.error('Error signing out:', error);
     }
-  }
+  };
 
   const navLinks = [
     { name: 'Home', path: '/', preload: () => import('../../pages/HomePage') },
-    { name: 'Products', path: '/products', preload: () => import('../../pages/ProductsPage') },
-    { name: 'Blog', path: '/blog', preload: () => import('../../pages/BlogPage') },
-    { name: 'Gallery', path: '/gallery', preload: () => import('../../pages/GalleryPage') },
-    { name: 'Workshops', path: '/sessions', preload: () => import('../../pages/SessionsPage') },
-    { name: 'Testimonials', path: '/testimonials', preload: () => import('../../pages/TestimonialsPage') },
-    { name: 'Contact', path: '/contact', preload: () => import('../../pages/ContactPage') },
-  ]
+    {
+      name: 'Products',
+      path: '/products',
+      preload: () => import('../../pages/ProductsPage'),
+    },
+    {
+      name: 'Blog',
+      path: '/blog',
+      preload: () => import('../../pages/BlogPage'),
+    },
+    {
+      name: 'Gallery',
+      path: '/gallery',
+      preload: () => import('../../pages/GalleryPage'),
+    },
+    {
+      name: 'Workshops',
+      path: '/sessions',
+      preload: () => import('../../pages/SessionsPage'),
+    },
+    {
+      name: 'Testimonials',
+      path: '/testimonials',
+      preload: () => import('../../pages/TestimonialsPage'),
+    },
+    {
+      name: 'Contact',
+      path: '/contact',
+      preload: () => import('../../pages/ContactPage'),
+    },
+  ];
 
-  const headerClasses = 'fixed top-0 w-full z-50 bg-gray-50 dark:bg-gray-900/95 backdrop-blur-md shadow-sm'
+  const headerClasses =
+    'fixed top-0 w-full z-50 bg-gray-50 dark:bg-gray-900/95 backdrop-blur-md shadow-sm';
 
   const getLinkClasses = (isActive) => `
     py-2 font-medium text-base transition-colors duration-300
-    ${isActive 
-      ? 'text-primary-600 dark:text-primary-400' 
-      : 'text-gray-800 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400'
+    ${
+      isActive
+        ? 'text-primary-600 dark:text-primary-400'
+        : 'text-gray-800 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400'
     }
-  `
+  `;
 
   return (
     <header className={headerClasses}>
@@ -115,7 +149,9 @@ function Header() {
           <button
             onClick={toggleTheme}
             className="p-2 rounded-full transition-colors duration-300 text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+            aria-label={`Switch to ${
+              theme === 'light' ? 'dark' : 'light'
+            } mode`}
           >
             {theme === 'light' ? <FiMoon size={20} /> : <FiSun size={20} />}
           </button>
@@ -139,11 +175,13 @@ function Header() {
           <button
             onClick={toggleTheme}
             className="p-2 mr-2 rounded-full transition-colors duration-300 text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+            aria-label={`Switch to ${
+              theme === 'light' ? 'dark' : 'light'
+            } mode`}
           >
             {theme === 'light' ? <FiMoon size={20} /> : <FiSun size={20} />}
           </button>
-          
+
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="p-2 rounded-full transition-colors duration-300 text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
@@ -179,7 +217,7 @@ function Header() {
                   {link.name}
                 </NavLink>
               ))}
-              
+
               {user ? (
                 <>
                   <NavLink
@@ -197,8 +235,8 @@ function Header() {
                   </NavLink>
                   <button
                     onClick={() => {
-                      handleSignOut()
-                      setIsMenuOpen(false)
+                      handleSignOut();
+                      setIsMenuOpen(false);
                     }}
                     className="flex items-center py-3 font-medium text-base text-gray-800 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400"
                   >
@@ -221,7 +259,7 @@ function Header() {
         )}
       </div>
     </header>
-  )
+  );
 }
 
-export default Header
+export default Header;

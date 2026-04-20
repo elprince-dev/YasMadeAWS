@@ -7,6 +7,9 @@ export default [
   {
     ignores: [
       '**/dist',
+      '**/cdk.out',
+      'packages/cdk/**/*.js',
+      'packages/cdk/**/*.d.ts',
       '**/vite.config.*.timestamp*',
       '**/vitest.config.*.timestamp*',
     ],

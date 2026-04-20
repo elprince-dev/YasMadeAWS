@@ -1,6 +1,7 @@
 # Static Hosting Stack - Theory & Concepts
 
 ## Table of Contents
+
 1. [Stack Overview](#stack-overview)
 2. [S3 Static Website Hosting](#s3-static-website-hosting)
 3. [Stack Dependencies](#stack-dependencies)
@@ -12,6 +13,7 @@
 ## Stack Overview
 
 ### Purpose
+
 The Static Hosting Stack creates the foundational storage layer for your React application using Amazon S3. This stack is responsible for:
 
 - **Static asset storage** - HTML, CSS, JavaScript, images, and other web assets
@@ -20,6 +22,7 @@ The Static Hosting Stack creates the foundational storage layer for your React a
 - **Foundation for CDN** - Serves as origin for CloudFront distribution
 
 ### Architecture Position
+
 ```
 Frontend Architecture:
 1. Static Hosting Stack ← You are here
@@ -33,6 +36,7 @@ Frontend Architecture:
 ```
 
 ### Stack Responsibilities
+
 - ✅ **S3 bucket creation** - Globally unique bucket for static assets
 - ✅ **Security hardening** - Block public access, encryption at rest
 - ✅ **Cost optimization** - Lifecycle rules for old versions
@@ -44,6 +48,7 @@ Frontend Architecture:
 ## S3 Static Website Hosting
 
 ### Traditional vs CDN Approach
+
 ```
 Traditional S3 Website Hosting:
 S3 Bucket (public) → Direct user access
@@ -60,12 +65,14 @@ S3 Bucket (private) → CloudFront → Users
 ```
 
 ### Why Private Bucket?
+
 ```typescript
 // S3 bucket configuration
-blockPublicAccess: BlockPublicAccess.BLOCK_ALL
+blockPublicAccess: BlockPublicAccess.BLOCK_ALL;
 ```
 
 **Benefits:**
+
 - ✅ **Enhanced security** - No direct public access to files
 - ✅ **Access control** - Only CloudFront can access content
 - ✅ **DDoS protection** - CloudFront shields origin from attacks
@@ -73,47 +80,54 @@ blockPublicAccess: BlockPublicAccess.BLOCK_ALL
 - ✅ **Performance** - Global edge caching
 
 **Trade-offs:**
+
 - ❌ **Complexity** - Requires CloudFront setup
 - ❌ **No direct access** - Can't access files directly via S3 URLs
 
 ## Stack Dependencies
 
 ### Input Dependencies
+
 ```typescript
 export interface StaticHostingStackProps extends StackProps {
-  readonly environmentConfig: EnvironmentConfig
+  readonly environmentConfig: EnvironmentConfig;
 }
 ```
 
 **Required inputs:**
+
 - **Environment configuration** - Bucket names, tags, lifecycle settings
 - **AWS account/region** - Deployment target information
 
 ### Output Dependencies
+
 ```typescript
 public readonly staticWebsite: StaticWebsite
 ```
 
 **Provides to other stacks:**
+
 - **S3 bucket reference** - Used by CDN stack as origin
 - **Bucket ARN** - For cross-stack references and permissions
 - **Bucket name** - For deployment scripts and CI/CD
 
 ### Cross-Stack References
+
 ```typescript
 // Exported for other stacks
 new CfnOutput(this, 'BucketName', {
-  exportName: `${this.stackName}-BucketName`
-})
+  exportName: `${this.stackName}-BucketName`,
+});
 
 new CfnOutput(this, 'BucketArn', {
-  exportName: `${this.stackName}-BucketArn`
-})
+  exportName: `${this.stackName}-BucketArn`,
+});
 ```
 
 ## Environment Configuration
 
 ### Bucket Naming Strategy
+
 ```typescript
 // Environment-specific bucket names
 buckets: {
@@ -123,12 +137,14 @@ buckets: {
 ```
 
 **Naming requirements:**
+
 - **Globally unique** - No two S3 buckets can have same name worldwide
 - **DNS compliant** - Lowercase letters, numbers, hyphens only
 - **Environment prefix** - Separate dev/staging/prod buckets
 - **Descriptive** - Clear purpose identification
 
 ### Configuration Structure
+
 ```typescript
 // From environment config
 environmentConfig: {
@@ -145,6 +161,7 @@ environmentConfig: {
 ```
 
 ### Environment Isolation
+
 ```
 Development Environment:
 ├── yasmade-dev-static-website
@@ -160,51 +177,59 @@ Production Environment:
 ## Resource Management
 
 ### S3 Bucket Features
+
 ```typescript
 // Bucket configuration
-new Bucket(this, "WebsiteBucket", {
+new Bucket(this, 'WebsiteBucket', {
   bucketName: props.environmentConfig.buckets.staticWebsite,
   blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
   versioned: true,
   encryption: BucketEncryption.S3_MANAGED,
   enforceSSL: true,
-  removalPolicy: RemovalPolicy.RETAIN
-})
+  removalPolicy: RemovalPolicy.RETAIN,
+});
 ```
 
 ### Versioning Benefits
+
 ```
 Version Management:
 ├── Current version: index.html (v3)
-├── Previous version: index.html (v2) 
+├── Previous version: index.html (v2)
 ├── Older version: index.html (v1)
 └── Rollback capability: Switch to any version
 ```
 
 **Use cases:**
+
 - **Deployment rollback** - Revert to previous working version
 - **A/B testing** - Compare different versions
 - **Audit trail** - Track all changes over time
 - **Disaster recovery** - Restore from accidental deletion
 
 ### Lifecycle Management
+
 ```typescript
 // Automatic cost optimization
 addLifecycleRule({
-  transitions: [{
-    storageClass: StorageClass.INFREQUENT_ACCESS,
-    transitionAfter: Duration.days(30)
-  }],
-  noncurrentVersionExpiration: Duration.days(90)
-})
+  transitions: [
+    {
+      storageClass: StorageClass.INFREQUENT_ACCESS,
+      transitionAfter: Duration.days(30),
+    },
+  ],
+  noncurrentVersionExpiration: Duration.days(90),
+});
 ```
 
 **Cost optimization flow:**
+
 1. **Day 0-30**: Standard storage (frequent access)
 2. **Day 30+**: Infrequent Access storage (40% cheaper)
 3. **Day 90+**: Old versions deleted automatically
 
 ### Security Configuration
+
 ```typescript
 // Security hardening
 encryption: BucketEncryption.S3_MANAGED,  // AES-256 encryption
@@ -215,6 +240,7 @@ blockPublicAccess: BlockPublicAccess.BLOCK_ALL  // No public access
 ## Deployment Strategy
 
 ### Deployment Flow
+
 ```
 1. Build React App
    ├── npm run build
@@ -238,6 +264,7 @@ blockPublicAccess: BlockPublicAccess.BLOCK_ALL  // No public access
 ```
 
 ### Blue-Green Deployment
+
 ```
 Blue-Green Strategy:
 ├── Blue Environment (current)
@@ -250,6 +277,7 @@ Blue-Green Strategy:
 ```
 
 ### Rollback Strategy
+
 ```typescript
 // Rollback options
 1. S3 Version Rollback
@@ -266,6 +294,7 @@ Blue-Green Strategy:
 ## Monitoring & Troubleshooting
 
 ### CloudWatch Metrics
+
 ```
 S3 Bucket Metrics:
 ├── BucketSizeBytes - Storage usage
@@ -275,6 +304,7 @@ S3 Bucket Metrics:
 ```
 
 ### Cost Monitoring
+
 ```typescript
 // Cost allocation tags
 tags: {
@@ -285,6 +315,7 @@ tags: {
 ```
 
 **Cost tracking:**
+
 - **Storage costs** - Based on data volume and storage class
 - **Request costs** - GET, PUT, DELETE operations
 - **Data transfer** - Outbound data transfer charges
@@ -293,44 +324,60 @@ tags: {
 ### Common Issues
 
 #### Bucket Name Already Exists
+
 **Problem**: S3 bucket names must be globally unique
+
 ```
 Error: Bucket name 'my-website' already exists
 ```
+
 **Solution**: Use environment-specific prefixes
+
 ```typescript
-bucketName: `${organizationName}-${environment}-${purpose}`
+bucketName: `${organizationName}-${environment}-${purpose}`;
 // Example: 'yasmade-dev-static-website'
 ```
 
 #### Access Denied Errors
+
 **Problem**: Bucket is private but something tries to access directly
+
 ```
 Error: Access Denied when accessing S3 URL
 ```
+
 **Solution**: This is expected behavior - access through CloudFront only
 
 #### High Storage Costs
+
 **Problem**: Old versions consuming storage
+
 ```
 Cost Alert: S3 storage costs increased 300%
 ```
+
 **Solution**: Verify lifecycle rules are working
+
 ```bash
 aws s3api list-object-versions --bucket bucket-name
 ```
 
 #### Deployment Failures
+
 **Problem**: Stack deployment fails
+
 ```
 Error: Bucket already exists in different region
 ```
+
 **Solutions:**
+
 - Check bucket name uniqueness
 - Verify region configuration
 - Ensure proper IAM permissions
 
 ### Debugging Commands
+
 ```bash
 # Check bucket configuration
 aws s3api get-bucket-location --bucket bucket-name
@@ -352,6 +399,7 @@ aws ce get-cost-and-usage --time-period Start=2024-01-01,End=2024-01-31 \
 ## Best Practices
 
 ### Naming Conventions
+
 ```
 ✅ Good naming:
 yasmade-prod-static-website
@@ -365,6 +413,7 @@ prod-bucket
 ```
 
 ### Security Checklist
+
 - ✅ Block all public access
 - ✅ Enable encryption at rest
 - ✅ Enforce SSL/TLS
@@ -373,6 +422,7 @@ prod-bucket
 - ✅ Regular security audits
 
 ### Cost Optimization
+
 - ✅ Enable lifecycle rules
 - ✅ Monitor storage usage
 - ✅ Use appropriate storage classes
@@ -380,6 +430,7 @@ prod-bucket
 - ✅ Set up cost alerts
 
 ### Operational Excellence
+
 - ✅ Use infrastructure as code (CDK)
 - ✅ Environment-specific configurations
 - ✅ Automated deployments
@@ -389,21 +440,23 @@ prod-bucket
 ## Integration Examples
 
 ### Using in Main CDK App
+
 ```typescript
 // Deploy static hosting stack
 const staticHostingStack = new StaticHostingStack(app, 'StaticHosting', {
   environmentConfig: devConfig,
-  env: { account: '123456789012', region: 'us-east-1' }
-})
+  env: { account: '123456789012', region: 'us-east-1' },
+});
 
 // Reference in CDN stack
 const cdnStack = new CdnStack(app, 'CDN', {
   environmentConfig: devConfig,
-  originBucket: staticHostingStack.staticWebsite.bucket
-})
+  originBucket: staticHostingStack.staticWebsite.bucket,
+});
 ```
 
 ### CI/CD Integration
+
 ```yaml
 # GitHub Actions example
 - name: Deploy to S3

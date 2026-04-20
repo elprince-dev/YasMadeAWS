@@ -3,10 +3,14 @@
  * Optimizes caching strategy based on content type and update frequency
  */
 
-import { AllowedMethods, CachePolicy, ViewerProtocolPolicy } from "aws-cdk-lib/aws-cloudfront";
+import {
+  AllowedMethods,
+  CachePolicy,
+  ViewerProtocolPolicy,
+} from 'aws-cdk-lib/aws-cloudfront';
 
 export const CdnBehaviors = {
-    /**
+  /**
    * Static assets that rarely change (CSS, JS, images with hashed names)
    * Long cache duration for maximum performance
    */
@@ -16,7 +20,7 @@ export const CdnBehaviors = {
     viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
     allowedMethods: AllowedMethods.ALLOW_GET_HEAD,
     compress: true,
-    comment: 'Long-term caching for static assets (CSS, JS, images)'
+    comment: 'Long-term caching for static assets (CSS, JS, images)',
   },
   /**
    * Assets folder for images and media files
@@ -28,9 +32,9 @@ export const CdnBehaviors = {
     viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
     allowedMethods: AllowedMethods.ALLOW_GET_HEAD,
     compress: true,
-    comment: 'Medium-term caching for assets and media files'
+    comment: 'Medium-term caching for assets and media files',
   },
- /**
+  /**
    * Service Worker - Never cache for immediate updates
    * Critical for PWA functionality and app updates
    */
@@ -40,7 +44,7 @@ export const CdnBehaviors = {
     viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
     allowedMethods: AllowedMethods.ALLOW_GET_HEAD,
     compress: false,
-    comment: 'No caching for service worker to ensure immediate updates'
+    comment: 'No caching for service worker to ensure immediate updates',
   },
   /**
    * PWA Manifest - Short cache for app metadata
@@ -52,7 +56,7 @@ export const CdnBehaviors = {
     viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
     allowedMethods: AllowedMethods.ALLOW_GET_HEAD,
     compress: true,
-    comment: 'Short-term caching for PWA manifest'
+    comment: 'Short-term caching for PWA manifest',
   },
   /**
    * API endpoints - No caching for dynamic content
@@ -64,7 +68,7 @@ export const CdnBehaviors = {
     viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
     allowedMethods: AllowedMethods.ALLOW_ALL,
     compress: true,
-    comment: 'No caching for API endpoints'
+    comment: 'No caching for API endpoints',
   },
   /**
    * Favicon and root-level files
@@ -76,20 +80,23 @@ export const CdnBehaviors = {
     viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
     allowedMethods: AllowedMethods.ALLOW_GET_HEAD,
     compress: false, // Already optimized
-    comment: 'Medium-term caching for favicon'
-  }
-} as const
+    comment: 'Medium-term caching for favicon',
+  },
+} as const;
 
 /**
  * Helper function to get behavior configuration
  * @param behaviorType - Type of behavior to retrieve
  * @returns CloudFront behavior configuration
  */
-export function getAllBehaviors(): Record<string, Omit<typeof CdnBehaviors.STATIC_ASSETS, 'pathPattern' | 'comment'>> {
-    const behaviors: Record<string, any> = {};
-    Object.values(CdnBehaviors).forEach(behavior => {
-        const {pathPattern, comment, ...config } = behavior;
-        behaviors[pathPattern] = config;
-    });
-    return behaviors;
+export function getAllBehaviors(): Record<
+  string,
+  Omit<typeof CdnBehaviors.STATIC_ASSETS, 'pathPattern' | 'comment'>
+> {
+  const behaviors: Record<string, any> = {};
+  Object.values(CdnBehaviors).forEach((behavior) => {
+    const { pathPattern, comment, ...config } = behavior;
+    behaviors[pathPattern] = config;
+  });
+  return behaviors;
 }

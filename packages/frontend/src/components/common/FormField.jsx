@@ -1,13 +1,13 @@
-function FormField({ 
-  label, 
-  name, 
-  type = 'text', 
-  value, 
-  onChange, 
-  required = false, 
-  placeholder = '', 
+function FormField({
+  label,
+  name,
+  type = 'text',
+  value,
+  onChange,
+  required = false,
+  placeholder = '',
   className = '',
-  children 
+  children,
 }) {
   return (
     <div className={className}>
@@ -26,7 +26,7 @@ function FormField({
         />
       )}
     </div>
-  )
+  );
 }
 
-export default FormField
+export default FormField;

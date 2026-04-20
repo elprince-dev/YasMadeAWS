@@ -8,9 +8,13 @@ import { API_ENDPOINTS } from '../constants';
 import { getTodayISO } from '../utils/dateHelpers';
 
 function SessionsPage() {
-  const { data: sessions, loading, error } = useSupabaseQuery(API_ENDPOINTS.sessions, {
+  const {
+    data: sessions,
+    loading,
+    error,
+  } = useSupabaseQuery(API_ENDPOINTS.sessions, {
     filters: { session_date: `gt.${getTodayISO()}` },
-    orderBy: { column: 'session_date', ascending: false }
+    orderBy: { column: 'session_date', ascending: false },
   });
 
   return (
@@ -24,7 +28,8 @@ function SessionsPage() {
         <div className="text-center mb-12">
           <h1 className="heading-1 mb-4">Creative Workshops</h1>
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Join our creative workshops and explore the art of handmade embroidery.
+            Join our creative workshops and explore the art of handmade
+            embroidery.
           </p>
         </div>
 
@@ -32,7 +37,9 @@ function SessionsPage() {
           <LoadingState message="Loading workshops..." />
         ) : error ? (
           <div className="text-center py-12">
-            <p className="text-red-600 dark:text-red-400">Failed to load workshops</p>
+            <p className="text-red-600 dark:text-red-400">
+              Failed to load workshops
+            </p>
           </div>
         ) : (
           <>

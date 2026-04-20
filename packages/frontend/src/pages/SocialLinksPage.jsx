@@ -1,35 +1,47 @@
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { useSupabase } from '../contexts/SupabaseContext'
-import { FiMail, FiMapPin, FiInstagram, FiFacebook, FiTwitter, FiYoutube, FiLinkedin, FiGithub, FiGlobe, FiLink, FiExternalLink } from 'react-icons/fi'
-import Logo from '../components/common/Logo'
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { useSupabase } from '../contexts/SupabaseContext';
+import {
+  FiMail,
+  FiMapPin,
+  FiInstagram,
+  FiFacebook,
+  FiTwitter,
+  FiYoutube,
+  FiLinkedin,
+  FiGithub,
+  FiGlobe,
+  FiLink,
+  FiExternalLink,
+} from 'react-icons/fi';
+import Logo from '../components/common/Logo';
 
 function SocialLinksPage() {
-  const { supabase } = useSupabase()
-  const [settings, setSettings] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const { supabase } = useSupabase();
+  const [settings, setSettings] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchSettings()
-  }, [])
+    fetchSettings();
+  }, []);
 
   async function fetchSettings() {
     try {
       const { data, error } = await supabase
         .from('settings')
         .select('*')
-        .single()
+        .single();
 
-      if (error) throw error
-      setSettings(data)
+      if (error) throw error;
+      setSettings(data);
     } catch (error) {
-      console.error('Error fetching settings:', error)
+      console.error('Error fetching settings:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
-  const socialLinks = settings?.social_links || []
+  const socialLinks = settings?.social_links || [];
 
   const iconMap = {
     FiMail: FiMail,
@@ -41,8 +53,8 @@ function SocialLinksPage() {
     FiGithub: FiGithub,
     FiMapPin: FiMapPin,
     FiGlobe: FiGlobe,
-    FiLink: FiLink
-  }
+    FiLink: FiLink,
+  };
 
   const colorMap = {
     FiMail: 'bg-red-500',
@@ -54,13 +66,13 @@ function SocialLinksPage() {
     FiGithub: 'bg-gray-800',
     FiMapPin: 'bg-green-500',
     FiGlobe: 'bg-purple-500',
-    FiLink: 'bg-gray-500'
-  }
+    FiLink: 'bg-gray-500',
+  };
 
   // Handle both old object format and new array format
-  let linkItems = []
+  let linkItems = [];
   if (Array.isArray(socialLinks)) {
-    linkItems = socialLinks.filter(link => link.title && link.url)
+    linkItems = socialLinks.filter((link) => link.title && link.url);
   } else {
     // Legacy support for old object format
     linkItems = Object.entries(socialLinks)
@@ -68,11 +80,17 @@ function SocialLinksPage() {
       .map(([key, value]) => ({
         title: key.charAt(0).toUpperCase() + key.slice(1),
         url: key === 'email' ? `mailto:${value}` : value,
-        icon: key === 'email' ? 'FiMail' : 
-              key === 'instagram' ? 'FiInstagram' :
-              key === 'facebook' ? 'FiFacebook' :
-              key === 'location' ? 'FiMapPin' : 'FiLink'
-      }))
+        icon:
+          key === 'email'
+            ? 'FiMail'
+            : key === 'instagram'
+            ? 'FiInstagram'
+            : key === 'facebook'
+            ? 'FiFacebook'
+            : key === 'location'
+            ? 'FiMapPin'
+            : 'FiLink',
+      }));
   }
 
   if (loading) {
@@ -84,15 +102,18 @@ function SocialLinksPage() {
               <div className="h-20 w-20 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto"></div>
               <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mx-auto"></div>
               <div className="space-y-3">
-                {[1, 2, 3, 4].map(i => (
-                  <div key={i} className="h-16 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
+                {[1, 2, 3, 4].map((i) => (
+                  <div
+                    key={i}
+                    className="h-16 bg-gray-200 dark:bg-gray-700 rounded-lg"
+                  ></div>
                 ))}
               </div>
             </div>
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -114,8 +135,12 @@ function SocialLinksPage() {
             <div className="w-32 h-32 flex items-center justify-center mx-auto mb-4">
               <Logo className="w-full h-full" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">YasMade</h1>
-            <p className="text-gray-600 dark:text-gray-400">Handmade Embroidery & Creative Sessions</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+              YasMade
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400">
+              Handmade Embroidery & Creative Sessions
+            </p>
           </motion.div>
 
           {/* Social Links */}
@@ -126,10 +151,10 @@ function SocialLinksPage() {
             className="space-y-4"
           >
             {linkItems.map((item, index) => {
-              const IconComponent = iconMap[item.icon] || FiLink
-              const color = colorMap[item.icon] || 'bg-gray-500'
-              const isEmail = item.url?.startsWith('mailto:')
-              
+              const IconComponent = iconMap[item.icon] || FiLink;
+              const color = colorMap[item.icon] || 'bg-gray-500';
+              const isEmail = item.url?.startsWith('mailto:');
+
               return (
                 <motion.a
                   key={item.id || item.title}
@@ -142,33 +167,42 @@ function SocialLinksPage() {
                   className="block bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-200 dark:border-gray-700"
                 >
                   <div className="flex items-center">
-                    <div className={`w-12 h-12 ${color} rounded-lg flex items-center justify-center mr-4`}>
+                    <div
+                      className={`w-12 h-12 ${color} rounded-lg flex items-center justify-center mr-4`}
+                    >
                       <IconComponent className="w-6 h-6 text-white" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 dark:text-white">{item.title}</h3>
+                      <h3 className="font-semibold text-gray-900 dark:text-white">
+                        {item.title}
+                      </h3>
                       <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
-                        {isEmail ? item.url.replace('mailto:', '') : 
-                         item.url.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]}
+                        {isEmail
+                          ? item.url.replace('mailto:', '')
+                          : item.url
+                              .replace(/^https?:\/\/(www\.)?/, '')
+                              .split('/')[0]}
                       </p>
                     </div>
                     <FiExternalLink className="w-5 h-5 text-gray-400" />
                   </div>
                 </motion.a>
-              )
+              );
             })}
-            
+
             {linkItems.length === 0 && (
               <div className="text-center py-8">
                 <FiLink className="w-12 h-12 mx-auto mb-4 text-gray-400 opacity-50" />
-                <p className="text-gray-600 dark:text-gray-400">No social links available at the moment.</p>
+                <p className="text-gray-600 dark:text-gray-400">
+                  No social links available at the moment.
+                </p>
               </div>
             )}
           </motion.div>
         </div>
       </div>
     </motion.div>
-  )
+  );
 }
 
-export default SocialLinksPage
+export default SocialLinksPage;

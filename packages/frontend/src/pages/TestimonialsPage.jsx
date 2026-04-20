@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { useSupabase } from '../contexts/SupabaseContext'
-import { FiHeart, FiInstagram } from 'react-icons/fi'
-import LazyImage from '../components/common/LazyImage'
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { useSupabase } from '../contexts/SupabaseContext';
+import { FiHeart, FiInstagram } from 'react-icons/fi';
+import LazyImage from '../components/common/LazyImage';
 
 function TestimonialsPage() {
-  const { supabase } = useSupabase()
-  const [testimonials, setTestimonials] = useState([])
-  const [loading, setLoading] = useState(true)
+  const { supabase } = useSupabase();
+  const [testimonials, setTestimonials] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchTestimonials()
-  }, [])
+    fetchTestimonials();
+  }, []);
 
   async function fetchTestimonials() {
     try {
@@ -20,14 +20,14 @@ function TestimonialsPage() {
         .from('testimonials')
         .select('*')
         .order('is_featured', { ascending: false })
-        .order('created_at', { ascending: false })
+        .order('created_at', { ascending: false });
 
-      if (error) throw error
-      setTestimonials(data || [])
+      if (error) throw error;
+      setTestimonials(data || []);
     } catch (error) {
-      console.error('Error fetching testimonials:', error)
+      console.error('Error fetching testimonials:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -36,15 +36,15 @@ function TestimonialsPage() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1
-      }
-    }
-  }
+        staggerChildren: 0.1,
+      },
+    },
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
-  }
+    visible: { opacity: 1, y: 0 },
+  };
 
   if (loading) {
     return (
@@ -56,8 +56,11 @@ function TestimonialsPage() {
               <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mx-auto"></div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3, 4, 5, 6].map(i => (
-                <div key={i} className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div
+                  key={i}
+                  className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg"
+                >
                   <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded-lg mb-4"></div>
                   <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
                   <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
@@ -67,7 +70,7 @@ function TestimonialsPage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -86,11 +89,16 @@ function TestimonialsPage() {
           className="text-center mb-16"
         >
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-            Stories from Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-pink-600">Creative Community</span>
+            Stories from Our{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-pink-600">
+              Creative Community
+            </span>
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Nothing fills my heart more than hearing how embroidery has brought joy, peace, and creativity into the lives of our workshop participants. 
-            Here are some beautiful words from our wonderful community of makers and creators.
+            Nothing fills my heart more than hearing how embroidery has brought
+            joy, peace, and creativity into the lives of our workshop
+            participants. Here are some beautiful words from our wonderful
+            community of makers and creators.
           </p>
         </motion.div>
 
@@ -110,7 +118,7 @@ function TestimonialsPage() {
               >
                 {/* Decorative gradient */}
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-400 to-pink-400"></div>
-                
+
                 {/* Featured badge */}
                 {testimonial.is_featured && (
                   <div className="absolute top-4 right-4">
@@ -155,7 +163,8 @@ function TestimonialsPage() {
               More Stories Coming Soon
             </h3>
             <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-              We're collecting beautiful testimonials from our workshop participants. Check back soon to read their inspiring stories!
+              We're collecting beautiful testimonials from our workshop
+              participants. Check back soon to read their inspiring stories!
             </p>
           </div>
         )}
@@ -172,7 +181,8 @@ function TestimonialsPage() {
             Share Your Story With Us
           </h3>
           <p className="text-gray-700 dark:text-gray-300 mb-6 max-w-2xl mx-auto leading-relaxed">
-            💜 Attended one of our workshops? We'd love to hear from you! Your story could inspire others to discover the joy of embroidery.
+            💜 Attended one of our workshops? We'd love to hear from you! Your
+            story could inspire others to discover the joy of embroidery.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
@@ -194,7 +204,7 @@ function TestimonialsPage() {
         </motion.div>
       </div>
     </motion.div>
-  )
+  );
 }
 
-export default TestimonialsPage
+export default TestimonialsPage;

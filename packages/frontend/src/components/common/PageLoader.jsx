@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { motion } from 'framer-motion';
 
 function PageLoader() {
   return (
@@ -12,7 +12,7 @@ function PageLoader() {
         <p className="text-gray-600 dark:text-gray-400">Loading...</p>
       </motion.div>
     </div>
-  )
+  );
 }
 
-export default PageLoader
+export default PageLoader;

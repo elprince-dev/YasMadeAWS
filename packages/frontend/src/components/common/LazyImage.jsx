@@ -1,29 +1,29 @@
-import { useState, useRef, useEffect } from 'react'
-import { getResponsiveImageProps } from '../../utils/imageOptimization'
+import { useState, useRef, useEffect } from 'react';
+import { getResponsiveImageProps } from '../../utils/imageOptimization';
 
-function LazyImage({ src, alt, className, loading = "lazy", ...props }) {
-  const [isLoaded, setIsLoaded] = useState(false)
-  const [hasError, setHasError] = useState(false)
-  const [isInView, setIsInView] = useState(false)
-  const imgRef = useRef()
+function LazyImage({ src, alt, className, loading = 'lazy', ...props }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  const imgRef = useRef();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsInView(true)
-          observer.disconnect()
+          setIsInView(true);
+          observer.disconnect();
         }
       },
       { threshold: 0.1 }
-    )
+    );
 
     if (imgRef.current) {
-      observer.observe(imgRef.current)
+      observer.observe(imgRef.current);
     }
 
-    return () => observer.disconnect()
-  }, [])
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div ref={imgRef} className={className}>
@@ -40,7 +40,9 @@ function LazyImage({ src, alt, className, loading = "lazy", ...props }) {
         />
       )}
       {hasError && (
-        <div className={`flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-gray-400 ${className}`}>
+        <div
+          className={`flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-gray-400 ${className}`}
+        >
           <span className="text-sm">Image unavailable</span>
         </div>
       )}
@@ -48,7 +50,7 @@ function LazyImage({ src, alt, className, loading = "lazy", ...props }) {
         <div className={`animate-shimmer ${className}`} />
       )}
     </div>
-  )
+  );
 }
 
-export default LazyImage
+export default LazyImage;

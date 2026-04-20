@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { useSupabase } from '../contexts/SupabaseContext'
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { useSupabase } from '../contexts/SupabaseContext';
 
 function BlogPostPage() {
-  const { id } = useParams()
-  const [post, setPost] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const { supabase } = useSupabase()
+  const { id } = useParams();
+  const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { supabase } = useSupabase();
 
   useEffect(() => {
     async function fetchBlogPost() {
@@ -16,19 +16,19 @@ function BlogPostPage() {
           .from('blogs')
           .select('*')
           .eq('id', id)
-          .single()
+          .single();
 
-        if (error) throw error
-        setPost(data)
+        if (error) throw error;
+        setPost(data);
       } catch (error) {
-        console.error('Error fetching blog post:', error)
+        console.error('Error fetching blog post:', error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
 
-    fetchBlogPost()
-  }, [id, supabase])
+    fetchBlogPost();
+  }, [id, supabase]);
 
   if (loading) {
     return (
@@ -43,7 +43,7 @@ function BlogPostPage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (!post) {
@@ -51,10 +51,12 @@ function BlogPostPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-2xl font-bold mb-4">Blog post not found</h1>
-          <p>The blog post you're looking for doesn't exist or has been removed.</p>
+          <p>
+            The blog post you're looking for doesn't exist or has been removed.
+          </p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -75,7 +77,7 @@ function BlogPostPage() {
               />
             </div>
           )}
-          
+
           <header className="mb-8">
             <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
               {post.title}
@@ -84,19 +86,19 @@ function BlogPostPage() {
               {new Date(post.created_at).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
-                day: 'numeric'
+                day: 'numeric',
               })}
             </div>
           </header>
 
-          <div 
+          <div
             className="prose prose-lg max-w-none dark:prose-invert prose-headings:text-gray-900 dark:prose-headings:text-white prose-a:text-primary-600 dark:prose-a:text-primary-400 prose-img:rounded-lg prose-img:shadow-lg mb-12"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
         </div>
       </article>
     </motion.div>
-  )
+  );
 }
 
-export default BlogPostPage
+export default BlogPostPage;

@@ -1,42 +1,45 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 
 function SectionProgress() {
-  const [activeSection, setActiveSection] = useState(0)
+  const [activeSection, setActiveSection] = useState(0);
 
   const sections = [
     { id: 'hero', label: 'Home' },
     { id: 'products', label: 'Products' },
     { id: 'blog', label: 'Blog' },
     { id: 'workshops', label: 'Workshops' },
-    { id: 'story', label: 'Story' }
-  ]
+    { id: 'story', label: 'Story' },
+  ];
 
   useEffect(() => {
-    const sectionList = sections
+    const sectionList = sections;
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 100
-      
+      const scrollPosition = window.scrollY + 100;
+
       sectionList.forEach((section, index) => {
-        const element = document.getElementById(section.id)
+        const element = document.getElementById(section.id);
         if (element) {
-          const { offsetTop, offsetHeight } = element
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(index)
+          const { offsetTop, offsetHeight } = element;
+          if (
+            scrollPosition >= offsetTop &&
+            scrollPosition < offsetTop + offsetHeight
+          ) {
+            setActiveSection(index);
           }
         }
-      })
-    }
+      });
+    };
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId)
+    const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
+      element.scrollIntoView({ behavior: 'smooth' });
     }
-  }
+  };
 
   return (
     <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
@@ -48,11 +51,13 @@ function SectionProgress() {
               onClick={() => scrollToSection(section.id)}
               className="group relative"
             >
-              <div className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                index === activeSection 
-                  ? 'bg-primary-600 scale-125' 
-                  : 'bg-gray-300 dark:bg-gray-600 hover:bg-primary-400'
-              }`} />
+              <div
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  index === activeSection
+                    ? 'bg-primary-600 scale-125'
+                    : 'bg-gray-300 dark:bg-gray-600 hover:bg-primary-400'
+                }`}
+              />
               <div className="absolute right-6 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
                 <div className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs px-2 py-1 rounded whitespace-nowrap">
                   {section.label}
@@ -63,7 +68,7 @@ function SectionProgress() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default SectionProgress
+export default SectionProgress;

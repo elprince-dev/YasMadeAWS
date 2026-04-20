@@ -1,46 +1,46 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { useSupabase } from '../../contexts/SupabaseContext'
-import Logo from '../../components/common/Logo'
-import { FiMail, FiLock } from 'react-icons/fi'
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { useSupabase } from '../../contexts/SupabaseContext';
+import Logo from '../../components/common/Logo';
+import { FiMail, FiLock } from 'react-icons/fi';
 
 function AdminLoginPage() {
-  const { supabase, user } = useSupabase()
-  const navigate = useNavigate()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const { supabase, user } = useSupabase();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (user) {
-      navigate('/admin')
+      navigate('/admin');
     }
-  }, [user, navigate])
+  }, [user, navigate]);
 
   async function handleLogin(e) {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
-    
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
-      })
-      
+      });
+
       if (error) {
-        throw error
+        throw error;
       }
-      
+
       if (data?.user) {
-        navigate('/admin')
+        navigate('/admin');
       }
     } catch (error) {
-      setError(error.message)
+      setError(error.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -64,11 +64,14 @@ function AdminLoginPage() {
               Sign in to access the YasMade admin dashboard
             </p>
           </div>
-          
+
           <form className="mt-8 space-y-6" onSubmit={handleLogin}>
             <div className="space-y-4">
               <div>
-                <label htmlFor="email-address" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label
+                  htmlFor="email-address"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                >
                   Email address
                 </label>
                 <div className="relative">
@@ -90,7 +93,10 @@ function AdminLoginPage() {
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                >
                   Password
                 </label>
                 <div className="relative">
@@ -114,8 +120,16 @@ function AdminLoginPage() {
 
             {error && (
               <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 px-4 py-3 rounded-lg text-sm flex items-center">
-                <svg className="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                <svg
+                  className="w-5 h-5 mr-2 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 {error}
               </div>
@@ -127,9 +141,25 @@ function AdminLoginPage() {
               className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
             >
               {loading ? (
-                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
               ) : (
                 'Sign in'
@@ -137,7 +167,7 @@ function AdminLoginPage() {
             </button>
           </form>
         </div>
-        
+
         <div className="text-center mt-6">
           <a
             href="/"
@@ -148,7 +178,7 @@ function AdminLoginPage() {
         </div>
       </div>
     </motion.div>
-  )
+  );
 }
 
-export default AdminLoginPage
+export default AdminLoginPage;

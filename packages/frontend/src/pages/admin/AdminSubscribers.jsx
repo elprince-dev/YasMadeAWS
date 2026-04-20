@@ -1,51 +1,62 @@
-import { useState, useEffect, useRef } from 'react'
-import { motion } from 'framer-motion'
-import { useSupabase } from '../../contexts/SupabaseContext'
-import { FiUserPlus, FiTrash2, FiMail, FiDownload, FiSend, FiX, FiAlertCircle, FiInfo, FiImage } from 'react-icons/fi'
-import ReactQuill from 'react-quill'
-import 'react-quill/dist/quill.snow.css'
-import { initCSRF } from '../../utils/csrf'
-import { sendNewsletter } from '../../utils/emailApi'
+import { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
+import { useSupabase } from '../../contexts/SupabaseContext';
+import {
+  FiUserPlus,
+  FiTrash2,
+  FiMail,
+  FiDownload,
+  FiSend,
+  FiX,
+  FiAlertCircle,
+  FiInfo,
+  FiImage,
+} from 'react-icons/fi';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import { initCSRF } from '../../utils/csrf';
+import { sendNewsletter } from '../../utils/emailApi';
 
 function AdminSubscribers() {
-  const { supabase } = useSupabase()
-  const [subscribers, setSubscribers] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [showAddForm, setShowAddForm] = useState(false)
-  const [showEmailForm, setShowEmailForm] = useState(false)
-  const [newEmail, setNewEmail] = useState('')
-  const [addingSubscriber, setAddingSubscriber] = useState(false)
+  const { supabase } = useSupabase();
+  const [subscribers, setSubscribers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [showEmailForm, setShowEmailForm] = useState(false);
+  const [newEmail, setNewEmail] = useState('');
+  const [addingSubscriber, setAddingSubscriber] = useState(false);
   const [emailContent, setEmailContent] = useState({
     subject: '',
-    content: ''
-  })
-  const [sendingEmail, setSendingEmail] = useState(false)
-  const [emailError, setEmailError] = useState(null)
-  const [selectedSubscribers, setSelectedSubscribers] = useState(new Set())
-  const quillRef = useRef(null)
+    content: '',
+  });
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [emailError, setEmailError] = useState(null);
+  const [selectedSubscribers, setSelectedSubscribers] = useState(new Set());
+  const quillRef = useRef(null);
 
-  const allSelected = subscribers.length > 0 && selectedSubscribers.size === subscribers.length
+  const allSelected =
+    subscribers.length > 0 && selectedSubscribers.size === subscribers.length;
 
   const toggleSelectAll = () => {
     if (allSelected) {
-      setSelectedSubscribers(new Set())
+      setSelectedSubscribers(new Set());
     } else {
-      setSelectedSubscribers(new Set(subscribers.map(s => s.id)))
+      setSelectedSubscribers(new Set(subscribers.map((s) => s.id)));
     }
-  }
+  };
 
   const toggleSubscriber = (id) => {
-    setSelectedSubscribers(prev => {
-      const next = new Set(prev)
+    setSelectedSubscribers((prev) => {
+      const next = new Set(prev);
       if (next.has(id)) {
-        next.delete(id)
+        next.delete(id);
       } else {
-        next.add(id)
+        next.add(id);
       }
-      return next
-    })
-  }
+      return next;
+    });
+  };
 
   // Quill editor configuration
   const modules = {
@@ -55,118 +66,134 @@ function AdminSubscribers() {
       ['blockquote'],
       [{ list: 'ordered' }, { list: 'bullet' }],
       ['link', 'image'],
-      ['clean']
-    ]
-  }
+      ['clean'],
+    ],
+  };
 
   const formats = [
     'header',
-    'bold', 'italic', 'underline',
+    'bold',
+    'italic',
+    'underline',
     'blockquote',
-    'list', 'bullet',
-    'link', 'image'
-  ]
+    'list',
+    'bullet',
+    'link',
+    'image',
+  ];
 
   useEffect(() => {
-    initCSRF()
-    fetchSubscribers()
-  }, [])
+    initCSRF();
+    fetchSubscribers();
+  }, []);
 
   async function fetchSubscribers() {
     try {
       const { data, error } = await supabase
         .from('subscribers')
         .select('*')
-        .order('created_at', { ascending: false })
+        .order('created_at', { ascending: false });
 
-      if (error) throw error
+      if (error) throw error;
 
-      setSubscribers(data)
+      setSubscribers(data);
     } catch (error) {
-      console.error('Error fetching subscribers:', encodeURIComponent(error.message || 'Unknown error'))
-      setError('Failed to load subscribers')
+      console.error(
+        'Error fetching subscribers:',
+        encodeURIComponent(error.message || 'Unknown error')
+      );
+      setError('Failed to load subscribers');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to remove this subscriber?')) return
+    if (!window.confirm('Are you sure you want to remove this subscriber?'))
+      return;
 
     try {
       const { error } = await supabase
         .from('subscribers')
         .delete()
-        .eq('id', id)
+        .eq('id', id);
 
-      if (error) throw error
+      if (error) throw error;
 
-      setSubscribers(subscribers.filter(sub => sub.id !== id))
+      setSubscribers(subscribers.filter((sub) => sub.id !== id));
     } catch (error) {
-      console.error('Error deleting subscriber:', encodeURIComponent(error.message || 'Unknown error'))
-      alert('Failed to delete subscriber')
+      console.error(
+        'Error deleting subscriber:',
+        encodeURIComponent(error.message || 'Unknown error')
+      );
+      alert('Failed to delete subscriber');
     }
-  }
+  };
 
   const handleAddSubscriber = async (e) => {
-    e.preventDefault()
-    setAddingSubscriber(true)
-    
+    e.preventDefault();
+    setAddingSubscriber(true);
+
     try {
       const { error } = await supabase
         .from('subscribers')
-        .insert([{ email: newEmail }])
+        .insert([{ email: newEmail }]);
 
-      if (error) throw error
+      if (error) throw error;
 
-      await fetchSubscribers()
-      setNewEmail('')
-      setShowAddForm(false)
+      await fetchSubscribers();
+      setNewEmail('');
+      setShowAddForm(false);
     } catch (error) {
-      console.error('Error adding subscriber:', encodeURIComponent(error.message || 'Unknown error'))
-      alert('Failed to add subscriber. The email might already be subscribed.')
+      console.error(
+        'Error adding subscriber:',
+        encodeURIComponent(error.message || 'Unknown error')
+      );
+      alert('Failed to add subscriber. The email might already be subscribed.');
     } finally {
-      setAddingSubscriber(false)
+      setAddingSubscriber(false);
     }
-  }
+  };
 
   const handleSendEmail = async (e) => {
-    e.preventDefault()
-    setSendingEmail(true)
-    setEmailError(null)
+    e.preventDefault();
+    setSendingEmail(true);
+    setEmailError(null);
 
     try {
       if (selectedSubscribers.size === 0) {
-        throw new Error('Please select at least one subscriber')
+        throw new Error('Please select at least one subscriber');
       }
 
       // Validate subject
       if (!emailContent.subject?.trim()) {
-        throw new Error('Please provide a subject for the email')
+        throw new Error('Please provide a subject for the email');
       }
 
       // Validate content
       const strippedContent = emailContent.content
         ?.replace(/<[^>]*>/g, '')
-        .trim()
+        .trim();
 
       if (!strippedContent) {
-        throw new Error('Please provide content for the email')
+        throw new Error('Please provide content for the email');
       }
 
-      const { data: { session } } = await supabase.auth.getSession()
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) {
-        throw new Error('No active session. Please log in again.')
+        throw new Error('No active session. Please log in again.');
       }
 
       // Get logo URL from storage
-      const { data: { publicUrl: logoUrl } } = supabase.storage
-        .from('images')
-        .getPublicUrl('yasmadeLogo.PNG')
+      const {
+        data: { publicUrl: logoUrl },
+      } = supabase.storage.from('images').getPublicUrl('yasmadeLogo.PNG');
 
       const recipientEmails = subscribers
-        .filter(sub => selectedSubscribers.has(sub.id))
-        .map(sub => sub.email)
+        .filter((sub) => selectedSubscribers.has(sub.id))
+        .map((sub) => sub.email);
 
       const result = await sendNewsletter(
         {
@@ -175,43 +202,48 @@ function AdminSubscribers() {
           content: emailContent.content,
           logoUrl,
         },
-        session.access_token,
-      )
+        session.access_token
+      );
 
       if (result.failedRecipients?.length) {
-        console.warn('Failed to send to:', result.failedRecipients)
+        console.warn('Failed to send to:', result.failedRecipients);
       }
 
-      alert('Email sent successfully!')
-      setShowEmailForm(false)
-      setEmailContent({ subject: '', content: '' })
+      alert('Email sent successfully!');
+      setShowEmailForm(false);
+      setEmailContent({ subject: '', content: '' });
     } catch (error) {
-      console.error('Error sending email:', encodeURIComponent(error.message || 'Unknown error'))
-      setEmailError(error.message)
+      console.error(
+        'Error sending email:',
+        encodeURIComponent(error.message || 'Unknown error')
+      );
+      setEmailError(error.message);
     } finally {
-      setSendingEmail(false)
+      setSendingEmail(false);
     }
-  }
+  };
 
   const exportToCSV = () => {
     const csvContent = [
       ['Email', 'Subscription Date'],
-      ...subscribers.map(sub => [
+      ...subscribers.map((sub) => [
         sub.email,
-        new Date(sub.created_at).toLocaleString()
-      ])
-    ].map(row => row.join(',')).join('\n')
+        new Date(sub.created_at).toLocaleString(),
+      ]),
+    ]
+      .map((row) => row.join(','))
+      .join('\n');
 
-    const blob = new Blob([csvContent], { type: 'text/csv' })
-    const url = window.URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `subscribers-${new Date().toISOString().split('T')[0]}.csv`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    window.URL.revokeObjectURL(url)
-  }
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `subscribers-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
 
   return (
     <motion.div
@@ -228,10 +260,19 @@ function AdminSubscribers() {
               onClick={() => setShowEmailForm(true)}
               className="btn-primary"
               disabled={selectedSubscribers.size === 0}
-              title={selectedSubscribers.size === 0 ? 'Select subscribers first' : `Send to ${selectedSubscribers.size} subscriber(s)`}
+              title={
+                selectedSubscribers.size === 0
+                  ? 'Select subscribers first'
+                  : `Send to ${selectedSubscribers.size} subscriber(s)`
+              }
             >
               <FiSend className="w-5 h-5 mr-2" />
-              <span className="hidden sm:inline">Send Email{selectedSubscribers.size > 0 ? ` (${selectedSubscribers.size})` : ''}</span>
+              <span className="hidden sm:inline">
+                Send Email
+                {selectedSubscribers.size > 0
+                  ? ` (${selectedSubscribers.size})`
+                  : ''}
+              </span>
             </button>
             <button
               onClick={() => setShowAddForm(true)}
@@ -302,19 +343,26 @@ function AdminSubscribers() {
         {/* Send Email Modal */}
         {showEmailForm && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-4xl flex flex-col" style={{ maxHeight: '90vh' }}>
+            <div
+              className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-4xl flex flex-col"
+              style={{ maxHeight: '90vh' }}
+            >
               {/* Header */}
               <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
                 <div>
-                  <h2 className="text-xl font-semibold">Send Email to Subscribers</h2>
+                  <h2 className="text-xl font-semibold">
+                    Send Email to Subscribers
+                  </h2>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    Sending to {selectedSubscribers.size} of {subscribers.length} subscriber{subscribers.length !== 1 ? 's' : ''}
+                    Sending to {selectedSubscribers.size} of{' '}
+                    {subscribers.length} subscriber
+                    {subscribers.length !== 1 ? 's' : ''}
                   </p>
                 </div>
                 <button
                   onClick={() => {
-                    setShowEmailForm(false)
-                    setEmailError(null)
+                    setShowEmailForm(false);
+                    setEmailError(null);
                   }}
                   className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                 >
@@ -339,7 +387,12 @@ function AdminSubscribers() {
                     <input
                       type="text"
                       value={emailContent.subject}
-                      onChange={(e) => setEmailContent(prev => ({ ...prev, subject: e.target.value }))}
+                      onChange={(e) =>
+                        setEmailContent((prev) => ({
+                          ...prev,
+                          subject: e.target.value,
+                        }))
+                      }
                       required
                       className="w-full px-4 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
                       placeholder="Enter email subject"
@@ -354,7 +407,9 @@ function AdminSubscribers() {
                       <ReactQuill
                         ref={quillRef}
                         value={emailContent.content}
-                        onChange={(content) => setEmailContent(prev => ({ ...prev, content }))}
+                        onChange={(content) =>
+                          setEmailContent((prev) => ({ ...prev, content }))
+                        }
                         modules={modules}
                         formats={formats}
                         className="bg-white dark:bg-gray-900 h-[300px]"
@@ -364,7 +419,9 @@ function AdminSubscribers() {
                     <div className="mt-2 flex items-start text-sm text-gray-500 dark:text-gray-400">
                       <FiInfo className="w-5 h-5 mr-2 mt-0.5 flex-shrink-0" />
                       <span>
-                        Click the image icon (<FiImage className="inline w-4 h-4 mx-1" />) in the toolbar to add images to your email.
+                        Click the image icon (
+                        <FiImage className="inline w-4 h-4 mx-1" />) in the
+                        toolbar to add images to your email.
                       </span>
                     </div>
                   </div>
@@ -376,8 +433,8 @@ function AdminSubscribers() {
                 <div className="flex justify-end space-x-4">
                   <button
                     onClick={() => {
-                      setShowEmailForm(false)
-                      setEmailError(null)
+                      setShowEmailForm(false);
+                      setEmailError(null);
                     }}
                     className="btn-secondary"
                   >
@@ -415,7 +472,10 @@ function AdminSubscribers() {
         {loading ? (
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="animate-pulse bg-white dark:bg-gray-800 rounded-lg p-4">
+              <div
+                key={i}
+                className="animate-pulse bg-white dark:bg-gray-800 rounded-lg p-4"
+              >
                 <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
                 <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
               </div>
@@ -428,7 +488,10 @@ function AdminSubscribers() {
                 <thead className="bg-gray-50 dark:bg-gray-900">
                   <tr>
                     <th className="px-6 py-3 text-left">
-                      <label className="flex items-center cursor-pointer" title={allSelected ? 'Deselect all' : 'Select all'}>
+                      <label
+                        className="flex items-center cursor-pointer"
+                        title={allSelected ? 'Deselect all' : 'Select all'}
+                      >
                         <input
                           type="checkbox"
                           checked={allSelected}
@@ -453,7 +516,14 @@ function AdminSubscribers() {
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                   {subscribers.map((subscriber) => (
-                    <tr key={subscriber.id} className={selectedSubscribers.has(subscriber.id) ? 'bg-violet-50 dark:bg-violet-900/10' : ''}>
+                    <tr
+                      key={subscriber.id}
+                      className={
+                        selectedSubscribers.has(subscriber.id)
+                          ? 'bg-violet-50 dark:bg-violet-900/10'
+                          : ''
+                      }
+                    >
                       <td className="px-6 py-4">
                         <input
                           type="checkbox"
@@ -486,10 +556,18 @@ function AdminSubscribers() {
                   ))}
                   {subscribers.length === 0 && (
                     <tr>
-                      <td colSpan="4" className="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                      <td
+                        colSpan="4"
+                        className="px-6 py-4 text-center text-gray-500 dark:text-gray-400"
+                      >
                         <FiMail className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
-                        <p className="text-lg font-medium">No subscribers yet</p>
-                        <p className="text-sm">New subscribers will appear here when people sign up for your newsletter.</p>
+                        <p className="text-lg font-medium">
+                          No subscribers yet
+                        </p>
+                        <p className="text-sm">
+                          New subscribers will appear here when people sign up
+                          for your newsletter.
+                        </p>
                       </td>
                     </tr>
                   )}
@@ -500,7 +578,7 @@ function AdminSubscribers() {
         )}
       </div>
     </motion.div>
-  )
+  );
 }
 
-export default AdminSubscribers
+export default AdminSubscribers;

@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react'
-import { useSupabase } from '../contexts/SupabaseContext'
-import { apiCache, getCacheKey } from '../utils/cache'
-import { logger } from '../utils/logger'
-import { buildQuery, handleSupabaseError } from '../utils/supabaseHelpers'
+import { useState, useEffect } from 'react';
+import { useSupabase } from '../contexts/SupabaseContext';
+import { apiCache, getCacheKey } from '../utils/cache';
+import { logger } from '../utils/logger';
+import { buildQuery, handleSupabaseError } from '../utils/supabaseHelpers';
 
 export const useSupabaseQuery = (table, options = {}) => {
-  const { supabase } = useSupabase()
-  const [data, setData] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const { supabase } = useSupabase();
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const {
     select = '*',
@@ -16,46 +16,56 @@ export const useSupabaseQuery = (table, options = {}) => {
     orderBy = null,
     limit = null,
     single = false,
-    cache = true
-  } = options
+    cache = true,
+  } = options;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const cacheKey = getCacheKey(table, { select, filters, orderBy, limit, single })
-        
+        const cacheKey = getCacheKey(table, {
+          select,
+          filters,
+          orderBy,
+          limit,
+          single,
+        });
+
         // Check cache first
         if (cache) {
-          const cachedData = apiCache.get(cacheKey)
+          const cachedData = apiCache.get(cacheKey);
           if (cachedData) {
-            setData(cachedData)
-            setLoading(false)
-            return
+            setData(cachedData);
+            setLoading(false);
+            return;
           }
         }
 
         // Execute query using helper
-        const { data: result, error } = await buildQuery(supabase, table, options)
+        const { data: result, error } = await buildQuery(
+          supabase,
+          table,
+          options
+        );
 
-        if (error) throw error
+        if (error) throw error;
 
         // Cache the result
         if (cache) {
-          apiCache.set(cacheKey, result)
+          apiCache.set(cacheKey, result);
         }
 
-        setData(result)
+        setData(result);
       } catch (err) {
-        const errorMessage = handleSupabaseError(err)
-        logger.error(errorMessage, `useSupabaseQuery:${table}`)
-        setError(errorMessage)
+        const errorMessage = handleSupabaseError(err);
+        logger.error(errorMessage, `useSupabaseQuery:${table}`);
+        setError(errorMessage);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchData()
-  }, [supabase, table, JSON.stringify(options)]) // eslint-disable-line react-hooks/exhaustive-deps
+    fetchData();
+  }, [supabase, table, JSON.stringify(options)]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return { data, loading, error }
-}
+  return { data, loading, error };
+};

@@ -21,9 +21,7 @@ function OrderConfirmationPage() {
 
   async function fetchSettings() {
     try {
-      const { data, error } = await supabase
-        .from('settings')
-        .select('*');
+      const { data, error } = await supabase.from('settings').select('*');
 
       if (error) throw error;
       setSettings(data[0] || []);
@@ -38,7 +36,8 @@ function OrderConfirmationPage() {
     try {
       const { data, error } = await supabase
         .from('orders')
-        .select(`
+        .select(
+          `
           *,
           shipping_rates (
             name,
@@ -52,7 +51,8 @@ function OrderConfirmationPage() {
               image_url
             )
           )
-        `)
+        `
+        )
         .eq('id', id)
         .single();
 
@@ -86,16 +86,16 @@ function OrderConfirmationPage() {
       if (uploadError) throw uploadError;
 
       // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('payment-proofs')
-        .getPublicUrl(filePath);
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from('payment-proofs').getPublicUrl(filePath);
 
       // Update order with payment proof
       const { error: updateError } = await supabase
         .from('orders')
         .update({
           payment_proof: publicUrl,
-          payment_status: 'pending'
+          payment_status: 'pending',
         })
         .eq('id', id);
 
@@ -150,17 +150,20 @@ function OrderConfirmationPage() {
         <div className="max-w-3xl mx-auto">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
             <h1 className="text-2xl font-bold mb-6">Order Confirmation</h1>
-            
+
             <div className="mb-8">
               <p className="text-lg mb-4">
-                Thank you for your order! Your order number is: <span className="font-semibold">#{order?.id.slice(0, 8)}</span>
+                Thank you for your order! Your order number is:{' '}
+                <span className="font-semibold">#{order?.id.slice(0, 8)}</span>
               </p>
               <p className="text-gray-600 dark:text-gray-400">
                 Please complete your payment by sending an e-transfer to:
               </p>
               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mt-2">
                 <p className="font-semibold">E-transfer Details:</p>
-                <p>Email: <span>{settings?.social_links?.email}</span></p>
+                <p>
+                  Email: <span>{settings?.social_links?.email}</span>
+                </p>
                 <p>Amount: ${order.total_amount.toFixed(2)} CAD</p>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                   Please include your order number in the e-transfer message.
@@ -170,7 +173,9 @@ function OrderConfirmationPage() {
 
             {!success ? (
               <div className="mb-8">
-                <h2 className="text-lg font-semibold mb-4">Upload Payment Proof</h2>
+                <h2 className="text-lg font-semibold mb-4">
+                  Upload Payment Proof
+                </h2>
                 <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center">
                   <input
                     type="file"
@@ -186,7 +191,9 @@ function OrderConfirmationPage() {
                   >
                     <FiUpload className="w-8 h-8 text-gray-400 mb-2" />
                     <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {uploading ? 'Uploading...' : 'Click to upload e-transfer screenshot'}
+                      {uploading
+                        ? 'Uploading...'
+                        : 'Click to upload e-transfer screenshot'}
                     </span>
                   </label>
                 </div>
@@ -205,7 +212,9 @@ function OrderConfirmationPage() {
                   </h2>
                 </div>
                 <p className="mt-2 text-green-700 dark:text-green-300">
-                  Your order will be reviewed and confirmed within 48 hours. You'll receive an email notification once your payment is confirmed.
+                  Your order will be reviewed and confirmed within 48 hours.
+                  You'll receive an email notification once your payment is
+                  confirmed.
                 </p>
               </div>
             )}
@@ -223,7 +232,8 @@ function OrderConfirmationPage() {
                     <div className="ml-4 flex-1">
                       <h3 className="font-medium">{item.products.name}</h3>
                       <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Quantity: {item.quantity} × ${item.price_at_time.toFixed(2)}
+                        Quantity: {item.quantity} × $
+                        {item.price_at_time.toFixed(2)}
                       </p>
                     </div>
                     <div className="text-right">
@@ -231,7 +241,7 @@ function OrderConfirmationPage() {
                     </div>
                   </div>
                 ))}
-                
+
                 <div className="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Subtotal</span>

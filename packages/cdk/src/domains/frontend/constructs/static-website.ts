@@ -1,18 +1,24 @@
-import { CfnOutput, Duration, RemovalPolicy, Stack, Tags } from "aws-cdk-lib";
-import { CfnOriginAccessControl } from "aws-cdk-lib/aws-cloudfront";
-import { BlockPublicAccess, Bucket, BucketEncryption, HttpMethods, StorageClass } from "aws-cdk-lib/aws-s3";
-import { Construct } from "constructs";
+import { CfnOutput, Duration, RemovalPolicy, Stack, Tags } from 'aws-cdk-lib';
+import { CfnOriginAccessControl } from 'aws-cdk-lib/aws-cloudfront';
+import {
+  BlockPublicAccess,
+  Bucket,
+  BucketEncryption,
+  HttpMethods,
+  StorageClass,
+} from 'aws-cdk-lib/aws-s3';
+import { Construct } from 'constructs';
 
 // Props for Static Website construct
 export interface StaticWebsiteProps {
-    // S3 bucket name (must be globally unique)
-    readonly bucketName: string;
-    // Enable versioning for rollback capability
-    readonly versioned?: boolean;
-    // Lifecycle rules for cost optimization
-    readonly lifecycleRules?: boolean;
-    // Resource tags
-    readonly tags?: { [key: string]: string }
+  // S3 bucket name (must be globally unique)
+  readonly bucketName: string;
+  // Enable versioning for rollback capability
+  readonly versioned?: boolean;
+  // Lifecycle rules for cost optimization
+  readonly lifecycleRules?: boolean;
+  // Resource tags
+  readonly tags?: { [key: string]: string };
 }
 
 /**
@@ -20,66 +26,66 @@ export interface StaticWebsiteProps {
  * Creates S3 bucket optimized for static website hosting via CloudFront
  */
 export class StaticWebsite extends Construct {
-    // The S3 bucket for static assets
-    public readonly bucket: Bucket;
- 
-    constructor(scope: Construct, id: string, props: StaticWebsiteProps){
-        super(scope, id)
+  // The S3 bucket for static assets
+  public readonly bucket: Bucket;
 
-        // Create S3 bucket for static website
-        this.bucket = new Bucket(this, "WebsiteBucket", {
-            // Globally unique bucket name
-            bucketName: props.bucketName,
+  constructor(scope: Construct, id: string, props: StaticWebsiteProps) {
+    super(scope, id);
 
-            // Block all public access (CloudFront will serve content)
-            blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+    // Create S3 bucket for static website
+    this.bucket = new Bucket(this, 'WebsiteBucket', {
+      // Globally unique bucket name
+      bucketName: props.bucketName,
 
-            // Enable versioning for rollback capability
-            versioned: props.versioned || true,
+      // Block all public access (CloudFront will serve content)
+      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
 
-            // Encryption at rest
-            encryption: BucketEncryption.S3_MANAGED,
+      // Enable versioning for rollback capability
+      versioned: props.versioned || true,
 
-            // Enforce SSL/TLS for all requests
-            enforceSSL: true,
+      // Encryption at rest
+      encryption: BucketEncryption.S3_MANAGED,
 
-            // Removal policy (be careful in production)
-            removalPolicy: RemovalPolicy.RETAIN,
-            
-            // CORS configuration for web assets
-            cors:[
-                {
-                    allowedMethods: [HttpMethods.GET, HttpMethods.HEAD],
-                    allowedOrigins: ["*"], // CloudFront will restrict this
-                    allowedHeaders: ["*"],
-                    maxAge: 3600
-                }
-            ]
-        })
+      // Enforce SSL/TLS for all requests
+      enforceSSL: true,
 
-        // Add lifecycle rules for cost optimization
-        if(props.lifecycleRules ?? true) {
-            this.bucket.addLifecycleRule({
-                id: 'OptimizeStorage',
-                enabled: true,
-                // Move to Infrequent Access after 30 days
-                transitions: [
-                    {
-                        storageClass: StorageClass.INFREQUENT_ACCESS,
-                        transitionAfter: Duration.days(30)
-                    }
-                ],
-                noncurrentVersionExpiration: Duration.days(90)
-            })
-        }
+      // Removal policy (be careful in production)
+      removalPolicy: RemovalPolicy.RETAIN,
 
-        // Apply tags if provided
-        if (props.tags) {
-            Object.entries(props.tags).forEach(([key, value]) => {
-                Tags.of(this.bucket).add(key, value)
-            })
-        }
+      // CORS configuration for web assets
+      cors: [
+        {
+          allowedMethods: [HttpMethods.GET, HttpMethods.HEAD],
+          allowedOrigins: ['*'], // CloudFront will restrict this
+          allowedHeaders: ['*'],
+          maxAge: 3600,
+        },
+      ],
+    });
 
-        // Bucket outputs are exported by the parent stack
+    // Add lifecycle rules for cost optimization
+    if (props.lifecycleRules ?? true) {
+      this.bucket.addLifecycleRule({
+        id: 'OptimizeStorage',
+        enabled: true,
+        // Move to Infrequent Access after 30 days
+        transitions: [
+          {
+            storageClass: StorageClass.INFREQUENT_ACCESS,
+            transitionAfter: Duration.days(30),
+          },
+        ],
+        noncurrentVersionExpiration: Duration.days(90),
+      });
     }
+
+    // Apply tags if provided
+    if (props.tags) {
+      Object.entries(props.tags).forEach(([key, value]) => {
+        Tags.of(this.bucket).add(key, value);
+      });
+    }
+
+    // Bucket outputs are exported by the parent stack
+  }
 }

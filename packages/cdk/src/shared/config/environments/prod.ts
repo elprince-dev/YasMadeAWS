@@ -1,6 +1,6 @@
-import { Duration } from 'aws-cdk-lib'
-import { APP_NAME, AWS_REGIONS } from '../constants/aws'
-import { EnvironmentConfig } from '../../types/environment'
+import { Duration } from 'aws-cdk-lib';
+import { APP_NAME, AWS_REGIONS } from '../constants/aws';
+import { EnvironmentConfig } from '../../types/environment';
 
 // Production environment configuration
 export const prodConfig: EnvironmentConfig = {
@@ -44,4 +44,4 @@ export const prodConfig: EnvironmentConfig = {
     Project: APP_NAME,
     Owner: 'elprince-dev',
   },
-}
+};

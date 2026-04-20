@@ -1,8 +1,8 @@
-import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
-import { FiCalendar } from 'react-icons/fi'
-import LazyImage from './LazyImage'
-import { formatDate, formatPrice } from '../../utils/dateHelpers'
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { FiCalendar } from 'react-icons/fi';
+import LazyImage from './LazyImage';
+import { formatDate, formatPrice } from '../../utils/dateHelpers';
 
 function SessionCard({ session }) {
   return (
@@ -37,14 +37,12 @@ function SessionCard({ session }) {
             <span className="text-lg font-bold text-primary-600 dark:text-primary-400">
               {formatPrice(session.price)}
             </span>
-            <span className="btn-primary py-2 px-4">
-              View Details
-            </span>
+            <span className="btn-primary py-2 px-4">View Details</span>
           </div>
         </div>
       </Link>
     </motion.div>
-  )
+  );
 }
 
-export default SessionCard
+export default SessionCard;

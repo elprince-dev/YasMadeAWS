@@ -28,19 +28,25 @@ function ProductDetailPage() {
         // Fetch product and images in parallel for better performance
         const [productResult, imagesResult] = await Promise.all([
           supabase.from('products').select('*').eq('id', id).single(),
-          supabase.from('product_images').select('*').eq('product_id', id).order('order_position')
+          supabase
+            .from('product_images')
+            .select('*')
+            .eq('product_id', id)
+            .order('order_position'),
         ]);
 
         if (productResult.error) throw productResult.error;
         if (imagesResult.error) throw imagesResult.error;
 
         setProduct(productResult.data);
-        
+
         // Handle images: use product_images if available, otherwise fallback to product.image_url
         if (imagesResult.data.length > 0) {
           setProductImages(imagesResult.data);
         } else if (productResult.data.image_url) {
-          setProductImages([{ id: 'main', image_url: productResult.data.image_url }]);
+          setProductImages([
+            { id: 'main', image_url: productResult.data.image_url },
+          ]);
         } else {
           setProductImages([{ id: 'fallback', image_url: './slide-4.jpeg' }]);
         }
@@ -67,7 +73,7 @@ function ProductDetailPage() {
       name: product.name,
       price: product.price,
       image: product.image_url,
-      quantity
+      quantity,
     });
   };
 
@@ -99,7 +105,9 @@ function ProductDetailPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-4">Product Not Found</h2>
-          <p className="text-gray-600">The product you're looking for doesn't exist.</p>
+          <p className="text-gray-600">
+            The product you're looking for doesn't exist.
+          </p>
         </div>
       </div>
     );
@@ -164,7 +172,7 @@ function ProductDetailPage() {
           <p className="text-2xl font-semibold text-primary-600 dark:text-primary-400 mb-6">
             ${product.price.toFixed(2)} CAD
           </p>
-          
+
           <div className="prose max-w-none mb-8">
             <p className="whitespace-pre-wrap">{product.description}</p>
           </div>
@@ -172,7 +180,11 @@ function ProductDetailPage() {
           <div className="space-y-6">
             <div className="flex items-center space-x-2">
               <span className="text-gray-600">Availability:</span>
-              <span className={`font-medium ${product.in_stock ? 'text-green-600' : 'text-red-600'}`}>
+              <span
+                className={`font-medium ${
+                  product.in_stock ? 'text-green-600' : 'text-red-600'
+                }`}
+              >
                 {product.in_stock ? 'In Stock' : 'Out of Stock'}
               </span>
             </div>

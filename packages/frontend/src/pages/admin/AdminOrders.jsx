@@ -1,27 +1,27 @@
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { useSupabase } from '../../contexts/SupabaseContext'
-import { FiX, FiFilter, FiDownload, FiEye } from 'react-icons/fi'
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { useSupabase } from '../../contexts/SupabaseContext';
+import { FiX, FiFilter, FiDownload, FiEye } from 'react-icons/fi';
 
 function AdminOrders() {
-  const { supabase } = useSupabase()
-  const [orders, setOrders] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [selectedOrder, setSelectedOrder] = useState(null)
-  const [showModal, setShowModal] = useState(false)
+  const { supabase } = useSupabase();
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const [filters, setFilters] = useState({
     status: 'all',
     dateFrom: '',
     dateTo: '',
-    searchTerm: ''
-  })
+    searchTerm: '',
+  });
   const [trackingInput, setTrackingInput] = useState('');
   const [trackingSuccess, setTrackingSuccess] = useState(false);
 
   useEffect(() => {
-    fetchOrders()
-  }, [])
+    fetchOrders();
+  }, []);
 
   useEffect(() => {
     if (showModal && selectedOrder) {
@@ -33,7 +33,8 @@ function AdminOrders() {
     try {
       const { data, error } = await supabase
         .from('orders')
-        .select(`
+        .select(
+          `
           *,
           shipping_rates (*),
           promo_codes (*),
@@ -41,17 +42,18 @@ function AdminOrders() {
             *,
             products (*)
           )
-        `)
-        .order('created_at', { ascending: false })
+        `
+        )
+        .order('created_at', { ascending: false });
 
-      if (error) throw error
+      if (error) throw error;
 
-      setOrders(data || [])
+      setOrders(data || []);
     } catch (error) {
-      console.error('Error fetching orders:', error)
-      setError('Failed to load orders')
+      console.error('Error fetching orders:', error);
+      setError('Failed to load orders');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -60,81 +62,87 @@ function AdminOrders() {
       const { error } = await supabase
         .from('orders')
         .update({ status: newStatus })
-        .eq('id', orderId)
+        .eq('id', orderId);
 
-      if (error) throw error
+      if (error) throw error;
 
-      setOrders(orders.map(order =>
-        order.id === orderId ? { ...order, status: newStatus } : order
-      ))
+      setOrders(
+        orders.map((order) =>
+          order.id === orderId ? { ...order, status: newStatus } : order
+        )
+      );
     } catch (error) {
-      console.error('Error updating order status:', error)
-      alert('Failed to update order status')
+      console.error('Error updating order status:', error);
+      alert('Failed to update order status');
     }
-  }
+  };
 
   const handleTrackingUpdate = async (orderId, trackingNumber) => {
     try {
       const { error } = await supabase
         .from('orders')
         .update({ tracking_number: trackingNumber })
-        .eq('id', orderId)
+        .eq('id', orderId);
 
-      if (error) throw error
+      if (error) throw error;
 
-      setOrders(orders.map(order =>
-        order.id === orderId ? { ...order, tracking_number: trackingNumber } : order
-      ))
+      setOrders(
+        orders.map((order) =>
+          order.id === orderId
+            ? { ...order, tracking_number: trackingNumber }
+            : order
+        )
+      );
       setTrackingSuccess(true);
       setTimeout(() => setTrackingSuccess(false), 2000);
     } catch (error) {
-      console.error('Error updating tracking number:', error)
-      alert('Failed to update tracking number')
+      console.error('Error updating tracking number:', error);
+      alert('Failed to update tracking number');
     }
-  }
+  };
 
   const handleFilterChange = (field, value) => {
-    setFilters(prev => ({ ...prev, [field]: value }))
-  }
+    setFilters((prev) => ({ ...prev, [field]: value }));
+  };
 
   const resetFilters = () => {
     setFilters({
       status: 'all',
       dateFrom: '',
       dateTo: '',
-      searchTerm: ''
-    })
-  }
+      searchTerm: '',
+    });
+  };
 
-  const filteredOrders = orders.filter(order => {
+  const filteredOrders = orders.filter((order) => {
     // Status filter
     if (filters.status !== 'all' && order.status !== filters.status) {
-      return false
+      return false;
     }
 
     // Date range filter
     if (filters.dateFrom || filters.dateTo) {
-      const orderDate = new Date(order.created_at)
+      const orderDate = new Date(order.created_at);
       if (filters.dateFrom && orderDate < new Date(filters.dateFrom)) {
-        return false
+        return false;
       }
       if (filters.dateTo && orderDate > new Date(filters.dateTo)) {
-        return false
+        return false;
       }
     }
 
     // Search term filter
     if (filters.searchTerm) {
-      const searchLower = filters.searchTerm.toLowerCase()
+      const searchLower = filters.searchTerm.toLowerCase();
       return (
         order.customer_name.toLowerCase().includes(searchLower) ||
         order.customer_email.toLowerCase().includes(searchLower) ||
         order.id.toLowerCase().includes(searchLower)
-      )
+      );
     }
 
-    return true
-  })
+    return true;
+  });
 
   const exportToCSV = () => {
     const headers = [
@@ -147,10 +155,10 @@ function AdminOrders() {
       'Shipping',
       'Discount',
       'Total',
-      'Tracking Number'
-    ]
+      'Tracking Number',
+    ];
 
-    const csvData = filteredOrders.map(order => [
+    const csvData = filteredOrders.map((order) => [
       order.id,
       new Date(order.created_at).toLocaleString(),
       order.customer_name,
@@ -160,41 +168,41 @@ function AdminOrders() {
       order.shipping_fee,
       order.discount_amount,
       order.total_amount,
-      order.tracking_number || 'N/A'
-    ])
+      order.tracking_number || 'N/A',
+    ]);
 
     const csvContent = [
       headers.join(','),
-      ...csvData.map(row => row.join(','))
-    ].join('\n')
+      ...csvData.map((row) => row.join(',')),
+    ].join('\n');
 
-    const blob = new Blob([csvContent], { type: 'text/csv' })
-    const url = window.URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `orders-${new Date().toISOString().split('T')[0]}.csv`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    window.URL.revokeObjectURL(url)
-  }
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `orders-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
       case 'paid':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
       case 'shipped':
-        return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
+        return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
       case 'delivered':
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
       case 'cancelled':
-        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
       default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
     }
-  }
+  };
 
   return (
     <motion.div
@@ -206,10 +214,7 @@ function AdminOrders() {
       <div className="container-custom">
         <div className="flex justify-between items-center mb-8">
           <h1 className="heading-2">Manage Orders</h1>
-          <button
-            onClick={exportToCSV}
-            className="btn-secondary"
-          >
+          <button onClick={exportToCSV} className="btn-secondary">
             <FiDownload className="w-5 h-5 mr-2" />
             Export to CSV
           </button>
@@ -277,7 +282,9 @@ function AdminOrders() {
               <input
                 type="text"
                 value={filters.searchTerm}
-                onChange={(e) => handleFilterChange('searchTerm', e.target.value)}
+                onChange={(e) =>
+                  handleFilterChange('searchTerm', e.target.value)
+                }
                 placeholder="Search orders..."
                 className="w-full px-4 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
               />
@@ -294,7 +301,10 @@ function AdminOrders() {
         {loading ? (
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="animate-pulse bg-white dark:bg-gray-800 rounded-lg p-4">
+              <div
+                key={i}
+                className="animate-pulse bg-white dark:bg-gray-800 rounded-lg p-4"
+              >
                 <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
                 <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
               </div>
@@ -347,8 +357,13 @@ function AdminOrders() {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(order.status)}`}>
-                          {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                        <span
+                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
+                            order.status
+                          )}`}
+                        >
+                          {order.status.charAt(0).toUpperCase() +
+                            order.status.slice(1)}
                         </span>
                       </td>
                       <td className="px-6 py-4">
@@ -364,8 +379,8 @@ function AdminOrders() {
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button
                           onClick={() => {
-                            setSelectedOrder(order)
-                            setShowModal(true)
+                            setSelectedOrder(order);
+                            setShowModal(true);
                           }}
                           className="text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300"
                         >
@@ -407,7 +422,9 @@ function AdminOrders() {
                 <div className="flex items-center space-x-2">
                   <select
                     value={selectedOrder.status}
-                    onChange={(e) => handleStatusChange(selectedOrder.id, e.target.value)}
+                    onChange={(e) =>
+                      handleStatusChange(selectedOrder.id, e.target.value)
+                    }
                     className="px-4 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
                   >
                     <option value="pending">Pending</option>
@@ -421,7 +438,9 @@ function AdminOrders() {
 
               {/* Tracking Number */}
               <div className="mb-6">
-                <h3 className="text-lg font-medium mb-2">Tracking Information</h3>
+                <h3 className="text-lg font-medium mb-2">
+                  Tracking Information
+                </h3>
                 <div className="flex items-center space-x-2">
                   <input
                     type="text"
@@ -431,7 +450,9 @@ function AdminOrders() {
                     className="flex-1 px-4 py-2 rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900"
                   />
                   <button
-                    onClick={() => handleTrackingUpdate(selectedOrder.id, trackingInput)}
+                    onClick={() =>
+                      handleTrackingUpdate(selectedOrder.id, trackingInput)
+                    }
                     className="btn-primary py-2"
                   >
                     Update
@@ -449,14 +470,20 @@ function AdminOrders() {
                 <div className="mb-6">
                   <h3 className="text-lg font-medium mb-2">Payment Proof</h3>
                   <div className="flex flex-col items-center">
-                    <a href={selectedOrder.payment_proof} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={selectedOrder.payment_proof}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <img
                         src={selectedOrder.payment_proof}
                         alt="Payment Proof"
                         className="max-h-64 rounded shadow border border-gray-200 dark:border-gray-700"
                       />
                     </a>
-                    <p className="text-xs text-gray-500 mt-2 text-center">Click image to view full size.</p>
+                    <p className="text-xs text-gray-500 mt-2 text-center">
+                      Click image to view full size.
+                    </p>
                   </div>
                 </div>
               )}
@@ -466,10 +493,14 @@ function AdminOrders() {
                 <div>
                   <h3 className="text-lg font-medium mb-2">Shipping Address</h3>
                   <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                    <p className="font-medium">{selectedOrder.shipping_address.name}</p>
+                    <p className="font-medium">
+                      {selectedOrder.shipping_address.name}
+                    </p>
                     <p>{selectedOrder.shipping_address.street}</p>
                     <p>
-                      {selectedOrder.shipping_address.city}, {selectedOrder.shipping_address.state} {selectedOrder.shipping_address.postal_code}
+                      {selectedOrder.shipping_address.city},{' '}
+                      {selectedOrder.shipping_address.state}{' '}
+                      {selectedOrder.shipping_address.postal_code}
                     </p>
                     <p>{selectedOrder.shipping_address.country}</p>
                   </div>
@@ -477,10 +508,14 @@ function AdminOrders() {
                 <div>
                   <h3 className="text-lg font-medium mb-2">Billing Address</h3>
                   <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                    <p className="font-medium">{selectedOrder.billing_address.name}</p>
+                    <p className="font-medium">
+                      {selectedOrder.billing_address.name}
+                    </p>
                     <p>{selectedOrder.billing_address.street}</p>
                     <p>
-                      {selectedOrder.billing_address.city}, {selectedOrder.billing_address.state} {selectedOrder.billing_address.postal_code}
+                      {selectedOrder.billing_address.city},{' '}
+                      {selectedOrder.billing_address.state}{' '}
+                      {selectedOrder.billing_address.postal_code}
                     </p>
                     <p>{selectedOrder.billing_address.country}</p>
                   </div>
@@ -543,16 +578,26 @@ function AdminOrders() {
               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
-                    <span className="font-medium">${selectedOrder.subtotal.toFixed(2)}</span>
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Subtotal
+                    </span>
+                    <span className="font-medium">
+                      ${selectedOrder.subtotal.toFixed(2)}
+                    </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600 dark:text-gray-400">Shipping</span>
-                    <span className="font-medium">${selectedOrder.shipping_fee.toFixed(2)}</span>
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Shipping
+                    </span>
+                    <span className="font-medium">
+                      ${selectedOrder.shipping_fee.toFixed(2)}
+                    </span>
                   </div>
                   {selectedOrder.discount_amount > 0 && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600 dark:text-gray-400">Discount</span>
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Discount
+                      </span>
                       <span className="font-medium text-green-600">
                         -${selectedOrder.discount_amount.toFixed(2)}
                       </span>
@@ -560,13 +605,19 @@ function AdminOrders() {
                   )}
                   {selectedOrder.tax_amount > 0 && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600 dark:text-gray-400">Tax</span>
-                      <span className="font-medium">${selectedOrder.tax_amount.toFixed(2)}</span>
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Tax
+                      </span>
+                      <span className="font-medium">
+                        ${selectedOrder.tax_amount.toFixed(2)}
+                      </span>
                     </div>
                   )}
                   <div className="border-t border-gray-200 dark:border-gray-600 pt-2 mt-2">
                     <div className="flex justify-between">
-                      <span className="font-medium text-gray-900 dark:text-white">Total</span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        Total
+                      </span>
                       <span className="font-bold text-gray-900 dark:text-white">
                         ${selectedOrder.total_amount.toFixed(2)}
                       </span>
@@ -579,7 +630,7 @@ function AdminOrders() {
         )}
       </div>
     </motion.div>
-  )
+  );
 }
 
-export default AdminOrders
+export default AdminOrders;

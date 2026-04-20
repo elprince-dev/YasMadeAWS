@@ -13,11 +13,13 @@
 9. [x] Enhance error handling with detailed logging
 
 ## Testing Required:
+
 - [ ] Test image upload functionality
 - [ ] Verify images are saved to Supabase bucket "images" in folder "blogs"
 - [ ] Test both creating new blog posts and editing existing ones
 
 ## Implementation Details:
+
 - Upload files to Supabase bucket "images" in folder "blogs"
 - Use react-dropzone for drag-and-drop functionality
 - Generate unique filenames using uuid

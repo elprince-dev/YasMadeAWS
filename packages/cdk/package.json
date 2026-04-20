@@ -8,7 +8,9 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "synth": "cdk synth",
+    "synth:pipeline": "cdk synth -a \"npx ts-node --prefer-ts-exts src/bin/pipeline-app.ts\"",
     "deploy": "cdk deploy ",
+    "deploy:pipeline": "cdk deploy -a \"npx ts-node --prefer-ts-exts src/bin/pipeline-app.ts\" --all",
     "test": "jest",
     "lint": "eslint .",
     "destroy": "cdk destroy",

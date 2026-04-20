@@ -1,16 +1,22 @@
-import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { useSupabase } from '../contexts/SupabaseContext'
-import { FiCalendar, FiClock, FiMapPin, FiUsers, FiAlertCircle } from 'react-icons/fi'
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { useSupabase } from '../contexts/SupabaseContext';
+import {
+  FiCalendar,
+  FiClock,
+  FiMapPin,
+  FiUsers,
+  FiAlertCircle,
+} from 'react-icons/fi';
 
 function SessionDetailPage() {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const { supabase } = useSupabase()
-  const [session, setSession] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { supabase } = useSupabase();
+  const [session, setSession] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     async function fetchSessionData() {
@@ -19,21 +25,21 @@ function SessionDetailPage() {
           .from('sessions')
           .select('*')
           .eq('id', id)
-          .single()
+          .single();
 
-        if (sessionError) throw sessionError
+        if (sessionError) throw sessionError;
 
-        setSession(sessionData)
+        setSession(sessionData);
       } catch (error) {
-        console.error('Error fetching session data:', error)
-        setError('Failed to load session details')
+        console.error('Error fetching session data:', error);
+        setError('Failed to load session details');
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
 
-    fetchSessionData()
-  }, [id, supabase])
+    fetchSessionData();
+  }, [id, supabase]);
 
   if (loading) {
     return (
@@ -48,7 +54,7 @@ function SessionDetailPage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (error || !session) {
@@ -59,7 +65,8 @@ function SessionDetailPage() {
             <FiAlertCircle className="mx-auto h-12 w-12 text-red-500 mb-4" />
             <h1 className="heading-2 mb-4">Session Not Found</h1>
             <p className="text-gray-600 dark:text-gray-400 mb-8">
-              {error || "The session you're looking for doesn't exist or has been removed."}
+              {error ||
+                "The session you're looking for doesn't exist or has been removed."}
             </p>
             <button
               onClick={() => navigate('/sessions')}
@@ -70,7 +77,7 @@ function SessionDetailPage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -91,7 +98,7 @@ function SessionDetailPage() {
               />
             </div>
           )}
-          
+
           <h1 className="heading-2 mb-6">{session.title}</h1>
 
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
@@ -102,7 +109,7 @@ function SessionDetailPage() {
                   weekday: 'long',
                   year: 'numeric',
                   month: 'long',
-                  day: 'numeric'
+                  day: 'numeric',
                 })}
               </div>
               {session.session_time && (
@@ -119,16 +126,18 @@ function SessionDetailPage() {
               )}
               <div className="flex items-center text-gray-600 dark:text-gray-400">
                 <FiUsers className="w-5 h-5 mr-2" />
-                {session.max_participants ? `${session.max_participants} spots available` : 'Unlimited spots'}
+                {session.max_participants
+                  ? `${session.max_participants} spots available`
+                  : 'Unlimited spots'}
               </div>
             </div>
-            <div 
+            <div
               className="mt-4 text-gray-600 dark:text-gray-400"
-              dangerouslySetInnerHTML={{ 
+              dangerouslySetInnerHTML={{
                 __html: session.description
                   .replace(/\r\n/g, '<br>')
                   .replace(/\n/g, '<br>')
-                  .replace(/\r/g, '<br>')
+                  .replace(/\r/g, '<br>'),
               }}
             />
             {session.price > 0 && (
@@ -154,14 +163,15 @@ function SessionDetailPage() {
                 Registration Not Available
               </h2>
               <p className="text-yellow-700 dark:text-yellow-300">
-                Registration for this session is not yet open. Please check back later.
+                Registration for this session is not yet open. Please check back
+                later.
               </p>
             </div>
           )}
         </div>
       </div>
     </motion.div>
-  )
+  );
 }
 
-export default SessionDetailPage
+export default SessionDetailPage;

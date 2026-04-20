@@ -1,11 +1,11 @@
-import { useRef, useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { FiMail, FiMapPin } from 'react-icons/fi'
-import { useSupabase } from '../contexts/SupabaseContext'
-import { sendContactNotification } from '../utils/emailApi'
+import { useRef, useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { FiMail, FiMapPin } from 'react-icons/fi';
+import { useSupabase } from '../contexts/SupabaseContext';
+import { sendContactNotification } from '../utils/emailApi';
 
 function ContactPage() {
-  const { supabase } = useSupabase()
+  const { supabase } = useSupabase();
   //---------------------
   const [settings, setSettings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,9 +15,7 @@ function ContactPage() {
 
   async function fetchSettings() {
     try {
-      const { data, error } = await supabase
-        .from('settings')
-        .select('*');
+      const { data, error } = await supabase.from('settings').select('*');
 
       if (error) throw error;
       setSettings(data[0] || []);
@@ -33,59 +31,59 @@ function ContactPage() {
     name: '',
     email: '',
     subject: '',
-    message: ''
-  })
-  const [submitting, setSubmitting] = useState(false)
-  const [success, setSuccess] = useState(false)
-  const [error, setError] = useState(null)
+    message: '',
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
+    const { name, value } = e.target;
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
-    }))
-  }
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setSubmitting(true)
-    setError(null)
+    e.preventDefault();
+    setSubmitting(true);
+    setError(null);
 
     try {
       const { error } = await supabase
         .from('contact_submissions')
-        .insert([formData])
+        .insert([formData]);
 
-      if (error) throw error
+      if (error) throw error;
 
       // Send email notification via Email API (fire-and-forget — form is already saved)
       try {
-        await sendContactNotification(formData)
+        await sendContactNotification(formData);
       } catch (emailErr) {
-        console.error('Email notification failed:', emailErr)
+        console.error('Email notification failed:', emailErr);
       }
 
-      setSuccess(true)
+      setSuccess(true);
       setFormData({
         name: '',
         email: '',
         subject: '',
-        message: ''
-      })
+        message: '',
+      });
     } catch (error) {
-      console.error('Error submitting form:', error)
-      setError('Failed to send message. Please try again later.')
+      console.error('Error submitting form:', error);
+      setError('Failed to send message. Please try again later.');
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
-  }
+  };
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="loader" />
       </div>
-      )
+    );
   }
 
   return (
@@ -115,7 +113,10 @@ function ContactPage() {
                 <div className="ml-4">
                   <h3 className="text-lg font-medium">Email</h3>
                   <p className="text-gray-600 dark:text-gray-400">
-                    <a href={`mailto:${settings?.social_links?.email}`} className="hover:text-primary-600 dark:hover:text-primary-400">
+                    <a
+                      href={`mailto:${settings?.social_links?.email}`}
+                      className="hover:text-primary-600 dark:hover:text-primary-400"
+                    >
                       {settings?.social_links?.email}
                     </a>
                   </p>
@@ -153,9 +154,12 @@ function ContactPage() {
           {/* Contact Form */}
           <div>
             <h2 className="text-2xl font-semibold mb-6">Send a Message</h2>
-            <form onSubmit={handleSubmit} className="space-y-6" ref={formRef} >
+            <form onSubmit={handleSubmit} className="space-y-6" ref={formRef}>
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                >
                   Name
                 </label>
                 <input
@@ -170,7 +174,10 @@ function ContactPage() {
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                >
                   Email
                 </label>
                 <input
@@ -185,7 +192,10 @@ function ContactPage() {
               </div>
 
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label
+                  htmlFor="subject"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                >
                   Subject
                 </label>
                 <input
@@ -200,7 +210,10 @@ function ContactPage() {
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label
+                  htmlFor="message"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                >
                   Message
                 </label>
                 <textarea
@@ -238,7 +251,7 @@ function ContactPage() {
         </div>
       </div>
     </motion.div>
-  )
+  );
 }
 
-export default ContactPage
+export default ContactPage;

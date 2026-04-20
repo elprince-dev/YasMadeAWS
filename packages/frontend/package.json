@@ -47,7 +47,10 @@
     "targets": {
       "build": {
         "cache": true,
-        "dependsOn": ["lint", "test"]
+        "dependsOn": [
+          "lint",
+          "test"
+        ]
       }
     }
   }

@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { FiInstagram, FiFacebook, FiMail } from 'react-icons/fi'
-import { useSupabase } from '../../contexts/SupabaseContext'
-import Logo from '../common/Logo'
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { FiInstagram, FiFacebook, FiMail } from 'react-icons/fi';
+import { useSupabase } from '../../contexts/SupabaseContext';
+import Logo from '../common/Logo';
 
 function Footer() {
-  const { supabase } = useSupabase()
-  const currentYear = new Date().getFullYear()
-  const [email, setEmail] = useState('')
-  const [subscribing, setSubscribing] = useState(false)
-  const [subscribeError, setSubscribeError] = useState(null)
-  const [subscribeSuccess, setSubscribeSuccess] = useState(false)
+  const { supabase } = useSupabase();
+  const currentYear = new Date().getFullYear();
+  const [email, setEmail] = useState('');
+  const [subscribing, setSubscribing] = useState(false);
+  const [subscribeError, setSubscribeError] = useState(null);
+  const [subscribeSuccess, setSubscribeSuccess] = useState(false);
   //---------------------
   const [settings, setSettings] = useState([]);
   const [loading, setLoading] = useState(true); // eslint-disable-line no-unused-vars
@@ -20,44 +20,47 @@ function Footer() {
 
   async function fetchSettings() {
     try {
-      const { data, error } = await supabase
-        .from('settings')
-        .select('*');
+      const { data, error } = await supabase.from('settings').select('*');
 
       if (error) throw error;
       setSettings(data[0] || []);
     } catch (error) {
-      console.error('Error fetching settings:', encodeURIComponent(error.message || 'Unknown error'));
+      console.error(
+        'Error fetching settings:',
+        encodeURIComponent(error.message || 'Unknown error')
+      );
     } finally {
       setLoading(false);
     }
   }
   //----------------------
-  
+
   const handleSubscribe = async (e) => {
-    e.preventDefault()
-    setSubscribing(true)
-    setSubscribeError(null)
-    setSubscribeSuccess(false)
+    e.preventDefault();
+    setSubscribing(true);
+    setSubscribeError(null);
+    setSubscribeSuccess(false);
 
     try {
-      const { error } = await supabase
-        .from('subscribers')
-        .insert([{ email }])
+      const { error } = await supabase.from('subscribers').insert([{ email }]);
 
-      if (error) throw error
+      if (error) throw error;
 
-      setSubscribeSuccess(true)
-      setEmail('')
+      setSubscribeSuccess(true);
+      setEmail('');
     } catch (error) {
-      console.error('Error subscribing:', encodeURIComponent(error.message || 'Unknown error'))
-      setSubscribeError('Failed to subscribe. You might already be subscribed.')
+      console.error(
+        'Error subscribing:',
+        encodeURIComponent(error.message || 'Unknown error')
+      );
+      setSubscribeError(
+        'Failed to subscribe. You might already be subscribed.'
+      );
     } finally {
-      setSubscribing(false)
+      setSubscribing(false);
     }
-  }
+  };
 
-  
   return (
     <footer className="bg-gray-50 dark:bg-gray-900 pt-12 pb-6 border-t border-gray-200 dark:border-gray-800">
       <div className="container-custom">
@@ -69,7 +72,8 @@ function Footer() {
               <span className="ml-2 text-xl font-bold">YasMade</span>
             </Link>
             <p className="text-gray-600 dark:text-gray-400 mb-4">
-              Handmade embroidery, creative sessions, and artistic inspiration for your home and life.
+              Handmade embroidery, creative sessions, and artistic inspiration
+              for your home and life.
             </p>
             <div className="flex space-x-4">
               <a
@@ -102,35 +106,55 @@ function Footer() {
 
           {/* Navigation & About */}
           <div className="md:col-span-1">
-            <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Navigation</h4>
+            <h4 className="font-semibold text-gray-900 dark:text-white mb-4">
+              Navigation
+            </h4>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <Link
+                  to="/"
+                  className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                >
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/products" className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <Link
+                  to="/products"
+                  className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                >
                   Products
                 </Link>
               </li>
               <li>
-                <Link to="/blog" className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <Link
+                  to="/blog"
+                  className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                >
                   Blog
                 </Link>
               </li>
               <li>
-                <Link to="/sessions" className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <Link
+                  to="/sessions"
+                  className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                >
                   Sessions
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <Link
+                  to="/contact"
+                  className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                >
                   Contact
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <Link
+                  to="/about"
+                  className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                >
                   About YasMade
                 </Link>
               </li>
@@ -139,7 +163,9 @@ function Footer() {
 
           {/* Newsletter */}
           <div className="md:col-span-1">
-            <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Subscribe to updates</h4>
+            <h4 className="font-semibold text-gray-900 dark:text-white mb-4">
+              Subscribe to updates
+            </h4>
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               Stay informed about new products, sessions, and blog posts.
             </p>
@@ -183,7 +209,7 @@ function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }
 
-export default Footer
+export default Footer;

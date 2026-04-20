@@ -1,14 +1,14 @@
-import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib'
-import { Construct } from 'constructs'
-import { IHostedZone } from 'aws-cdk-lib/aws-route53'
-import { EnvironmentConfig } from '../../../shared/types/environment'
-import { SesIdentity } from '../constructs/ses-identity'
-import { EmailApi } from '../constructs/email-api'
+import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib';
+import { Construct } from 'constructs';
+import { IHostedZone } from 'aws-cdk-lib/aws-route53';
+import { EnvironmentConfig } from '../../../shared/types/environment';
+import { SesIdentity } from '../constructs/ses-identity';
+import { EmailApi } from '../constructs/email-api';
 
 export interface EmailStackProps extends StackProps {
-  readonly environmentConfig: EnvironmentConfig
+  readonly environmentConfig: EnvironmentConfig;
   /** Route53 hosted zone from CertificateStack */
-  readonly hostedZone: IHostedZone
+  readonly hostedZone: IHostedZone;
 }
 
 /**
@@ -18,20 +18,20 @@ export interface EmailStackProps extends StackProps {
  * constructs into a single deployable stack.
  */
 export class EmailStack extends Stack {
-  public readonly sesIdentity: SesIdentity
-  public readonly emailApi: EmailApi
+  public readonly sesIdentity: SesIdentity;
+  public readonly emailApi: EmailApi;
 
   constructor(scope: Construct, id: string, props: EmailStackProps) {
-    super(scope, id, props)
+    super(scope, id, props);
 
-    const domainName = props.environmentConfig.domain.name
+    const domainName = props.environmentConfig.domain.name;
 
     // SES domain identity with DKIM + MAIL FROM
     this.sesIdentity = new SesIdentity(this, 'SesIdentity', {
       domainName,
       hostedZone: props.hostedZone,
       tags: props.environmentConfig.tags,
-    })
+    });
 
     // API Gateway + Lambda email handler
     this.emailApi = new EmailApi(this, 'EmailApi', {
@@ -46,13 +46,13 @@ export class EmailStack extends Stack {
       supabaseUrl: process.env.VITE_SUPABASE_URL ?? '',
       supabaseAnonKey: process.env.VITE_SUPABASE_ANON_KEY ?? '',
       tags: props.environmentConfig.tags,
-    })
+    });
 
     // Stack outputs
     new CfnOutput(this, 'ApiEndpoint', {
       value: this.emailApi.httpApi.apiEndpoint,
       description: 'Email API base URL',
       exportName: `${this.stackName}-ApiEndpoint`,
-    })
+    });
   }
 }

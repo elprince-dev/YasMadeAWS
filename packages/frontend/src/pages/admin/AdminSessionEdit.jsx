@@ -1,15 +1,15 @@
-import { useState, useEffect, useCallback } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { useSupabase } from '../../contexts/SupabaseContext'
-import { FiSave, FiX, FiUpload } from 'react-icons/fi'
-import { useDropzone } from 'react-dropzone'
-import { v4 as uuidv4 } from 'uuid'
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { useSupabase } from '../../contexts/SupabaseContext';
+import { FiSave, FiX, FiUpload } from 'react-icons/fi';
+import { useDropzone } from 'react-dropzone';
+import { v4 as uuidv4 } from 'uuid';
 
 function AdminSessionEdit() {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const { supabase } = useSupabase()
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { supabase } = useSupabase();
   const [session, setSession] = useState({
     title: '',
     description: '',
@@ -19,72 +19,77 @@ function AdminSessionEdit() {
     price: 0,
     max_participants: '',
     image_url: '',
-    google_form_link: ''
-  })
-  const [loading, setLoading] = useState(id ? true : false)
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState(null)
-  const [uploadProgress, setUploadProgress] = useState(0)
-  const [uploading, setUploading] = useState(false)
+    google_form_link: '',
+  });
+  const [loading, setLoading] = useState(id ? true : false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (id) {
-      fetchSessionData()
+      fetchSessionData();
     }
-  }, [id])
+  }, [id]);
 
-  const onDrop = useCallback(async (acceptedFiles) => {
-    if (acceptedFiles.length === 0) return
+  const onDrop = useCallback(
+    async (acceptedFiles) => {
+      if (acceptedFiles.length === 0) return;
 
-    const file = acceptedFiles[0]
-    if (!file.type.startsWith('image/')) {
-      setError('Please upload an image file')
-      return
-    }
+      const file = acceptedFiles[0];
+      if (!file.type.startsWith('image/')) {
+        setError('Please upload an image file');
+        return;
+      }
 
-    try {
-      setUploading(true)
-      setUploadProgress(0)
-      const fileExt = file.name.split('.').pop()
-      const fileName = `${uuidv4()}.${fileExt}`
-      const filePath = `sessions/${fileName}`
+      try {
+        setUploading(true);
+        setUploadProgress(0);
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${uuidv4()}.${fileExt}`;
+        const filePath = `sessions/${fileName}`;
 
-      const { error: uploadError } = await supabase.storage
-        .from('images')
-        .upload(filePath, file, {
-          onUploadProgress: (progress) => {
-            setUploadProgress(Math.round((progress.loaded / progress.total) * 100))
-          }
-        })
+        const { error: uploadError } = await supabase.storage
+          .from('images')
+          .upload(filePath, file, {
+            onUploadProgress: (progress) => {
+              setUploadProgress(
+                Math.round((progress.loaded / progress.total) * 100)
+              );
+            },
+          });
 
-      if (uploadError) throw uploadError
+        if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('images')
-        .getPublicUrl(filePath)
+        const {
+          data: { publicUrl },
+        } = supabase.storage.from('images').getPublicUrl(filePath);
 
-      setSession(prev => ({
-        ...prev,
-        image_url: publicUrl
-      }))
-      setError(null)
-    } catch (error) {
-      console.error('Error uploading image:', error)
-      setError('Failed to upload image')
-    } finally {
-      setUploading(false)
-      setUploadProgress(0)
-    }
-  }, [supabase])
+        setSession((prev) => ({
+          ...prev,
+          image_url: publicUrl,
+        }));
+        setError(null);
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        setError('Failed to upload image');
+      } finally {
+        setUploading(false);
+        setUploadProgress(0);
+      }
+    },
+    [supabase]
+  );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      'image/*': ['.jpeg', '.jpg', '.png', '.gif']
+      'image/*': ['.jpeg', '.jpg', '.png', '.gif'],
     },
     maxFiles: 1,
-    disabled: uploading
-  })
+    disabled: uploading,
+  });
 
   async function fetchSessionData() {
     try {
@@ -92,56 +97,52 @@ function AdminSessionEdit() {
         .from('sessions')
         .select('*')
         .eq('id', id)
-        .single()
+        .single();
 
-      if (sessionError) throw sessionError
+      if (sessionError) throw sessionError;
 
       const formattedData = {
         ...sessionData,
-        session_date: sessionData.session_date.split('T')[0]
-      }
+        session_date: sessionData.session_date.split('T')[0],
+      };
 
-      setSession(formattedData)
+      setSession(formattedData);
     } catch (error) {
-      console.error('Error fetching session:', error)
-      setError('Failed to load session')
+      console.error('Error fetching session:', error);
+      setError('Failed to load session');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   const handleChange = (e) => {
-    const { name, value, type } = e.target
-    setSession(prev => ({
+    const { name, value, type } = e.target;
+    setSession((prev) => ({
       ...prev,
-      [name]: type === 'number' ? (value === '' ? '' : parseFloat(value)) : value
-    }))
-  }
+      [name]:
+        type === 'number' ? (value === '' ? '' : parseFloat(value)) : value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setSaving(true)
-    setError(null)
+    e.preventDefault();
+    setSaving(true);
+    setError(null);
 
     try {
       const { error } = id
-        ? await supabase
-            .from('sessions')
-            .update(session)
-            .eq('id', id)
-        : await supabase
-            .from('sessions')
-            .insert([session])
+        ? await supabase.from('sessions').update(session).eq('id', id)
+        : await supabase.from('sessions').insert([session]);
 
-      if (error) throw error
+      if (error) throw error;
 
-      navigate('/admin/sessions')
+      navigate('/admin/sessions');
     } catch (error) {
-      console.error('Error saving session:', error)
-      setError('Failed to save session')
-      setSaving(false)
+      console.error('Error saving session:', error);
+      setError('Failed to save session');
+      setSaving(false);
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -153,7 +154,7 @@ function AdminSessionEdit() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -166,7 +167,9 @@ function AdminSessionEdit() {
       <div className="container-custom">
         <div className="max-w-4xl mx-auto">
           <div className="flex justify-between items-center mb-8">
-            <h1 className="heading-2">{id ? 'Edit Session' : 'Create New Session'}</h1>
+            <h1 className="heading-2">
+              {id ? 'Edit Session' : 'Create New Session'}
+            </h1>
             <button
               onClick={() => navigate('/admin/sessions')}
               className="btn-secondary"
@@ -179,7 +182,7 @@ function AdminSessionEdit() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
               <h2 className="text-xl font-semibold mb-6">Session Details</h2>
-              
+
               {/* Image Upload */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -188,9 +191,11 @@ function AdminSessionEdit() {
                 <div
                   {...getRootProps()}
                   className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors
-                    ${isDragActive 
-                      ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/10' 
-                      : 'border-gray-300 dark:border-gray-700 hover:border-primary-500'}
+                    ${
+                      isDragActive
+                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/10'
+                        : 'border-gray-300 dark:border-gray-700 hover:border-primary-500'
+                    }
                     ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   <input {...getInputProps()} />
@@ -202,14 +207,18 @@ function AdminSessionEdit() {
                         className="max-h-48 mx-auto rounded-lg"
                       />
                       <p className="text-sm text-gray-600 dark:text-gray-400">
-                        {uploading ? 'Uploading...' : 'Drag & drop a new image to replace, or click to select'}
+                        {uploading
+                          ? 'Uploading...'
+                          : 'Drag & drop a new image to replace, or click to select'}
                       </p>
                     </div>
                   ) : (
                     <div className="space-y-2">
                       <FiUpload className="w-8 h-8 mx-auto text-gray-400" />
                       <p className="text-gray-600 dark:text-gray-400">
-                        {uploading ? 'Uploading...' : 'Drag & drop an image here, or click to select'}
+                        {uploading
+                          ? 'Uploading...'
+                          : 'Drag & drop an image here, or click to select'}
                       </p>
                     </div>
                   )}
@@ -360,7 +369,7 @@ function AdminSessionEdit() {
         </div>
       </div>
     </motion.div>
-  )
+  );
 }
 
-export default AdminSessionEdit
+export default AdminSessionEdit;

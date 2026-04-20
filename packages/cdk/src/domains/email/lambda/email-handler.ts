@@ -1,127 +1,164 @@
-import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses'
-import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda'
+import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
+import type {
+  APIGatewayProxyEventV2,
+  APIGatewayProxyResultV2,
+} from 'aws-lambda';
 
 // ── Types ──────────────────────────────────────────────────────────────
 
 export interface NewsletterRequest {
-  subscribers: string[]
-  subject: string
-  content: string
-  logoUrl: string
+  subscribers: string[];
+  subject: string;
+  content: string;
+  logoUrl: string;
 }
 
 export interface ContactRequest {
-  name: string
-  email: string
-  subject: string
-  message: string
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
 }
 
 export interface OrderConfirmationRequest {
-  orderId: string
-  customerEmail: string
-  customerName: string
-  items: Array<{ name: string; quantity: number; price: number }>
+  orderId: string;
+  customerEmail: string;
+  customerName: string;
+  items: Array<{ name: string; quantity: number; price: number }>;
   shippingAddress: {
-    street: string
-    city: string
-    state: string
-    postal_code: string
-    country: string
-  }
-  subtotal: number
-  shippingFee: number
-  discountAmount: number
-  totalAmount: number
-  paymentProofUrl: string
+    street: string;
+    city: string;
+    state: string;
+    postal_code: string;
+    country: string;
+  };
+  subtotal: number;
+  shippingFee: number;
+  discountAmount: number;
+  totalAmount: number;
+  paymentProofUrl: string;
 }
 
 export interface EmailApiResponse {
-  success: boolean
-  messageId?: string
-  error?: string
-  failedRecipients?: string[]
+  success: boolean;
+  messageId?: string;
+  error?: string;
+  failedRecipients?: string[];
 }
 
 // ── Environment ────────────────────────────────────────────────────────
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? ''
-const DOMAIN_NAME = process.env.DOMAIN_NAME ?? ''
-const SUPABASE_URL = process.env.SUPABASE_URL ?? ''
-const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY ?? ''
-const FROM_ADDRESS = `YasMade <no-reply@${DOMAIN_NAME}>`
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? '';
+const DOMAIN_NAME = process.env.DOMAIN_NAME ?? '';
+const SUPABASE_URL = process.env.SUPABASE_URL ?? '';
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY ?? '';
+const FROM_ADDRESS = `YasMade <no-reply@${DOMAIN_NAME}>`;
 
-const ses = new SESClient({})
+let ses = new SESClient({});
+
+/** @internal Test-only: replace the SES client instance */
+export function __setSESClient(client: SESClient): void {
+  ses = client;
+}
 
 // ── Validation helpers ─────────────────────────────────────────────────
 
-export function validateNewsletterRequest(body: unknown): body is NewsletterRequest {
-  if (!body || typeof body !== 'object') return false
-  const b = body as Record<string, unknown>
+export function validateNewsletterRequest(
+  body: unknown
+): body is NewsletterRequest {
+  if (!body || typeof body !== 'object') return false;
+  const b = body as Record<string, unknown>;
   return (
     Array.isArray(b.subscribers) &&
     b.subscribers.length > 0 &&
-    b.subscribers.every((s: unknown) => typeof s === 'string' && s.length > 0) &&
-    typeof b.subject === 'string' && b.subject.trim().length > 0 &&
-    typeof b.content === 'string' && b.content.trim().length > 0 &&
-    typeof b.logoUrl === 'string' && b.logoUrl.trim().length > 0
-  )
+    b.subscribers.every(
+      (s: unknown) => typeof s === 'string' && s.length > 0
+    ) &&
+    typeof b.subject === 'string' &&
+    b.subject.trim().length > 0 &&
+    typeof b.content === 'string' &&
+    b.content.trim().length > 0 &&
+    typeof b.logoUrl === 'string' &&
+    b.logoUrl.trim().length > 0
+  );
 }
 
 export function validateContactRequest(body: unknown): body is ContactRequest {
-  if (!body || typeof body !== 'object') return false
-  const b = body as Record<string, unknown>
+  if (!body || typeof body !== 'object') return false;
+  const b = body as Record<string, unknown>;
   return (
-    typeof b.name === 'string' && b.name.trim().length > 0 &&
-    typeof b.email === 'string' && b.email.trim().length > 0 &&
-    typeof b.subject === 'string' && b.subject.trim().length > 0 &&
-    typeof b.message === 'string' && b.message.trim().length > 0
-  )
+    typeof b.name === 'string' &&
+    b.name.trim().length > 0 &&
+    typeof b.email === 'string' &&
+    b.email.trim().length > 0 &&
+    typeof b.subject === 'string' &&
+    b.subject.trim().length > 0 &&
+    typeof b.message === 'string' &&
+    b.message.trim().length > 0
+  );
 }
 
-export function validateOrderConfirmationRequest(body: unknown): body is OrderConfirmationRequest {
-  if (!body || typeof body !== 'object') return false
-  const b = body as Record<string, unknown>
+export function validateOrderConfirmationRequest(
+  body: unknown
+): body is OrderConfirmationRequest {
+  if (!body || typeof body !== 'object') return false;
+  const b = body as Record<string, unknown>;
   if (
-    typeof b.orderId !== 'string' || b.orderId.trim().length === 0 ||
-    typeof b.customerEmail !== 'string' || b.customerEmail.trim().length === 0 ||
-    typeof b.customerName !== 'string' || b.customerName.trim().length === 0 ||
-    !Array.isArray(b.items) || b.items.length === 0 ||
+    typeof b.orderId !== 'string' ||
+    b.orderId.trim().length === 0 ||
+    typeof b.customerEmail !== 'string' ||
+    b.customerEmail.trim().length === 0 ||
+    typeof b.customerName !== 'string' ||
+    b.customerName.trim().length === 0 ||
+    !Array.isArray(b.items) ||
+    b.items.length === 0 ||
     typeof b.subtotal !== 'number' ||
     typeof b.shippingFee !== 'number' ||
     typeof b.discountAmount !== 'number' ||
     typeof b.totalAmount !== 'number' ||
-    typeof b.paymentProofUrl !== 'string' || b.paymentProofUrl.trim().length === 0
-  ) return false
+    typeof b.paymentProofUrl !== 'string' ||
+    b.paymentProofUrl.trim().length === 0
+  )
+    return false;
 
-  const addr = b.shippingAddress
-  if (!addr || typeof addr !== 'object') return false
-  const a = addr as Record<string, unknown>
+  const addr = b.shippingAddress;
+  if (!addr || typeof addr !== 'object') return false;
+  const a = addr as Record<string, unknown>;
   if (
-    typeof a.street !== 'string' || a.street.trim().length === 0 ||
-    typeof a.city !== 'string' || a.city.trim().length === 0 ||
-    typeof a.state !== 'string' || a.state.trim().length === 0 ||
-    typeof a.postal_code !== 'string' || a.postal_code.trim().length === 0 ||
-    typeof a.country !== 'string' || a.country.trim().length === 0
-  ) return false
+    typeof a.street !== 'string' ||
+    a.street.trim().length === 0 ||
+    typeof a.city !== 'string' ||
+    a.city.trim().length === 0 ||
+    typeof a.state !== 'string' ||
+    a.state.trim().length === 0 ||
+    typeof a.postal_code !== 'string' ||
+    a.postal_code.trim().length === 0 ||
+    typeof a.country !== 'string' ||
+    a.country.trim().length === 0
+  )
+    return false;
 
   return (b.items as unknown[]).every((item: unknown) => {
-    if (!item || typeof item !== 'object') return false
-    const i = item as Record<string, unknown>
+    if (!item || typeof item !== 'object') return false;
+    const i = item as Record<string, unknown>;
     return (
-      typeof i.name === 'string' && i.name.trim().length > 0 &&
-      typeof i.quantity === 'number' && i.quantity > 0 &&
+      typeof i.name === 'string' &&
+      i.name.trim().length > 0 &&
+      typeof i.quantity === 'number' &&
+      i.quantity > 0 &&
       typeof i.price === 'number'
-    )
-  })
+    );
+  });
 }
 
 // ── JWT validation ─────────────────────────────────────────────────────
 
-export async function verifySupabaseJwt(authHeader: string | undefined): Promise<boolean> {
-  if (!authHeader || !authHeader.startsWith('Bearer ')) return false
-  const token = authHeader.slice(7)
-  if (!token) return false
+export async function verifySupabaseJwt(
+  authHeader: string | undefined
+): Promise<boolean> {
+  if (!authHeader || !authHeader.startsWith('Bearer ')) return false;
+  const token = authHeader.slice(7);
+  if (!token) return false;
 
   try {
     // Decode the JWT payload (base64url) and verify via Supabase's /auth/v1/user
@@ -130,10 +167,10 @@ export async function verifySupabaseJwt(authHeader: string | undefined): Promise
         Authorization: `Bearer ${token}`,
         apikey: SUPABASE_ANON_KEY,
       },
-    })
-    return response.ok
+    });
+    return response.ok;
   } catch {
-    return false
+    return false;
   }
 }
 
@@ -150,7 +187,7 @@ export function stripHtml(html: string): string {
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
     .replace(/\s+/g, ' ')
-    .trim()
+    .trim();
 }
 
 /** Convert relative image src URLs to absolute using the domain */
@@ -159,20 +196,27 @@ export function absolutizeImageUrls(html: string, baseUrl: string): string {
     /(<img[^>]*\ssrc=")([^"]+)("[^>]*>)/gi,
     (_match, before: string, src: string, after: string) => {
       if (src.startsWith('http://') || src.startsWith('https://')) {
-        return `${before}${src}${after}`
+        return `${before}${src}${after}`;
       }
       const absolute = src.startsWith('/')
         ? `${baseUrl}${src}`
-        : `${baseUrl}/${src}`
-      return `${before}${absolute}${after}`
-    },
-  )
+        : `${baseUrl}/${src}`;
+      return `${before}${absolute}${after}`;
+    }
+  );
 }
 
 // ── Newsletter template ────────────────────────────────────────────────
 
-export function renderNewsletterHtml(subject: string, content: string, logoUrl: string): string {
-  const processedContent = absolutizeImageUrls(content, `https://${DOMAIN_NAME}`)
+export function renderNewsletterHtml(
+  subject: string,
+  content: string,
+  logoUrl: string
+): string {
+  const processedContent = absolutizeImageUrls(
+    content,
+    `https://${DOMAIN_NAME}`
+  );
   return `<!DOCTYPE html>
 <html>
 <head>
@@ -210,7 +254,7 @@ export function renderNewsletterHtml(subject: string, content: string, logoUrl: 
     </table>
   </center>
 </body>
-</html>`
+</html>`;
 }
 
 // ── Contact notification template ──────────────────────────────────────
@@ -229,24 +273,32 @@ export function renderContactHtml(req: ContactRequest): string {
   <h3 style="margin-top: 20px;">Message</h3>
   <p style="white-space: pre-wrap;">${req.message}</p>
 </body>
-</html>`
+</html>`;
 }
 
 // ── Order confirmation template ────────────────────────────────────────
 
-export function renderOrderConfirmationHtml(req: OrderConfirmationRequest): string {
+export function renderOrderConfirmationHtml(
+  req: OrderConfirmationRequest
+): string {
   const itemRows = req.items
     .map(
       (item) =>
         `<tr>
-          <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.name}</td>
-          <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
-          <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">$${item.price.toFixed(2)}</td>
-        </tr>`,
+          <td style="padding: 8px; border-bottom: 1px solid #eee;">${
+            item.name
+          }</td>
+          <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center;">${
+            item.quantity
+          }</td>
+          <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">$${item.price.toFixed(
+            2
+          )}</td>
+        </tr>`
     )
-    .join('')
+    .join('');
 
-  const addr = req.shippingAddress
+  const addr = req.shippingAddress;
   return `<!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8" /></head>
@@ -267,25 +319,39 @@ export function renderOrderConfirmationHtml(req: OrderConfirmationRequest): stri
   </table>
 
   <table cellpadding="4" cellspacing="0" style="width: 100%; max-width: 600px;">
-    <tr><td>Subtotal</td><td style="text-align: right;">$${req.subtotal.toFixed(2)}</td></tr>
-    <tr><td>Shipping</td><td style="text-align: right;">$${req.shippingFee.toFixed(2)}</td></tr>
-    <tr><td>Discount</td><td style="text-align: right;">-$${req.discountAmount.toFixed(2)}</td></tr>
-    <tr style="font-weight: bold; font-size: 16px;"><td>Total</td><td style="text-align: right;">$${req.totalAmount.toFixed(2)} CAD</td></tr>
+    <tr><td>Subtotal</td><td style="text-align: right;">$${req.subtotal.toFixed(
+      2
+    )}</td></tr>
+    <tr><td>Shipping</td><td style="text-align: right;">$${req.shippingFee.toFixed(
+      2
+    )}</td></tr>
+    <tr><td>Discount</td><td style="text-align: right;">-$${req.discountAmount.toFixed(
+      2
+    )}</td></tr>
+    <tr style="font-weight: bold; font-size: 16px;"><td>Total</td><td style="text-align: right;">$${req.totalAmount.toFixed(
+      2
+    )} CAD</td></tr>
   </table>
 
   <h3 style="margin-top: 24px;">Shipping Address</h3>
-  <p>${addr.street}<br/>${addr.city}, ${addr.state} ${addr.postal_code}<br/>${addr.country}</p>
+  <p>${addr.street}<br/>${addr.city}, ${addr.state} ${addr.postal_code}<br/>${
+    addr.country
+  }</p>
 
   <h3>Payment Instructions</h3>
-  <p>Please send an Interac e-Transfer for <strong>$${req.totalAmount.toFixed(2)} CAD</strong> to complete your order.</p>
+  <p>Please send an Interac e-Transfer for <strong>$${req.totalAmount.toFixed(
+    2
+  )} CAD</strong> to complete your order.</p>
   <p>After sending the e-Transfer, please upload your proof of payment here:<br/>
-    <a href="${req.paymentProofUrl}" style="color: #007BFF;">${req.paymentProofUrl}</a>
+    <a href="${req.paymentProofUrl}" style="color: #007BFF;">${
+    req.paymentProofUrl
+  }</a>
   </p>
 
   <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
   <p style="font-size: 12px; color: #777;">This is an automated message from YasMade. If you have questions, reply to this email.</p>
 </body>
-</html>`
+</html>`;
 }
 
 // ── SES sending helpers ────────────────────────────────────────────────
@@ -294,7 +360,7 @@ async function sendEmail(
   to: string[],
   subject: string,
   htmlBody: string,
-  replyTo?: string[],
+  replyTo?: string[]
 ): Promise<string | undefined> {
   const command = new SendEmailCommand({
     Source: FROM_ADDRESS,
@@ -307,117 +373,140 @@ async function sendEmail(
       },
     },
     ReplyToAddresses: replyTo,
-  })
-  const result = await ses.send(command)
-  return result.MessageId
+  });
+  const result = await ses.send(command);
+  return result.MessageId;
 }
 
 // ── Route handlers ─────────────────────────────────────────────────────
 
-async function handleNewsletter(body: unknown, authHeader: string | undefined): Promise<APIGatewayProxyResultV2> {
-  const authenticated = await verifySupabaseJwt(authHeader)
+async function handleNewsletter(
+  body: unknown,
+  authHeader: string | undefined
+): Promise<APIGatewayProxyResultV2> {
+  const authenticated = await verifySupabaseJwt(authHeader);
   if (!authenticated) {
-    return jsonResponse(401, { success: false, error: 'Unauthorized' })
+    return jsonResponse(401, { success: false, error: 'Unauthorized' });
   }
 
   if (!validateNewsletterRequest(body)) {
-    return jsonResponse(400, { success: false, error: 'Invalid request: requires subscribers[], subject, content, and logoUrl' })
+    return jsonResponse(400, {
+      success: false,
+      error:
+        'Invalid request: requires subscribers[], subject, content, and logoUrl',
+    });
   }
 
-  const html = renderNewsletterHtml(body.subject, body.content, body.logoUrl)
-  const failedRecipients: string[] = []
+  const html = renderNewsletterHtml(body.subject, body.content, body.logoUrl);
+  const failedRecipients: string[] = [];
 
   for (const subscriber of body.subscribers) {
     try {
-      await sendEmail([subscriber], body.subject, html)
+      await sendEmail([subscriber], body.subject, html);
     } catch {
-      failedRecipients.push(subscriber)
+      failedRecipients.push(subscriber);
     }
   }
 
-  const response: EmailApiResponse = { success: true }
+  const response: EmailApiResponse = { success: true };
   if (failedRecipients.length > 0) {
-    response.failedRecipients = failedRecipients
+    response.failedRecipients = failedRecipients;
   }
-  return jsonResponse(200, response as unknown as Record<string, unknown>)
+  return jsonResponse(200, response as unknown as Record<string, unknown>);
 }
 
 async function handleContact(body: unknown): Promise<APIGatewayProxyResultV2> {
   if (!validateContactRequest(body)) {
-    return jsonResponse(400, { success: false, error: 'Invalid request: requires name, email, subject, and message' })
+    return jsonResponse(400, {
+      success: false,
+      error: 'Invalid request: requires name, email, subject, and message',
+    });
   }
 
-  const html = renderContactHtml(body)
+  const html = renderContactHtml(body);
   const messageId = await sendEmail(
     [ADMIN_EMAIL],
     `Contact Form: ${body.subject}`,
     html,
-    [body.email],
-  )
+    [body.email]
+  );
 
-  return jsonResponse(200, { success: true, messageId })
+  return jsonResponse(200, { success: true, messageId });
 }
 
-async function handleOrderConfirmation(body: unknown, authHeader: string | undefined): Promise<APIGatewayProxyResultV2> {
-  const authenticated = await verifySupabaseJwt(authHeader)
+async function handleOrderConfirmation(
+  body: unknown,
+  authHeader: string | undefined
+): Promise<APIGatewayProxyResultV2> {
+  const authenticated = await verifySupabaseJwt(authHeader);
   if (!authenticated) {
-    return jsonResponse(401, { success: false, error: 'Unauthorized' })
+    return jsonResponse(401, { success: false, error: 'Unauthorized' });
   }
 
   if (!validateOrderConfirmationRequest(body)) {
     return jsonResponse(400, {
       success: false,
-      error: 'Invalid request: requires orderId, customerEmail, customerName, items[], shippingAddress, subtotal, shippingFee, discountAmount, totalAmount, and paymentProofUrl',
-    })
+      error:
+        'Invalid request: requires orderId, customerEmail, customerName, items[], shippingAddress, subtotal, shippingFee, discountAmount, totalAmount, and paymentProofUrl',
+    });
   }
 
-  const html = renderOrderConfirmationHtml(body)
+  const html = renderOrderConfirmationHtml(body);
   const messageId = await sendEmail(
     [body.customerEmail, ADMIN_EMAIL],
     `YasMade Order Confirmation — #${body.orderId}`,
-    html,
-  )
+    html
+  );
 
-  return jsonResponse(200, { success: true, messageId })
+  return jsonResponse(200, { success: true, messageId });
 }
 
 // ── Response helper ────────────────────────────────────────────────────
 
-function jsonResponse(statusCode: number, body: Record<string, unknown>): APIGatewayProxyResultV2 {
+function jsonResponse(
+  statusCode: number,
+  body: Record<string, unknown>
+): APIGatewayProxyResultV2 {
   return {
     statusCode,
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
-  }
+  };
 }
 
 // ── Lambda entry point ─────────────────────────────────────────────────
 
-export async function handler(event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> {
+export async function handler(
+  event: APIGatewayProxyEventV2
+): Promise<APIGatewayProxyResultV2> {
   try {
-    const path = event.rawPath ?? ''
-    const authHeader = event.headers?.authorization ?? event.headers?.Authorization
+    const path = event.rawPath ?? '';
+    const authHeader =
+      event.headers?.authorization ?? event.headers?.Authorization;
 
-    let body: unknown
+    let body: unknown;
     try {
-      body = event.body ? JSON.parse(event.body) : {}
+      body = event.body ? JSON.parse(event.body) : {};
     } catch {
-      return jsonResponse(400, { success: false, error: 'Invalid JSON body' })
+      return jsonResponse(400, { success: false, error: 'Invalid JSON body' });
     }
 
     if (path.endsWith('/newsletter')) {
-      return await handleNewsletter(body, authHeader)
+      return await handleNewsletter(body, authHeader);
     }
     if (path.endsWith('/contact')) {
-      return await handleContact(body)
+      return await handleContact(body);
     }
     if (path.endsWith('/order-confirmation')) {
-      return await handleOrderConfirmation(body, authHeader)
+      return await handleOrderConfirmation(body, authHeader);
     }
 
-    return jsonResponse(404, { success: false, error: 'Not found' })
+    return jsonResponse(404, { success: false, error: 'Not found' });
   } catch (err) {
-    console.error('Unhandled error:', err)
-    return jsonResponse(500, { success: false, error: 'Internal server error' })
+    console.error('Unhandled error:', err);
+    return jsonResponse(500, {
+      success: false,
+      error: 'Internal server error',
+    });
   }
 }

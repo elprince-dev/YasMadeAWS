@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { useSupabase } from '../../contexts/SupabaseContext'
-import { FiSave } from 'react-icons/fi'
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { useSupabase } from '../../contexts/SupabaseContext';
+import { FiSave } from 'react-icons/fi';
 
 function AdminSettings() {
-  const { supabase } = useSupabase()
+  const { supabase } = useSupabase();
   const [settings, setSettings] = useState({
     quran_verse: '',
     quran_verse_source: '',
@@ -13,86 +13,84 @@ function AdminSettings() {
     social_links: {
       instagram: '',
       facebook: '',
-      twitter: ''
-    }
-  })
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState(null)
-  const [success, setSuccess] = useState(false)
+      twitter: '',
+    },
+  });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    fetchSettings()
-  }, [])
+    fetchSettings();
+  }, []);
 
   async function fetchSettings() {
     try {
       const { data, error } = await supabase
         .from('settings')
         .select('*')
-        .single()
+        .single();
 
-      if (error) throw error
+      if (error) throw error;
 
       setSettings({
         ...data,
         social_links: data.social_links || {
           instagram: '',
           facebook: '',
-          twitter: ''
-        }
-      })
+          twitter: '',
+        },
+      });
     } catch (error) {
-      console.error('Error fetching settings:', error)
-      setError('Failed to load settings')
+      console.error('Error fetching settings:', error);
+      setError('Failed to load settings');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   const handleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     if (name.startsWith('social_')) {
-      const platform = name.replace('social_', '')
-      setSettings(prev => ({
+      const platform = name.replace('social_', '');
+      setSettings((prev) => ({
         ...prev,
         social_links: {
           ...prev.social_links,
-          [platform]: value
-        }
-      }))
+          [platform]: value,
+        },
+      }));
     } else {
-      setSettings(prev => ({
+      setSettings((prev) => ({
         ...prev,
-        [name]: value
-      }))
+        [name]: value,
+      }));
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setSaving(true)
-    setError(null)
-    setSuccess(false)
+    e.preventDefault();
+    setSaving(true);
+    setError(null);
+    setSuccess(false);
 
     try {
-      const { error } = await supabase
-        .from('settings')
-        .upsert({
-          id: '00000000-0000-0000-0000-000000000000',
-          ...settings
-        })
+      const { error } = await supabase.from('settings').upsert({
+        id: '00000000-0000-0000-0000-000000000000',
+        ...settings,
+      });
 
-      if (error) throw error
+      if (error) throw error;
 
-      setSuccess(true)
+      setSuccess(true);
     } catch (error) {
-      console.error('Error saving settings:', error)
-      setError('Failed to save settings')
+      console.error('Error saving settings:', error);
+      setError('Failed to save settings');
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }
+  };
 
   return (
     <motion.div
@@ -108,14 +106,17 @@ function AdminSettings() {
           {loading ? (
             <div className="animate-pulse space-y-4">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-12 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                <div
+                  key={i}
+                  className="h-12 bg-gray-200 dark:bg-gray-700 rounded"
+                ></div>
               ))}
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
                 <h2 className="text-xl font-semibold mb-6">General Settings</h2>
-                
+
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -147,7 +148,7 @@ function AdminSettings() {
 
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
                 <h2 className="text-xl font-semibold mb-6">Quranic Verse</h2>
-                
+
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -178,8 +179,10 @@ function AdminSettings() {
               </div>
 
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-                <h2 className="text-xl font-semibold mb-6">Social Media Links</h2>
-                
+                <h2 className="text-xl font-semibold mb-6">
+                  Social Media Links
+                </h2>
+
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -247,7 +250,7 @@ function AdminSettings() {
         </div>
       </div>
     </motion.div>
-  )
+  );
 }
 
-export default AdminSettings
+export default AdminSettings;

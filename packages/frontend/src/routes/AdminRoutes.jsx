@@ -1,24 +1,27 @@
-import { lazy } from 'react'
-import { Routes, Route } from 'react-router-dom'
-
+import { lazy } from 'react';
+import { Routes, Route } from 'react-router-dom';
 
 // Lazy load admin components
-const AdminDashboard = lazy(() => import('../pages/admin/AdminDashboard'))
-const AdminProducts = lazy(() => import('../pages/admin/AdminProducts'))
-const AdminProductEdit = lazy(() => import('../pages/admin/AdminProductEdit'))
-const AdminBlogs = lazy(() => import('../pages/admin/AdminBlogs'))
-const AdminBlogEdit = lazy(() => import('../pages/admin/AdminBlogEdit'))
-const AdminSessions = lazy(() => import('../pages/admin/AdminSessions'))
-const AdminSessionEdit = lazy(() => import('../pages/admin/AdminSessionEdit'))
-const AdminSettings = lazy(() => import('../pages/admin/AdminSettings'))
-const AdminMessages = lazy(() => import('../pages/admin/AdminMessages'))
-const AdminSubscribers = lazy(() => import('../pages/admin/AdminSubscribers'))
-const AdminOrders = lazy(() => import('../pages/admin/AdminOrders'))
-const AdminShippingRates = lazy(() => import('../pages/admin/AdminShippingRates'))
-const AdminPromoCodes = lazy(() => import('../pages/admin/AdminPromoCodes'))
-const AdminGallery = lazy(() => import('../pages/admin/AdminGallery'))
-const AdminSocialLinks = lazy(() => import('../pages/admin/AdminSocialLinks'))
-const AdminTestimonials = lazy(() => import('../pages/admin/AdminTestimonials'))
+const AdminDashboard = lazy(() => import('../pages/admin/AdminDashboard'));
+const AdminProducts = lazy(() => import('../pages/admin/AdminProducts'));
+const AdminProductEdit = lazy(() => import('../pages/admin/AdminProductEdit'));
+const AdminBlogs = lazy(() => import('../pages/admin/AdminBlogs'));
+const AdminBlogEdit = lazy(() => import('../pages/admin/AdminBlogEdit'));
+const AdminSessions = lazy(() => import('../pages/admin/AdminSessions'));
+const AdminSessionEdit = lazy(() => import('../pages/admin/AdminSessionEdit'));
+const AdminSettings = lazy(() => import('../pages/admin/AdminSettings'));
+const AdminMessages = lazy(() => import('../pages/admin/AdminMessages'));
+const AdminSubscribers = lazy(() => import('../pages/admin/AdminSubscribers'));
+const AdminOrders = lazy(() => import('../pages/admin/AdminOrders'));
+const AdminShippingRates = lazy(() =>
+  import('../pages/admin/AdminShippingRates')
+);
+const AdminPromoCodes = lazy(() => import('../pages/admin/AdminPromoCodes'));
+const AdminGallery = lazy(() => import('../pages/admin/AdminGallery'));
+const AdminSocialLinks = lazy(() => import('../pages/admin/AdminSocialLinks'));
+const AdminTestimonials = lazy(() =>
+  import('../pages/admin/AdminTestimonials')
+);
 
 function AdminRoutes() {
   return (
@@ -43,7 +46,7 @@ function AdminRoutes() {
       <Route path="/social-links" element={<AdminSocialLinks />} />
       <Route path="/testimonials" element={<AdminTestimonials />} />
     </Routes>
-  )
+  );
 }
 
-export default AdminRoutes
+export default AdminRoutes;

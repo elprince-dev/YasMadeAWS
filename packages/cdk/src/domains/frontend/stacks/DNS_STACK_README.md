@@ -1,6 +1,7 @@
 # DNS Stack - Theory & Concepts
 
 ## Table of Contents
+
 1. [Stack Overview](#stack-overview)
 2. [SSL Certificate Management](#ssl-certificate-management)
 3. [DNS Configuration](#dns-configuration)
@@ -12,6 +13,7 @@
 ## Stack Overview
 
 ### Purpose
+
 The DNS Stack is the final piece of the frontend infrastructure, responsible for:
 
 - **SSL certificate creation** - ACM certificates with automatic DNS validation
@@ -21,6 +23,7 @@ The DNS Stack is the final piece of the frontend infrastructure, responsible for
 - **Domain migration** - Seamless transition from existing DNS providers
 
 ### Architecture Position
+
 ```
 Frontend Architecture:
 1. Static Hosting Stack
@@ -35,6 +38,7 @@ Frontend Architecture:
 ```
 
 ### Stack Responsibilities
+
 - ✅ **SSL certificate creation** - ACM certificates with DNS validation
 - ✅ **Hosted zone management** - Route53 DNS zone creation
 - ✅ **DNS record configuration** - A/AAAA records pointing to CloudFront
@@ -47,16 +51,18 @@ Frontend Architecture:
 ## SSL Certificate Management
 
 ### ACM Certificate Creation
+
 ```typescript
 this.sslCertificate = new SslCertificate(this, 'SslCertificate', {
   domainName: props.environmentConfig.domain.name,
   hostedZone: this.hostedZone,
   region: props.environmentConfig.domain.certificateRegion,
-  tags: props.environmentConfig.tags
-})
+  tags: props.environmentConfig.tags,
+});
 ```
 
 ### Certificate Features
+
 ```
 SSL Certificate:
 ├── Primary domain: example.com
@@ -68,6 +74,7 @@ SSL Certificate:
 ```
 
 ### DNS Validation Process
+
 ```
 Certificate Validation Flow:
 1. Request certificate for example.com
@@ -81,6 +88,7 @@ Certificate Validation Flow:
 ```
 
 ### Why DNS Validation?
+
 ```
 DNS Validation vs Email Validation:
 ├── DNS Validation ✅
@@ -98,16 +106,18 @@ DNS Validation vs Email Validation:
 ## DNS Configuration
 
 ### Hosted Zone Creation
+
 ```typescript
 this.domainSetup = new DomainSetup(this, 'DomainSetup', {
   domainName: props.environmentConfig.domain.name,
   distribution: props.distribution,
   createHostedZone: props.environmentConfig.domain.createHostedZone,
-  includeWwwRedirect: true
-})
+  includeWwwRedirect: true,
+});
 ```
 
 ### DNS Record Structure
+
 ```
 Route53 Hosted Zone: example.com
 ├── SOA Record (Start of Authority)
@@ -118,12 +128,14 @@ Route53 Hosted Zone: example.com
 ```
 
 ### Alias Records vs CNAME
+
 ```typescript
 // Alias record (AWS-specific, better performance)
-target: RecordTarget.fromAlias(new CloudFrontTarget(props.distribution))
+target: RecordTarget.fromAlias(new CloudFrontTarget(props.distribution));
 ```
 
 **Why Alias Records:**
+
 - ✅ **Works with apex domain** - Can use example.com (not possible with CNAME)
 - ✅ **No additional DNS queries** - Direct resolution to IP addresses
 - ✅ **No query charges** - AWS doesn't charge for alias record queries
@@ -131,19 +143,21 @@ target: RecordTarget.fromAlias(new CloudFrontTarget(props.distribution))
 - ✅ **Health checks** - Automatic failover if CloudFront is unhealthy
 
 ### IPv4 and IPv6 Support
+
 ```typescript
 // IPv4 support (A record)
 this.aRecord = new ARecord(this, 'ARecord', {
-  target: RecordTarget.fromAlias(new CloudFrontTarget(props.distribution))
-})
+  target: RecordTarget.fromAlias(new CloudFrontTarget(props.distribution)),
+});
 
 // IPv6 support (AAAA record)
 this.aaaaRecord = new AaaaRecord(this, 'AAAARecord', {
-  target: RecordTarget.fromAlias(new CloudFrontTarget(props.distribution))
-})
+  target: RecordTarget.fromAlias(new CloudFrontTarget(props.distribution)),
+});
 ```
 
 **Dual-stack benefits:**
+
 - ✅ **Maximum compatibility** - Works with all internet users
 - ✅ **Future-proofing** - Ready for IPv6 adoption
 - ✅ **Performance optimization** - Clients use fastest available protocol
@@ -152,6 +166,7 @@ this.aaaaRecord = new AaaaRecord(this, 'AAAARecord', {
 ## Regional Deployment Strategy
 
 ### Cross-Region Requirements
+
 ```typescript
 constructor(scope: Construct, id: string, props: DnsStackProps) {
   super(scope, id, {
@@ -166,6 +181,7 @@ constructor(scope: Construct, id: string, props: DnsStackProps) {
 ```
 
 ### Why us-east-1 for Certificates?
+
 ```
 CloudFront Certificate Requirements:
 ├── Historical reason: CloudFront was built when us-east-1 was primary
@@ -175,6 +191,7 @@ CloudFront Certificate Requirements:
 ```
 
 ### Multi-Region Deployment Strategy
+
 ```
 Application Architecture:
 ├── Primary Application Stack
@@ -188,6 +205,7 @@ Application Architecture:
 ```
 
 ### Environment-Specific Regions
+
 ```typescript
 // Development environment
 env: {
@@ -195,7 +213,7 @@ env: {
   region: 'us-east-1'  // Certificate region
 }
 
-// Production environment  
+// Production environment
 env: {
   account: '987654321098',
   region: 'us-east-1'  // Certificate region
@@ -205,6 +223,7 @@ env: {
 ## Domain Migration Process
 
 ### Pre-Migration Setup
+
 ```
 Current State (Namecheap):
 ├── Domain registered: example.com
@@ -220,6 +239,7 @@ Target State (AWS):
 ```
 
 ### Migration Steps
+
 ```
 1. Deploy DNS Stack
    ├── Creates Route53 hosted zone
@@ -246,6 +266,7 @@ Target State (AWS):
 ```
 
 ### DNS Propagation Timeline
+
 ```
 DNS Propagation Schedule:
 ├── 0-15 minutes: Route53 servers updated
@@ -256,6 +277,7 @@ DNS Propagation Schedule:
 ```
 
 ### Rollback Strategy
+
 ```
 Emergency Rollback:
 1. Revert name servers at registrar
@@ -277,14 +299,16 @@ Emergency Rollback:
 ## Stack Dependencies
 
 ### Input Dependencies
+
 ```typescript
 export interface DnsStackProps extends StackProps {
-  readonly environmentConfig: EnvironmentConfig
-  readonly distribution: Distribution  // From CDN Stack
+  readonly environmentConfig: EnvironmentConfig;
+  readonly distribution: Distribution; // From CDN Stack
 }
 ```
 
 ### Dependency Chain
+
 ```
 Deployment Order:
 1. Static Hosting Stack (independent)
@@ -298,6 +322,7 @@ Cross-Stack References:
 ```
 
 ### Circular Dependency Resolution
+
 ```
 Problem: CDN needs certificate, DNS needs distribution
 
@@ -308,23 +333,25 @@ Solution: Two-phase deployment
 ```
 
 ### Stack Outputs
+
 ```typescript
 // Critical outputs for integration and debugging
 new CfnOutput(this, 'CertificateArn', {
   value: this.sslCertificate.certificate.certificateArn,
-  exportName: `${this.stackName}-CertificateArn`
-})
+  exportName: `${this.stackName}-CertificateArn`,
+});
 
 new CfnOutput(this, 'NameServers', {
   value: Fn.join(', ', this.hostedZone.hostedZoneNameServers || []),
   description: 'Route53 Name Servers (update in domain registrar)',
-  exportName: `${this.stackName}-NameServers`
-})
+  exportName: `${this.stackName}-NameServers`,
+});
 ```
 
 ## Security & Compliance
 
 ### Certificate Security
+
 ```
 SSL Certificate Security:
 ├── RSA 2048-bit encryption (industry standard)
@@ -335,6 +362,7 @@ SSL Certificate Security:
 ```
 
 ### DNS Security
+
 ```
 Route53 Security Features:
 ├── DNSSEC support (optional)
@@ -345,6 +373,7 @@ Route53 Security Features:
 ```
 
 ### Compliance Considerations
+
 ```
 Security Standards:
 ├── TLS 1.2+ enforcement
@@ -355,6 +384,7 @@ Security Standards:
 ```
 
 ### Access Control
+
 ```typescript
 // IAM policy for DNS management
 {
@@ -377,6 +407,7 @@ Security Standards:
 ## Monitoring & Troubleshooting
 
 ### Certificate Monitoring
+
 ```
 Certificate Health Checks:
 ├── Expiry monitoring (CloudWatch alarms)
@@ -386,6 +417,7 @@ Certificate Health Checks:
 ```
 
 ### DNS Monitoring
+
 ```
 DNS Health Monitoring:
 ├── Query response times
@@ -397,13 +429,16 @@ DNS Health Monitoring:
 ### Common Issues
 
 #### Certificate Validation Stuck
+
 **Problem**: Certificate remains in "Pending validation" status
 **Causes:**
+
 - Incorrect name servers at domain registrar
 - DNS propagation delays
 - Hosted zone configuration errors
 
 **Solutions:**
+
 ```bash
 # Check DNS propagation
 dig _abc123.example.com CNAME
@@ -414,13 +449,16 @@ dig example.com NS
 ```
 
 #### Domain Not Resolving
+
 **Problem**: Website not accessible via custom domain
 **Causes:**
+
 - Name servers not updated at registrar
 - DNS records not created properly
 - CloudFront distribution not ready
 
 **Solutions:**
+
 ```bash
 # Check name servers
 dig example.com NS
@@ -434,18 +472,22 @@ https://www.whatsmydns.net/
 ```
 
 #### SSL Certificate Errors
+
 **Problem**: Browser shows certificate warnings
 **Causes:**
+
 - Certificate not associated with CloudFront
 - Wrong domain name in certificate
 - Certificate in wrong region
 
 **Solutions:**
+
 - Verify certificate ARN in CloudFront distribution
 - Check certificate covers both example.com and www.example.com
 - Ensure certificate is in us-east-1
 
 ### Debugging Commands
+
 ```bash
 # Check certificate status
 aws acm describe-certificate --certificate-arn arn:aws:acm:us-east-1:123456789012:certificate/abc123
@@ -464,6 +506,7 @@ nslookup example.com 1.1.1.1
 ## Best Practices
 
 ### Certificate Management
+
 ```
 ✅ Use DNS validation for automation
 ✅ Include both apex and www domains
@@ -473,6 +516,7 @@ nslookup example.com 1.1.1.1
 ```
 
 ### DNS Configuration
+
 ```
 ✅ Use alias records for AWS resources
 ✅ Implement both IPv4 and IPv6 support
@@ -482,6 +526,7 @@ nslookup example.com 1.1.1.1
 ```
 
 ### Security Hardening
+
 ```
 ✅ Enable DNSSEC (if required)
 ✅ Use least privilege IAM policies
@@ -491,6 +536,7 @@ nslookup example.com 1.1.1.1
 ```
 
 ### Operational Excellence
+
 ```
 ✅ Infrastructure as code (CDK)
 ✅ Environment-specific configurations
@@ -502,36 +548,38 @@ nslookup example.com 1.1.1.1
 ## Integration Examples
 
 ### Complete Frontend Stack
+
 ```typescript
 // Deploy all three stacks with proper dependencies
 const staticHostingStack = new StaticHostingStack(app, 'StaticHosting', {
-  environmentConfig: prodConfig
-})
+  environmentConfig: prodConfig,
+});
 
 const cdnStack = new CdnStack(app, 'CDN', {
   environmentConfig: prodConfig,
-  originBucket: staticHostingStack.staticWebsite.bucket
-})
+  originBucket: staticHostingStack.staticWebsite.bucket,
+});
 
 const dnsStack = new DnsStack(app, 'DNS', {
   environmentConfig: prodConfig,
   distribution: cdnStack.cdnDistribution.distribution,
-  env: { region: 'us-east-1' }  // Required for certificate
-})
+  env: { region: 'us-east-1' }, // Required for certificate
+});
 ```
 
 ### Environment-Specific Deployment
+
 ```typescript
 // Development environment (no custom domain)
 const devCdnStack = new CdnStack(app, 'DevCDN', {
   environmentConfig: devConfig,
-  originBucket: devStaticStack.staticWebsite.bucket
+  originBucket: devStaticStack.staticWebsite.bucket,
   // No certificate - uses CloudFront domain
-})
+});
 
 // Production environment (with custom domain)
 const prodDnsStack = new DnsStack(app, 'ProdDNS', {
   environmentConfig: prodConfig,
-  distribution: prodCdnStack.cdnDistribution.distribution
-})
+  distribution: prodCdnStack.cdnDistribution.distribution,
+});
 ```

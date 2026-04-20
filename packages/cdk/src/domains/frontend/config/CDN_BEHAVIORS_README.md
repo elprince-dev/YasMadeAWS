@@ -1,6 +1,7 @@
 # CloudFront Cache Behaviors Configuration - Theory & Concepts
 
 ## Table of Contents
+
 1. [Cache Behavior Fundamentals](#cache-behavior-fundamentals)
 2. [Path Pattern Matching](#path-pattern-matching)
 3. [Cache Policies Explained](#cache-policies-explained)
@@ -12,12 +13,14 @@
 ## Cache Behavior Fundamentals
 
 ### What are Cache Behaviors?
+
 - **Path-based rules** - Different caching strategies for different URL patterns
 - **Performance optimization** - Serve content faster by caching at edge locations
 - **Content freshness** - Balance between speed and up-to-date content
 - **Resource efficiency** - Reduce origin server load and bandwidth costs
 
 ### How Cache Behaviors Work
+
 ```
 User Request: example.com/static/css/main.css
 1. CloudFront checks path pattern: /static/*
@@ -28,6 +31,7 @@ User Request: example.com/static/css/main.css
 ```
 
 ### Behavior Priority
+
 ```
 CloudFront evaluates behaviors in order:
 1. Most specific patterns first: /service-worker.js
@@ -38,21 +42,24 @@ CloudFront evaluates behaviors in order:
 ## Path Pattern Matching
 
 ### Pattern Types
-| Pattern | Matches | Example Files |
-|---------|---------|---------------|
-| `/static/*` | All files in static folder | `/static/css/main.css`, `/static/js/app.js` |
-| `/assets/*` | All files in assets folder | `/assets/images/logo.png`, `/assets/fonts/font.woff` |
-| `/service-worker.js` | Exact file match | `/service-worker.js` only |
-| `/api/*` | All API endpoints | `/api/users`, `/api/products/123` |
-| `*.jpg` | All JPEG files | `photo.jpg`, `images/banner.jpg` |
+
+| Pattern              | Matches                    | Example Files                                        |
+| -------------------- | -------------------------- | ---------------------------------------------------- |
+| `/static/*`          | All files in static folder | `/static/css/main.css`, `/static/js/app.js`          |
+| `/assets/*`          | All files in assets folder | `/assets/images/logo.png`, `/assets/fonts/font.woff` |
+| `/service-worker.js` | Exact file match           | `/service-worker.js` only                            |
+| `/api/*`             | All API endpoints          | `/api/users`, `/api/products/123`                    |
+| `*.jpg`              | All JPEG files             | `photo.jpg`, `images/banner.jpg`                     |
 
 ### Pattern Matching Rules
+
 - **Case sensitive** - `/Static/*` ≠ `/static/*`
 - **Exact matching** - `/favicon.ico` matches only that file
 - **Wildcard matching** - `*` matches any characters
 - **Order matters** - More specific patterns should be listed first
 
 ### React App File Structure
+
 ```
 React Build Output:
 ├── index.html (default behavior)
@@ -73,8 +80,9 @@ React Build Output:
 ## Cache Policies Explained
 
 ### CACHING_OPTIMIZED_FOR_UNCOMPRESSED_OBJECTS
+
 ```typescript
-cachePolicy: CachePolicy.CACHING_OPTIMIZED_FOR_UNCOMPRESSED_OBJECTS
+cachePolicy: CachePolicy.CACHING_OPTIMIZED_FOR_UNCOMPRESSED_OBJECTS;
 ```
 
 **Use case:** Static assets with versioned filenames
@@ -83,8 +91,9 @@ cachePolicy: CachePolicy.CACHING_OPTIMIZED_FOR_UNCOMPRESSED_OBJECTS
 **Why long TTL:** Files with hashed names never change - new versions get new names
 
 ### CACHING_OPTIMIZED
+
 ```typescript
-cachePolicy: CachePolicy.CACHING_OPTIMIZED
+cachePolicy: CachePolicy.CACHING_OPTIMIZED;
 ```
 
 **Use case:** General static content
@@ -93,8 +102,9 @@ cachePolicy: CachePolicy.CACHING_OPTIMIZED
 **Balance:** Good performance with reasonable freshness
 
 ### CACHING_DISABLED
+
 ```typescript
-cachePolicy: CachePolicy.CACHING_DISABLED
+cachePolicy: CachePolicy.CACHING_DISABLED;
 ```
 
 **Use case:** Dynamic or frequently changing content
@@ -103,15 +113,17 @@ cachePolicy: CachePolicy.CACHING_DISABLED
 **Trade-off:** Always fresh but slower performance
 
 ### Cache Policy Comparison
-| Policy | TTL | Use Case | Performance | Freshness |
-|--------|-----|----------|-------------|-----------|
-| **OPTIMIZED_FOR_UNCOMPRESSED** | 1 year | Versioned assets | Highest | N/A (versioned) |
-| **OPTIMIZED** | 24 hours | General content | High | Good |
-| **DISABLED** | 0 seconds | Dynamic content | Lowest | Highest |
+
+| Policy                         | TTL       | Use Case         | Performance | Freshness       |
+| ------------------------------ | --------- | ---------------- | ----------- | --------------- |
+| **OPTIMIZED_FOR_UNCOMPRESSED** | 1 year    | Versioned assets | Highest     | N/A (versioned) |
+| **OPTIMIZED**                  | 24 hours  | General content  | High        | Good            |
+| **DISABLED**                   | 0 seconds | Dynamic content  | Lowest      | Highest         |
 
 ## File Type Optimization
 
 ### Static Assets (`/static/*`)
+
 ```typescript
 STATIC_ASSETS: {
   pathPattern: '/static/*',
@@ -121,16 +133,19 @@ STATIC_ASSETS: {
 ```
 
 **Why this configuration:**
+
 - **Long cache (1 year)** - Files have hash in name, safe to cache forever
 - **Compression enabled** - Text files (CSS, JS) compress well
 - **GET/HEAD only** - Static files don't need POST/PUT methods
 
 **File examples:**
+
 - `main.abc123.css` - Stylesheet with content hash
 - `chunk.def456.js` - JavaScript bundle with hash
 - `logo.789.png` - Image with hash (though images don't compress much)
 
 ### Assets Folder (`/assets/*`)
+
 ```typescript
 ASSETS: {
   pathPattern: '/assets/*',
@@ -140,16 +155,19 @@ ASSETS: {
 ```
 
 **Why this configuration:**
+
 - **Medium cache (24 hours)** - Files may not have hashes, need periodic refresh
 - **Compression enabled** - Some assets benefit from compression
 - **Balanced approach** - Good performance with reasonable freshness
 
 **File examples:**
+
 - `logo.png` - Company logo (no hash)
 - `background.jpg` - Background image
 - `font.woff2` - Web font file
 
 ### Service Worker (`/service-worker.js`)
+
 ```typescript
 SERVICE_WORKER: {
   pathPattern: '/service-worker.js',
@@ -159,17 +177,20 @@ SERVICE_WORKER: {
 ```
 
 **Why this configuration:**
+
 - **No caching** - Service worker updates must be immediate
 - **No compression** - Small file, compression overhead not worth it
 - **Critical for PWAs** - Outdated service worker breaks app updates
 
 **PWA Update Flow:**
+
 1. User visits site
 2. Browser checks service worker for updates
 3. If cached, user gets old version and app doesn't update
 4. With no caching, browser always gets latest service worker
 
 ### API Endpoints (`/api/*`)
+
 ```typescript
 API: {
   pathPattern: '/api/*',
@@ -179,6 +200,7 @@ API: {
 ```
 
 **Why this configuration:**
+
 - **No caching** - API responses are dynamic and user-specific
 - **All HTTP methods** - APIs need GET, POST, PUT, DELETE
 - **Compression enabled** - JSON responses compress well
@@ -186,6 +208,7 @@ API: {
 ## Progressive Web App (PWA) Support
 
 ### Service Worker Considerations
+
 ```typescript
 SERVICE_WORKER: {
   pathPattern: '/service-worker.js',
@@ -195,11 +218,13 @@ SERVICE_WORKER: {
 ```
 
 **Critical for PWA functionality:**
+
 - **Immediate updates** - New service worker versions deploy instantly
 - **Cache management** - Service worker controls its own caching strategy
 - **Offline functionality** - Outdated service worker breaks offline features
 
 ### Manifest File
+
 ```typescript
 MANIFEST: {
   pathPattern: '/manifest.json',
@@ -209,6 +234,7 @@ MANIFEST: {
 ```
 
 **PWA manifest contains:**
+
 - App name and description
 - Icons for home screen
 - Theme colors
@@ -216,6 +242,7 @@ MANIFEST: {
 - Start URL
 
 **Why medium caching:**
+
 - Changes occasionally (app updates, new icons)
 - Not critical for immediate updates like service worker
 - Small file benefits from compression
@@ -223,49 +250,58 @@ MANIFEST: {
 ## Performance vs Freshness Trade-offs
 
 ### High Performance (Long Cache)
+
 ```typescript
 // 1 year cache for versioned assets
-cachePolicy: CachePolicy.CACHING_OPTIMIZED_FOR_UNCOMPRESSED_OBJECTS
+cachePolicy: CachePolicy.CACHING_OPTIMIZED_FOR_UNCOMPRESSED_OBJECTS;
 ```
 
 **Benefits:**
+
 - ✅ **Instant loading** - Files served from edge cache
 - ✅ **Reduced bandwidth** - Less data transfer from origin
 - ✅ **Lower costs** - Fewer origin requests
 - ✅ **Better user experience** - Faster page loads
 
 **Trade-offs:**
+
 - ❌ **Update delays** - Changes take time to propagate
 - ❌ **Cache invalidation complexity** - Manual invalidation needed for urgent updates
 
 ### High Freshness (No Cache)
+
 ```typescript
 // No cache for dynamic content
-cachePolicy: CachePolicy.CACHING_DISABLED
+cachePolicy: CachePolicy.CACHING_DISABLED;
 ```
 
 **Benefits:**
+
 - ✅ **Always current** - Users always get latest content
 - ✅ **No cache issues** - No stale content problems
 - ✅ **Immediate updates** - Changes visible instantly
 
 **Trade-offs:**
+
 - ❌ **Slower performance** - Every request goes to origin
 - ❌ **Higher bandwidth** - More data transfer
 - ❌ **Increased costs** - More origin requests
 
 ### Balanced Approach (Medium Cache)
+
 ```typescript
 // 24 hour cache for general content
-cachePolicy: CachePolicy.CACHING_OPTIMIZED
+cachePolicy: CachePolicy.CACHING_OPTIMIZED;
 ```
 
 **Benefits:**
+
 - ✅ **Good performance** - Most requests served from cache
 - ✅ **Reasonable freshness** - Content updates daily
 - ✅ **Cost effective** - Balanced origin requests
 
 **Best for:**
+
 - Images without version hashes
 - Fonts and general assets
 - Content that changes occasionally
@@ -273,6 +309,7 @@ cachePolicy: CachePolicy.CACHING_OPTIMIZED
 ## Best Practices
 
 ### File Naming Strategy
+
 ```
 ✅ Good: Versioned filenames
 main.abc123.css → Cache for 1 year
@@ -284,6 +321,7 @@ app.js → Cache for 24 hours (risk of stale content)
 ```
 
 ### Cache Hierarchy
+
 ```
 1. Never cache: APIs, service workers
 2. Short cache (1 hour): HTML files
@@ -292,6 +330,7 @@ app.js → Cache for 24 hours (risk of stale content)
 ```
 
 ### Compression Guidelines
+
 ```
 ✅ Compress: Text files (HTML, CSS, JS, JSON, XML)
 ✅ Compress: SVG images
@@ -300,6 +339,7 @@ app.js → Cache for 24 hours (risk of stale content)
 ```
 
 ### HTTP Methods by Content Type
+
 ```
 Static Assets: GET, HEAD only
 API Endpoints: GET, POST, PUT, DELETE, PATCH
@@ -310,18 +350,21 @@ Manifest: GET, HEAD only
 ## Monitoring & Optimization
 
 ### CloudWatch Metrics to Monitor
+
 - **Cache Hit Rate** - Percentage of requests served from cache
 - **Origin Latency** - Time to fetch from S3 when cache miss occurs
 - **Request Count** - Total requests per behavior pattern
 - **Bytes Downloaded** - Data transfer volume per pattern
 
 ### Optimization Strategies
+
 1. **Increase cache hit rate** - Use longer TTLs where appropriate
 2. **Monitor popular content** - Pre-warm cache for frequently accessed files
 3. **Analyze request patterns** - Identify content that could benefit from longer caching
 4. **Review error rates** - Fix broken links that cause 404s
 
 ### Cache Invalidation
+
 ```bash
 # Invalidate specific paths
 aws cloudfront create-invalidation \
@@ -337,21 +380,25 @@ aws cloudfront create-invalidation \
 ## Common Issues & Solutions
 
 ### Service Worker Not Updating
+
 **Problem:** Users stuck with old app version
 **Cause:** Service worker cached by CloudFront
 **Solution:** Ensure `CACHING_DISABLED` for service worker path
 
 ### CSS/JS Changes Not Visible
+
 **Problem:** Updated styles/scripts not loading
 **Cause:** Long cache TTL with non-versioned filenames
 **Solution:** Use versioned filenames or shorter TTL
 
 ### Slow API Responses
+
 **Problem:** API calls taking too long
 **Cause:** API responses being cached when they shouldn't be
 **Solution:** Ensure `CACHING_DISABLED` for API paths
 
 ### High Origin Costs
+
 **Problem:** Unexpected charges from S3 requests
 **Cause:** Low cache hit rate due to short TTLs
 **Solution:** Increase TTL for static content, use versioned filenames
@@ -359,20 +406,22 @@ aws cloudfront create-invalidation \
 ## Implementation Example
 
 ### Using in CDK Construct
+
 ```typescript
-import { CdnBehaviors, getAllBehaviors } from './cdn-behaviors'
+import { CdnBehaviors, getAllBehaviors } from './cdn-behaviors';
 
 // In your CloudFront distribution
 new Distribution(this, 'Distribution', {
   defaultBehavior: {
     // Default behavior for HTML files
-    cachePolicy: CachePolicy.CACHING_OPTIMIZED
+    cachePolicy: CachePolicy.CACHING_OPTIMIZED,
   },
-  additionalBehaviors: getAllBehaviors()
-})
+  additionalBehaviors: getAllBehaviors(),
+});
 ```
 
 ### Custom Behavior
+
 ```typescript
 // Add custom behavior for specific needs
 const customBehaviors = {
@@ -380,7 +429,7 @@ const customBehaviors = {
   '/downloads/*': {
     cachePolicy: CachePolicy.CACHING_OPTIMIZED,
     allowedMethods: AllowedMethods.ALLOW_GET_HEAD,
-    compress: false // Large files, don't compress
-  }
-}
+    compress: false, // Large files, don't compress
+  },
+};
 ```

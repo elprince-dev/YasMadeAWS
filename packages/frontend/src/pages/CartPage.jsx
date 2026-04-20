@@ -9,7 +9,8 @@ import { sendOrderConfirmation } from '../utils/emailApi';
 function CartPage() {
   const navigate = useNavigate();
   const { supabase } = useSupabase();
-  const { items, removeFromCart, updateQuantity, getTotal, clearCart } = useCart();
+  const { items, removeFromCart, updateQuantity, getTotal, clearCart } =
+    useCart();
   const [promoCode, setPromoCode] = useState('');
   const [appliedPromo, setAppliedPromo] = useState(null);
   const [promoError, setPromoError] = useState(null);
@@ -24,7 +25,7 @@ function CartPage() {
     city: '',
     state: '',
     postal_code: '',
-    country: 'Canada'
+    country: 'Canada',
   });
 
   useEffect(() => {
@@ -55,7 +56,7 @@ function CartPage() {
 
   const handleApplyPromo = async () => {
     if (!promoCode.trim()) return;
-    
+
     setPromoError(null);
     try {
       const { data, error } = await supabase
@@ -92,14 +93,15 @@ function CartPage() {
   const getDiscountAmount = () => {
     if (!appliedPromo) return 0;
     const subtotal = getTotal();
-    return appliedPromo.discount_type === 'percentage' 
-      ? (subtotal * appliedPromo.discount_value / 100)
+    return appliedPromo.discount_type === 'percentage'
+      ? (subtotal * appliedPromo.discount_value) / 100
       : appliedPromo.discount_value;
   };
 
   const getFinalTotal = () => {
     const subtotal = getTotal();
-    const shipping = shippingRates.find(rate => rate.id === shippingRate)?.price || 0;
+    const shipping =
+      shippingRates.find((rate) => rate.id === shippingRate)?.price || 0;
     const discount = getDiscountAmount();
     return Math.max(0, subtotal - discount + shipping);
   };
@@ -113,60 +115,64 @@ function CartPage() {
       // Create order in database
       const { data: order, error: orderError } = await supabase
         .from('orders')
-        .insert([{
-          customer_email: orderDetails.email,
-          customer_name: orderDetails.name,
-          shipping_address: {
-            street: orderDetails.shipping_address,
-            city: orderDetails.city,
-            state: orderDetails.state,
-            postal_code: orderDetails.postal_code,
-            country: orderDetails.country
+        .insert([
+          {
+            customer_email: orderDetails.email,
+            customer_name: orderDetails.name,
+            shipping_address: {
+              street: orderDetails.shipping_address,
+              city: orderDetails.city,
+              state: orderDetails.state,
+              postal_code: orderDetails.postal_code,
+              country: orderDetails.country,
+            },
+            billing_address: {
+              street: orderDetails.shipping_address,
+              city: orderDetails.city,
+              state: orderDetails.state,
+              postal_code: orderDetails.postal_code,
+              country: orderDetails.country,
+            },
+            shipping_rate_id: shippingRate,
+            subtotal: getTotal(),
+            shipping_fee:
+              shippingRates.find((rate) => rate.id === shippingRate)?.price ||
+              0,
+            discount_amount: getDiscountAmount(),
+            promo_code_id: appliedPromo?.id || null,
+            total_amount: getFinalTotal(),
+            status: 'pending',
+            payment_status: 'pending',
           },
-          billing_address: {
-            street: orderDetails.shipping_address,
-            city: orderDetails.city,
-            state: orderDetails.state,
-            postal_code: orderDetails.postal_code,
-            country: orderDetails.country
-          },
-          shipping_rate_id: shippingRate,
-          subtotal: getTotal(),
-          shipping_fee: shippingRates.find(rate => rate.id === shippingRate)?.price || 0,
-          discount_amount: getDiscountAmount(),
-          promo_code_id: appliedPromo?.id || null,
-          total_amount: getFinalTotal(),
-          status: 'pending',
-          payment_status: 'pending'
-        }])
+        ])
         .select()
         .single();
 
       if (orderError) throw orderError;
 
       // Create order items
-      const { error: itemsError } = await supabase
-        .from('order_items')
-        .insert(
-          items.map(item => ({
-            order_id: order.id,
-            product_id: item.id,
-            quantity: item.quantity,
-            price_at_time: item.price
-          }))
-        );
+      const { error: itemsError } = await supabase.from('order_items').insert(
+        items.map((item) => ({
+          order_id: order.id,
+          product_id: item.id,
+          quantity: item.quantity,
+          price_at_time: item.price,
+        }))
+      );
 
       if (itemsError) throw itemsError;
 
       // Send order confirmation email (best-effort — order is already saved)
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
         await sendOrderConfirmation(
           {
             orderId: order.id,
             customerEmail: orderDetails.email,
             customerName: orderDetails.name,
-            items: items.map(item => ({
+            items: items.map((item) => ({
               name: item.name,
               quantity: item.quantity,
               price: item.price,
@@ -179,12 +185,14 @@ function CartPage() {
               country: orderDetails.country,
             },
             subtotal: getTotal(),
-            shippingFee: shippingRates.find(rate => rate.id === shippingRate)?.price || 0,
+            shippingFee:
+              shippingRates.find((rate) => rate.id === shippingRate)?.price ||
+              0,
             discountAmount: getDiscountAmount(),
             totalAmount: getFinalTotal(),
             paymentProofUrl: `${window.location.origin}/order-confirmation/${order.id}`,
           },
-          session?.access_token,
+          session?.access_token
         );
       } catch (emailErr) {
         console.error('Order confirmation email failed:', emailErr);
@@ -260,14 +268,18 @@ function CartPage() {
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-2">
                       <button
-                        onClick={() => handleQuantityChange(item.id, item.quantity, -1)}
+                        onClick={() =>
+                          handleQuantityChange(item.id, item.quantity, -1)
+                        }
                         className="p-1 rounded-full border border-gray-300 hover:border-primary-500 transition-colors"
                       >
                         <FiMinus className="w-4 h-4" />
                       </button>
                       <span className="w-8 text-center">{item.quantity}</span>
                       <button
-                        onClick={() => handleQuantityChange(item.id, item.quantity, 1)}
+                        onClick={() =>
+                          handleQuantityChange(item.id, item.quantity, 1)
+                        }
                         className="p-1 rounded-full border border-gray-300 hover:border-primary-500 transition-colors"
                       >
                         <FiPlus className="w-4 h-4" />
@@ -289,29 +301,45 @@ function CartPage() {
           <div className="lg:col-span-1">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
               <h2 className="text-xl font-semibold mb-6">Order Details</h2>
-              
+
               <form onSubmit={handleSubmitOrder} className="space-y-6">
                 {/* Contact Information */}
                 <div>
-                  <h3 className="text-lg font-medium mb-4">Contact Information</h3>
+                  <h3 className="text-lg font-medium mb-4">
+                    Contact Information
+                  </h3>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium mb-2">Email</label>
+                      <label className="block text-sm font-medium mb-2">
+                        Email
+                      </label>
                       <input
                         type="email"
                         required
                         value={orderDetails.email}
-                        onChange={(e) => setOrderDetails(prev => ({ ...prev, email: e.target.value }))}
+                        onChange={(e) =>
+                          setOrderDetails((prev) => ({
+                            ...prev,
+                            email: e.target.value,
+                          }))
+                        }
                         className="w-full px-4 py-2 rounded-md border-gray-300 dark:border-gray-700"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2">Full Name</label>
+                      <label className="block text-sm font-medium mb-2">
+                        Full Name
+                      </label>
                       <input
                         type="text"
                         required
                         value={orderDetails.name}
-                        onChange={(e) => setOrderDetails(prev => ({ ...prev, name: e.target.value }))}
+                        onChange={(e) =>
+                          setOrderDetails((prev) => ({
+                            ...prev,
+                            name: e.target.value,
+                          }))
+                        }
                         className="w-full px-4 py-2 rounded-md border-gray-300 dark:border-gray-700"
                       />
                     </div>
@@ -323,50 +351,80 @@ function CartPage() {
                   <h3 className="text-lg font-medium mb-4">Shipping Address</h3>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium mb-2">Street Address</label>
+                      <label className="block text-sm font-medium mb-2">
+                        Street Address
+                      </label>
                       <input
                         type="text"
                         required
                         value={orderDetails.shipping_address}
-                        onChange={(e) => setOrderDetails(prev => ({ ...prev, shipping_address: e.target.value }))}
+                        onChange={(e) =>
+                          setOrderDetails((prev) => ({
+                            ...prev,
+                            shipping_address: e.target.value,
+                          }))
+                        }
                         className="w-full px-4 py-2 rounded-md border-gray-300 dark:border-gray-700"
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium mb-2">City</label>
+                        <label className="block text-sm font-medium mb-2">
+                          City
+                        </label>
                         <input
                           type="text"
                           required
                           value={orderDetails.city}
-                          onChange={(e) => setOrderDetails(prev => ({ ...prev, city: e.target.value }))}
+                          onChange={(e) =>
+                            setOrderDetails((prev) => ({
+                              ...prev,
+                              city: e.target.value,
+                            }))
+                          }
                           className="w-full px-4 py-2 rounded-md border-gray-300 dark:border-gray-700"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-2">Province</label>
+                        <label className="block text-sm font-medium mb-2">
+                          Province
+                        </label>
                         <input
                           type="text"
                           required
                           value={orderDetails.state}
-                          onChange={(e) => setOrderDetails(prev => ({ ...prev, state: e.target.value }))}
+                          onChange={(e) =>
+                            setOrderDetails((prev) => ({
+                              ...prev,
+                              state: e.target.value,
+                            }))
+                          }
                           className="w-full px-4 py-2 rounded-md border-gray-300 dark:border-gray-700"
                         />
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium mb-2">Postal Code</label>
+                        <label className="block text-sm font-medium mb-2">
+                          Postal Code
+                        </label>
                         <input
                           type="text"
                           required
                           value={orderDetails.postal_code}
-                          onChange={(e) => setOrderDetails(prev => ({ ...prev, postal_code: e.target.value }))}
+                          onChange={(e) =>
+                            setOrderDetails((prev) => ({
+                              ...prev,
+                              postal_code: e.target.value,
+                            }))
+                          }
                           className="w-full px-4 py-2 rounded-md border-gray-300 dark:border-gray-700"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-2">Country</label>
+                        <label className="block text-sm font-medium mb-2">
+                          Country
+                        </label>
                         <input
                           type="text"
                           required
@@ -394,9 +452,12 @@ function CartPage() {
                           className="h-4 w-4 text-primary-600"
                         />
                         <span className="ml-3">
-                          <span className="block text-sm font-medium">{rate.name}</span>
+                          <span className="block text-sm font-medium">
+                            {rate.name}
+                          </span>
                           <span className="block text-sm text-gray-500">
-                            ${rate.price.toFixed(2)} • {rate.estimated_days_min}-{rate.estimated_days_max} business days
+                            ${rate.price.toFixed(2)} • {rate.estimated_days_min}
+                            -{rate.estimated_days_max} business days
                           </span>
                         </span>
                       </label>
@@ -412,7 +473,9 @@ function CartPage() {
                       <input
                         type="text"
                         value={promoCode}
-                        onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                        onChange={(e) =>
+                          setPromoCode(e.target.value.toUpperCase())
+                        }
                         placeholder="Enter promo code"
                         className="flex-1 px-4 py-2 rounded-md border-gray-300 dark:border-gray-700"
                       />
@@ -431,10 +494,9 @@ function CartPage() {
                           {appliedPromo.code} applied
                         </span>
                         <p className="text-xs text-green-600 dark:text-green-300">
-                          {appliedPromo.discount_type === 'percentage' 
+                          {appliedPromo.discount_type === 'percentage'
                             ? `${appliedPromo.discount_value}% off`
-                            : `$${appliedPromo.discount_value} off`
-                          }
+                            : `$${appliedPromo.discount_value} off`}
                         </p>
                       </div>
                       <button
@@ -447,7 +509,9 @@ function CartPage() {
                     </div>
                   )}
                   {promoError && (
-                    <p className="text-red-600 dark:text-red-400 text-sm mt-2">{promoError}</p>
+                    <p className="text-red-600 dark:text-red-400 text-sm mt-2">
+                      {promoError}
+                    </p>
                   )}
                 </div>
 
@@ -467,7 +531,12 @@ function CartPage() {
                     <div className="flex justify-between text-sm">
                       <span>Shipping</span>
                       <span>
-                        ${(shippingRates.find(rate => rate.id === shippingRate)?.price || 0).toFixed(2)} CAD
+                        $
+                        {(
+                          shippingRates.find((rate) => rate.id === shippingRate)
+                            ?.price || 0
+                        ).toFixed(2)}{' '}
+                        CAD
                       </span>
                     </div>
                     <div className="flex justify-between text-lg font-bold pt-2">

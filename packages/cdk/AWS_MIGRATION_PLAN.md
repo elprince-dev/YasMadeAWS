@@ -1,11 +1,13 @@
 # AWS Serverless Migration Plan - YasMade Frontend
 
 ## Overview
+
 Migrate the React frontend from Netlify to AWS using serverless architecture with CloudFront, S3, ACM, and Route53.
 
 ## Phase 1: Frontend Infrastructure (Current Focus)
 
 ### 1. S3 Static Website Hosting
+
 - **Purpose**: Host the built React application
 - **Configuration**:
   - Create S3 bucket for static assets
@@ -15,6 +17,7 @@ Migrate the React frontend from Netlify to AWS using serverless architecture wit
   - Block public access (CloudFront will serve content)
 
 ### 2. CloudFront Distribution
+
 - **Purpose**: Global CDN for fast content delivery
 - **Configuration**:
   - Origin: S3 bucket
@@ -26,6 +29,7 @@ Migrate the React frontend from Netlify to AWS using serverless architecture wit
   - Custom domain configuration
 
 ### 3. SSL Certificate (ACM)
+
 - **Purpose**: HTTPS encryption for custom domain
 - **Configuration**:
   - Request certificate in us-east-1 (required for CloudFront)
@@ -34,6 +38,7 @@ Migrate the React frontend from Netlify to AWS using serverless architecture wit
   - Auto-renewal enabled
 
 ### 4. Route53 Hosted Zone
+
 - **Purpose**: DNS management for custom domain
 - **Configuration**:
   - Create hosted zone for your domain
@@ -42,6 +47,7 @@ Migrate the React frontend from Netlify to AWS using serverless architecture wit
   - Optional: www subdomain redirect
 
 ### 5. Domain Migration from Namecheap
+
 - **Steps**:
   1. Update nameservers in Namecheap to Route53 NS records
   2. Verify DNS propagation
@@ -50,6 +56,7 @@ Migrate the React frontend from Netlify to AWS using serverless architecture wit
 ## Phase 2: Backend Infrastructure (Future)
 
 ### 1. API Gateway + Lambda
+
 - **Purpose**: Serverless API endpoints
 - **Services**:
   - Replace Supabase Edge Functions
@@ -58,18 +65,21 @@ Migrate the React frontend from Netlify to AWS using serverless architecture wit
   - File upload handling
 
 ### 2. Database Migration
+
 - **Options**:
   - Keep Supabase (hybrid approach)
   - Migrate to RDS Aurora Serverless
   - Use DynamoDB for NoSQL approach
 
 ### 3. Authentication
+
 - **Options**:
   - AWS Cognito
   - Keep Supabase Auth
   - Custom JWT implementation
 
 ### 4. File Storage
+
 - **Purpose**: Replace Supabase Storage
 - **Configuration**:
   - S3 bucket for user uploads
@@ -78,6 +88,7 @@ Migrate the React frontend from Netlify to AWS using serverless architecture wit
   - CloudFront distribution for image delivery
 
 ### 5. CI/CD Pipeline
+
 - **Purpose**: Automated deployment
 - **Components**:
   - CodePipeline
@@ -88,42 +99,49 @@ Migrate the React frontend from Netlify to AWS using serverless architecture wit
 ## Implementation Order
 
 ### Step 1: Foundation Setup
+
 1. Create domain-driven folder structure
 2. Set up shared configuration and constants
 3. Define domain-specific TypeScript interfaces
 4. Create base constructs and utilities
 
 ### Step 2: Frontend Domain (Phase 1)
+
 1. Frontend domain constructs (SSL, S3, CloudFront, DNS)
 2. Frontend domain stacks (hosting, CDN, DNS)
 3. Frontend domain configuration and security
 4. Frontend domain tests
 
 ### Step 3: API Domain (Phase 2 - Future)
+
 1. API Gateway and Lambda constructs
 2. API domain stacks and monitoring
 3. Function deployment and versioning
 4. API security and rate limiting
 
 ### Step 4: Database Domain (Phase 2 - Future)
+
 1. Database constructs (RDS/DynamoDB)
 2. Database stacks with backup policies
 3. Migration and schema management
 4. Database security and access patterns
 
 ### Step 5: Auth Domain (Phase 2 - Future)
+
 1. Cognito constructs and configuration
 2. Authentication stacks and triggers
 3. OAuth integration and user management
 4. Security policies and compliance
 
 ### Step 6: Storage Domain (Phase 2 - Future)
+
 1. Media storage constructs
 2. File processing and CDN
 3. Upload policies and security
 4. Image optimization pipeline
 
 ### Step 7: Pipeline Domain (Phase 3 - Future)
+
 1. CI/CD pipeline constructs
 2. Multi-environment deployment
 3. Approval workflows and rollback
@@ -244,6 +262,7 @@ src/
 ## Environment Configuration
 
 ### File Organization
+
 - **config/environments/**: Environment-specific settings
 - **config/constants.ts**: Global constants (regions, naming patterns)
 - **types/**: TypeScript interfaces and types
@@ -252,48 +271,52 @@ src/
 - **lib/utils/**: Helper functions and utilities
 
 ### Development Environment
+
 ```typescript
 // config/environments/dev.ts
 export const devConfig = {
   domain: 'dev.yourdomain.com',
   certificateRegion: 'us-east-1',
   bucketName: 'yasmade-dev-static-website',
-  environment: 'dev'
-}
+  environment: 'dev',
+};
 ```
 
 ### Production Environment
+
 ```typescript
 // config/environments/prod.ts
 export const prodConfig = {
   domain: 'yourdomain.com',
-  certificateRegion: 'us-east-1', 
+  certificateRegion: 'us-east-1',
   bucketName: 'yasmade-prod-static-website',
-  environment: 'prod'
-}
+  environment: 'prod',
+};
 ```
 
 ### Constants Structure
+
 ```typescript
 // config/constants.ts
 export const AWS_REGIONS = {
   PRIMARY: 'us-east-1',
-  CERTIFICATE: 'us-east-1' // Required for CloudFront
-} as const
+  CERTIFICATE: 'us-east-1', // Required for CloudFront
+} as const;
 
 export const RESOURCE_NAMES = {
   PREFIX: 'yasmade',
-  SEPARATOR: '-'
-} as const
+  SEPARATOR: '-',
+} as const;
 
 export const CLOUDFRONT_SETTINGS = {
   PRICE_CLASS: 'PriceClass_100',
   DEFAULT_TTL: 86400,
-  MAX_TTL: 31536000
-} as const
+  MAX_TTL: 31536000,
+} as const;
 ```
 
 ## Cost Estimation (Monthly)
+
 - S3: ~$1-5 (depending on storage and requests)
 - CloudFront: ~$1-10 (depending on traffic)
 - Route53: ~$0.50 per hosted zone
@@ -303,12 +326,14 @@ export const CLOUDFRONT_SETTINGS = {
 ## Migration Checklist
 
 ### Pre-Migration
+
 - [ ] Backup current Netlify deployment
 - [ ] Document current environment variables
 - [ ] Test build process locally
 - [ ] Prepare domain transfer plan
 
 ### Migration Day
+
 - [ ] Deploy CDK stack
 - [ ] Upload built assets to S3
 - [ ] Configure CloudFront
@@ -317,6 +342,7 @@ export const CLOUDFRONT_SETTINGS = {
 - [ ] Monitor for issues
 
 ### Post-Migration
+
 - [ ] Update CI/CD to deploy to AWS
 - [ ] Remove Netlify deployment
 - [ ] Monitor performance and costs
@@ -325,12 +351,14 @@ export const CLOUDFRONT_SETTINGS = {
 ## Phase 1 File Creation Order (Completed/In Progress)
 
 ### Foundation Files (✅ Completed)
+
 1. **shared/config/constants/aws.ts** - AWS regions, CloudFront settings, S3 config, naming patterns, security headers
 2. **shared/types/environment.ts** - TypeScript interfaces for environment config, domain config, CloudFront config
 3. **shared/config/environments/dev.ts** - Development environment configuration with dev.yasmade.net domain
 4. **shared/utils/naming.ts** - Resource naming utilities and conventions
 
 ### Frontend Domain Constructs (🔄 In Progress)
+
 5. **domains/frontend/constructs/ssl-certificate.ts** - ACM certificate with DNS validation (✅ Completed)
 6. **domains/frontend/constructs/README.md** - SSL/TLS theory and concepts documentation (✅ Completed)
 7. **domains/frontend/constructs/static-website.ts** - S3 bucket with OAC and lifecycle rules (🔄 Next)
@@ -338,21 +366,25 @@ export const CLOUDFRONT_SETTINGS = {
 9. **domains/frontend/constructs/domain-setup.ts** - Route53 hosted zone and DNS records
 
 ### Frontend Domain Configuration
+
 10. **domains/frontend/config/cdn-behaviors.ts** - CloudFront caching rules for different file types
 11. **domains/frontend/config/security-headers.ts** - Response headers configuration
 
 ### Frontend Domain Stacks
+
 12. **domains/frontend/stacks/static-hosting-stack.ts** - S3 hosting stack
 13. **domains/frontend/stacks/cdn-stack.ts** - CloudFront distribution stack
 14. **domains/frontend/stacks/dns-stack.ts** - Route53 + ACM certificate stack
 
 ### Integration & Testing
+
 15. **bin/app.ts** - Main CDK app entry point (update existing)
 16. **shared/config/environments/prod.ts** - Production environment configuration
 17. **tests/unit/domains/frontend/** - Frontend domain unit tests
 18. **tests/integration/cross-domain/** - Integration tests
 
 ### Deployment Preparation
+
 19. **shared/config/index.ts** - Configuration exports
 20. **shared/types/index.ts** - Type exports
 21. **package.json** - Update CDK dependencies if needed
@@ -361,6 +393,7 @@ export const CLOUDFRONT_SETTINGS = {
 ## Phase 1 Progress Tracking
 
 ### ✅ Completed Files
+
 - `shared/config/constants/aws.ts` - AWS constants and settings
 - `shared/types/environment.ts` - TypeScript interfaces
 - `shared/config/environments/dev.ts` - Development environment config
@@ -369,6 +402,7 @@ export const CLOUDFRONT_SETTINGS = {
 - `domains/frontend/constructs/README.md` - SSL/TLS documentation
 
 ### 🔄 Next Files to Create
+
 - `domains/frontend/constructs/static-website.ts` - S3 bucket construct
 - `domains/frontend/constructs/cdn-distribution.ts` - CloudFront construct
 - `domains/frontend/constructs/domain-setup.ts` - Route53 construct
@@ -376,6 +410,7 @@ export const CLOUDFRONT_SETTINGS = {
 - `domains/frontend/config/security-headers.ts` - Security headers
 
 ### 📋 Remaining Phase 1 Tasks
+
 - Frontend domain stacks (3 files)
 - Integration and testing (4 files)
 - Production environment config (1 file)
@@ -384,6 +419,7 @@ export const CLOUDFRONT_SETTINGS = {
 ## Benefits of Domain-Driven Architecture
 
 ### Senior-Level Design Principles
+
 - **Domain Separation**: Frontend, API, Database, Auth as separate domains
 - **Bounded Contexts**: Each domain owns its infrastructure and business logic
 - **Dependency Inversion**: Domains depend on shared abstractions, not implementations
@@ -391,6 +427,7 @@ export const CLOUDFRONT_SETTINGS = {
 - **Open/Closed Principle**: Easy to extend domains without modifying existing code
 
 ### Operational Benefits
+
 - **Team Ownership**: Different teams can own different domains
 - **Independent Deployment**: Domains can be deployed separately
 - **Scalability**: Easy to scale individual domains based on needs
@@ -399,6 +436,7 @@ export const CLOUDFRONT_SETTINGS = {
 - **Monitoring**: Domain-specific metrics and alarms
 
 ### Development Benefits
+
 - **Code Reusability**: Shared constructs across domains
 - **Type Safety**: Strong typing with domain-specific interfaces
 - **Environment Parity**: Consistent structure across dev/staging/prod
@@ -406,6 +444,7 @@ export const CLOUDFRONT_SETTINGS = {
 - **Onboarding**: New developers can focus on specific domains
 
 ## Next Steps
+
 1. Review and approve this plan
 2. Set up AWS account and CDK environment
 3. Create the organized file structure
