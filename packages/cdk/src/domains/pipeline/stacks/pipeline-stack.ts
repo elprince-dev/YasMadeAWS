@@ -70,6 +70,10 @@ export class PipelineStack extends Stack {
               type: BuildEnvironmentVariableType.PARAMETER_STORE,
               value: '/yasmade/dev/supabase-anon-key',
             },
+            CODESTAR_CONNECTION_ARN: {
+              type: BuildEnvironmentVariableType.PARAMETER_STORE,
+              value: '/yasmade/dev/codestar-connection-arn',
+            },
           },
         },
       },
