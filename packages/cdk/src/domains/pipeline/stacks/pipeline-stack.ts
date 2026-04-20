@@ -51,6 +51,7 @@ export class PipelineStack extends Stack {
         'npm run build',
         'npm run synth:pipeline',
       ],
+      primaryOutputDirectory: 'packages/cdk/cdk.out',
     });
 
     this.pipeline = new CodePipeline(this, 'Pipeline', {
