@@ -1,8 +1,9 @@
-<p align="center">
-  <img src="packages/frontend/public/logo-dark.png" alt="YasMade Logo" width="180" />
-</p>
+<div align="center">
 
-<h1 align="center">🌸 YasMade — Handcrafted Embroidery & Creative Workshops</h1>
+![YasMade Logo](./packages/frontend/public/logo-light.png#gh-light-mode-only)
+![YasMade Logo](./packages/frontend/public/logo-dark.png#gh-dark-mode-only)
+
+# 🌸 YasMade — Handcrafted Embroidery & Creative Workshops
 
 <p align="center">
   A modern e-commerce platform for artisanal embroidery, creative workshops, and Islamic-inspired art — powered by AWS.
@@ -40,40 +41,9 @@ This is the **AWS edition** — migrated from Netlify/Vercel to a fully managed 
 
 ## 🏗️ Architecture
 
-> 📐 [View the full interactive diagram](./yasmade-architecture.drawio) *(open with draw.io or directly on GitHub)*
-
-```
-                           ┌──────────────┐
-                           │   Browser    │
-                           │  (React SPA) │
-                           └──────┬───────┘
-                                  │ HTTPS
-                           ┌──────▼───────┐
-                           │   Route 53   │
-                           │dev.yasmade.net│
-                           └──────┬───────┘
-                                  │
-                      ┌───────────▼────────────┐
-                      │    CloudFront (CDN)     │◄── ACM Certificate (SSL)
-                      └───────────┬────────────┘
-                                  │ Origin
-                ┌─────────────────┼─────────────────┐
-                │                 │                  │
-       ┌────────▼────────┐  ┌────▼──────┐  ┌───────▼────────┐
-       │   S3 Bucket     │  │ API GW v2 │  │   Supabase     │
-       │ (Static Assets) │  │ (HTTP API)│  │ ┌────────────┐ │
-       └─────────────────┘  └────┬──────┘  │ │ Auth (JWT) │ │
-                                 │         │ ├────────────┤ │
-                            ┌────▼──────┐  │ │ PostgreSQL │ │
-                            │  Lambda   │──│ ├────────────┤ │
-                            │(Node.js)  │  │ │  Storage   │ │
-                            └────┬──────┘  │ └────────────┘ │
-                                 │         └────────────────┘
-                            ┌────▼──────┐
-                            │    SES    │──► 📬 Recipients
-                            │  (Email)  │
-                            └───────────┘
-```
+<p align="center">
+  <img src="architecture.png" alt="YasMade AWS Architecture" width="100%" />
+</p>
 
 ### Infrastructure Stacks
 
