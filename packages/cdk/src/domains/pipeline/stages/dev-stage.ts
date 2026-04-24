@@ -28,18 +28,21 @@ export class DevStage extends Stage {
 
     // 1. Static hosting — S3 bucket for the React build output
     const staticHosting = new StaticHostingStack(this, 'StaticHosting', {
+      stackName: 'YasMade-StaticHosting-Dev',
       environmentConfig: props.environmentConfig,
       env,
     });
 
     // 2. Certificate — Route53 hosted zone + ACM certificate (us-east-1)
     const certificate = new CertificateStack(this, 'Certificate', {
+      stackName: 'YasMade-Certificate-Dev',
       environmentConfig: props.environmentConfig,
       // env is set inside CertificateStack to us-east-1
     });
 
     // 3. CDN — CloudFront distribution (needs S3 bucket + certificate)
     const cdn = new CdnStack(this, 'CDN', {
+      stackName: 'YasMade-CDN-Dev',
       environmentConfig: props.environmentConfig,
       originBucket: staticHosting.staticWebsite.bucket,
       certificate: certificate.sslCertificate.certificate,
@@ -50,6 +53,7 @@ export class DevStage extends Stage {
 
     // 4. DNS — Route53 A/AAAA/www records pointing to CloudFront
     const dns = new DnsStack(this, 'DNS', {
+      stackName: 'YasMade-DNS-Dev',
       environmentConfig: props.environmentConfig,
       distribution: cdn.cdnDistribution.distribution,
       hostedZone: certificate.hostedZone,
@@ -60,6 +64,7 @@ export class DevStage extends Stage {
 
     // 5. Email — SES identity + API Gateway + Lambda email handler
     const email = new EmailStack(this, 'Email', {
+      stackName: 'YasMade-Email-Dev',
       environmentConfig: props.environmentConfig,
       hostedZone: certificate.hostedZone,
       env,

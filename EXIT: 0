@@ -1,0 +1,1224 @@
+{
+    "Deleted": [
+        {
+            "Key": "vite.svg",
+            "VersionId": "P42lEwFlqcTy7rFigieDycncr8.tzsyU"
+        },
+        {
+            "Key": "assets/AdminSocialLinks-8a0GPxSr.js",
+            "VersionId": "fjNmXOxxNTdwZEjGpvykut08pqplx1DJ"
+        },
+        {
+            "Key": "slide-4.jpeg",
+            "VersionId": "Z95KuzeMME8YlEIzxL14b1ODQoBkL.g0"
+        },
+        {
+            "Key": "assets/ProductDetailPage-B_l4pjL9.css",
+            "VersionId": "OL05UZgLQPuIMt_ksSOwukV9adW8iDVy"
+        },
+        {
+            "Key": "assets/index-BValeuGM.css",
+            "VersionId": "ZuFh1v_DpStwYG4k_ZZ6rf_U7iqrC8M8"
+        },
+        {
+            "Key": "slide-7.jpeg",
+            "VersionId": "pcEQ4cQ4Hd.dEpxX9mxNZV6lXoamMRLK"
+        },
+        {
+            "Key": "assets/ProductsPage-D4Hmie7O.js",
+            "VersionId": "lQOn0B.nYnBiMlNOYkFQ7LJZ_KOiYHZk"
+        },
+        {
+            "Key": "assets/ContactPage-BdnfkvM1.js",
+            "VersionId": "OUpMJgWGd9C8IOyH9Tpg3AChDYdYb7vc"
+        },
+        {
+            "Key": "assets/GalleryPage-ZNmKVqPZ.js",
+            "VersionId": "I45osqFrF3G06GLr7GDUAr6By.45Orwu"
+        },
+        {
+            "Key": "assets/NotFoundPage-vw-QFXAu.js",
+            "VersionId": "n7VzqljrIcTbDfLoEpsaP7LAms5h9Hnx"
+        },
+        {
+            "Key": "assets/OrderConfirmationPage-Hz6EIs4q.js",
+            "VersionId": "Jm9upIu39FYOTUyPP2XgWyJeH3GkLsNB"
+        },
+        {
+            "Key": "assets/index-CMC_09x_.css",
+            "VersionId": "YrhnfngLbWi_FBixhdi9Xk6gdzihAns7"
+        },
+        {
+            "Key": "assets/AdminRoutes-DgRzwp92.js",
+            "VersionId": "tARa9R4pKfT1oNnrKkIPEva1DM2qczxO"
+        },
+        {
+            "Key": "gallery/gallery-2.jpeg",
+            "VersionId": "_Mt2VD2YhCoPwPIM.Tot16F4zy8mWddL"
+        },
+        {
+            "Key": "gallery/gallery-4.jpeg",
+            "VersionId": "zokUbFe21yEvaM7RCnoroVUBnggb.R9G"
+        },
+        {
+            "Key": "assets/ProductDetailPage-B_l4pjL9.css",
+            "VersionId": "H3bjwGgUqMBm2K1aii3DpLpC4sEOgqj9"
+        },
+        {
+            "Key": "assets/CartPage-B53fs__R.js",
+            "VersionId": "EVXvb1n4FRBv5qbLoIDsLpKuu3Cox9DF"
+        },
+        {
+            "Key": "assets/AboutPage-Btzac6XE.js",
+            "VersionId": "FnSHRA0w_7Bm3yHYy6fVqCb2aZmNC6e6"
+        },
+        {
+            "Key": "assets/SessionDetailPage-tQUfMhdT.js",
+            "VersionId": "PgeSpJfWjHmABDBfo2BSrimgQpb7DKH6"
+        },
+        {
+            "Key": "assets/SocialLinksPage-C9yKhLEV.js",
+            "VersionId": "GImp28wyIO0sqw.5D22.PpVY.iGOWvOG"
+        },
+        {
+            "Key": "assets/AdminBlogs-BUWlbMbB.js",
+            "VersionId": "UXDQUREShom5B5Oej8sra_mLC.6fDQg0"
+        },
+        {
+            "Key": "vite.svg",
+            "VersionId": "nNaowOTK5HQJaKHgOTY7yQ9yo3tKU30o"
+        },
+        {
+            "Key": "slide-2.jpeg",
+            "VersionId": "9ESKIoBfm.KdXerg0lMBFcYh4YdNHGDs"
+        },
+        {
+            "Key": "slide-5.jpeg",
+            "VersionId": "5Zdyp3NIaGGQK9eGRbWobpPXfB0cW6Nb"
+        },
+        {
+            "Key": "assets/GalleryPage-UyxSCNGN.js",
+            "VersionId": "xu8hnhucZZqph8z9h3unFmPlcz98qPmH"
+        },
+        {
+            "Key": "assets/CartPage-C37mMv2p.js",
+            "VersionId": "cVqZkeKz3J6FQ8OqRt5ximiFH0vEVymG"
+        },
+        {
+            "Key": "assets/AdminProducts-DiBQiHDO.js",
+            "VersionId": "cmdkGPudvGzMOAtkqUuiB3Y3S.vMPgeO"
+        },
+        {
+            "Key": "assets/ContactPage-CeQQQ0jY.js",
+            "VersionId": "eYknEQ8UdgRjpRF11k79P63bCgX_UBDY"
+        },
+        {
+            "Key": "assets/ProductsPage-yQ7tww7k.js",
+            "VersionId": "0VbbHukNxNsjD6oBR1msfTeCewjVzKAo"
+        },
+        {
+            "Key": "slide-1.jpeg",
+            "VersionId": "Mn_SnYUl0gd6Bp6PlCsMRus5NN9.Smxg"
+        },
+        {
+            "Key": "assets/NotFoundPage-CuXD5f4V.js",
+            "VersionId": "GeZU7_yGl_j1Mau.L4bnNEuAJXG2up84"
+        },
+        {
+            "Key": "assets/AdminBlogs-DIVRtRLu.js",
+            "VersionId": "hQigdDHN9ODRaZQe_bF7UiY073v7KIdf"
+        },
+        {
+            "Key": "assets/SessionsPage-C4a2KyWK.js",
+            "VersionId": "CVDIriaJzxQ_0vOaqniBR4jEDK3jQM7n"
+        },
+        {
+            "Key": "assets/TestimonialsPage-uZBBqxeI.js",
+            "VersionId": "WM5VQ_FzkGXz2YUuw2GFDQYVa9nuKKva"
+        },
+        {
+            "Key": "gallery/gallery-1.jpeg",
+            "VersionId": "V7Qeo3V29eL8S_VwJ1vRX9PChOc4zC6P"
+        },
+        {
+            "Key": "assets/quill-DZrYvFpI.css",
+            "VersionId": "Wai2Ta48SraprrEJnZcYp4OdL1YY7or."
+        },
+        {
+            "Key": "assets/emailApi-B99OPTkH.js",
+            "VersionId": "YCY1OYfwxSKqIyKzZuuVDatNZFcVjXZY"
+        },
+        {
+            "Key": "logo-dark.png:Zone.Identifier",
+            "VersionId": "e3VMaORszBuU83U2MUWucGQSUlX3jCXZ"
+        },
+        {
+            "Key": "assets/AdminMessages-Clkj28_3.js",
+            "VersionId": "w6uuj94ddH7CDzyrAv5Oto3zf2CuBNGS"
+        },
+        {
+            "Key": "slide-2.jpeg",
+            "VersionId": "OEnYUUEHGNEvU6civKGPMRAh45h.A4fS"
+        },
+        {
+            "Key": "assets/AdminProducts-DiBQiHDO.js",
+            "VersionId": "AZmuMCe9eggmLRJFaTiUnpqm02uc69uN"
+        },
+        {
+            "Key": "index.html",
+            "VersionId": "pI6W5dbDlo6vd1d8geM9JxvEPDQYDP9S"
+        },
+        {
+            "Key": "gallery/gallery-2.jpeg",
+            "VersionId": "CV4s0O0PV9EH15grudieAsE54gE5akh3"
+        },
+        {
+            "Key": "assets/SessionDetailPage-CZpPl0IL.js",
+            "VersionId": "R8VVInYiZIlCpUBT6PQ_KkguSDtkTOlF"
+        },
+        {
+            "Key": "assets/AdminBlogs-BHbrVodK.js",
+            "VersionId": "dcubRBG3AomFcRsQYN4PGJ0p0adaruEp"
+        },
+        {
+            "Key": "gallery/gallery-1.jpeg",
+            "VersionId": "nVpJp27VmWl_Rig2KFr2pPkjm17LLZ.y"
+        },
+        {
+            "Key": "assets/AdminLoginPage-BxM7wz5v.js",
+            "VersionId": "eAedNZQe0ZlqvOYS1MKagqXQMu9rkMes"
+        },
+        {
+            "Key": "assets/AdminRoutes-CAZxUF6o.js",
+            "VersionId": "jiTLD7y7cZUdZCKenFwBaBaGwD39cXMR"
+        },
+        {
+            "Key": "assets/AdminSubscribers-BJfml5gw.js",
+            "VersionId": "BDq7ET8cRifrsjWmBWAg4YWBYC031y.U"
+        },
+        {
+            "Key": "assets/useSupabaseQuery-Cl24f-q-.js",
+            "VersionId": "3RWNX06x84U_cJYF6aim2ZAmRPNRlWen"
+        },
+        {
+            "Key": "index.html",
+            "VersionId": "j.Dfn5btedqsN1td7.xgj3s8txP7mxel"
+        },
+        {
+            "Key": "gallery/gallery-4.jpeg",
+            "VersionId": "6VxDai2_QJKVQOFHmfd3_JjJr4mDXk1I"
+        },
+        {
+            "Key": "assets/AdminPromoCodes-D-4i3lSj.js",
+            "VersionId": "EFH_cPjepruqwYXVZOCOtXEJcmtsf92h"
+        },
+        {
+            "Key": "assets/AdminMessages-CH-WyQFB.js",
+            "VersionId": "y908RJoXGstnmKYHHmTNMicHcpjyMCCH"
+        },
+        {
+            "Key": "logo-light.png:Zone.Identifier",
+            "VersionId": ".yuqPhpa91VI8UIS6znIu0m5TCUV6m6k"
+        },
+        {
+            "Key": "assets/BlogPage-Bitm-vQ2.js",
+            "VersionId": ".n25oXGOSKPfUo1GTaT_XigRVE1X87yz"
+        },
+        {
+            "Key": "assets/AdminProducts-H33kuRiP.js",
+            "VersionId": "Jk_3NEYeXUUvAGdB7MOstDLZbaQkyWxb"
+        },
+        {
+            "Key": "assets/v4-BPewsjiO.js",
+            "VersionId": "HRwiKfvM0liZYCvFYvtnO83_PZDcdSpl"
+        },
+        {
+            "Key": "gallery/gallery-3.jpeg",
+            "VersionId": "nbqVwmmX4.53mX8hbZOSguNbApsfiuYs"
+        },
+        {
+            "Key": "slide-6.jpeg",
+            "VersionId": "OpYF1FNAQQ78SsTmwTklpw01LGT.8cF2"
+        },
+        {
+            "Key": "gallery/gallery-2.jpeg",
+            "VersionId": "vOP826ikNCg9iCQTL8_C4xfOZFNnmuF1"
+        },
+        {
+            "Key": "assets/AdminBlogEdit-DLtiHwJ_.js",
+            "VersionId": "53gKGOgB20TllMrfjyJpV_TKv_YsZvKP"
+        },
+        {
+            "Key": "logo-dark.png:Zone.Identifier",
+            "VersionId": "Ls5.LMyQaDXMFIcE1lln_3PgYN7Tz5Dy"
+        },
+        {
+            "Key": "assets/OrderConfirmationPage-B_WRgcUK.js",
+            "VersionId": "9wAwOYy5QXOj8idd0odE2VDchgjvQ.n1"
+        },
+        {
+            "Key": "assets/TestimonialsPage-IRY0fh2Y.js",
+            "VersionId": "YQHAtPGq6t836WT7x5jGpehgos7oOYj6"
+        },
+        {
+            "Key": "assets/AdminBlogs-BmSrubbW.js",
+            "VersionId": "zrzfFG9hkbajgHUkxX3_yZxoIu8axzdr"
+        },
+        {
+            "Key": "assets/AdminOrders-CaD4MP8Y.js",
+            "VersionId": "zv5L5wMV4MXho3sSJ4fZ9WhYo7qlvAbX"
+        },
+        {
+            "Key": "assets/AdminTestimonials-Cw85avfT.js",
+            "VersionId": "6nwu0ikiLzMijEVd5jvzpnPiU8Mk2ZZ9"
+        },
+        {
+            "Key": "logo-light.png",
+            "VersionId": "vlorTO0puSsBha6H0m_VNmyTQexgqB0h"
+        },
+        {
+            "Key": "index.html",
+            "VersionId": "cz8b_hI4FoZEM3HVEEsi10yiXMFgdpfT"
+        },
+        {
+            "Key": "assets/HomePage-y7YwAq9s.js",
+            "VersionId": "fY0aFwzmoxZu7C2KMX537Av2.EXcmyCz"
+        },
+        {
+            "Key": "logo.svg",
+            "VersionId": "LGe9m2M9s1RiAU62pwUAeJrks6GP0HhU"
+        },
+        {
+            "Key": "logo-light.png:Zone.Identifier",
+            "VersionId": "Znwsqexk_ykUjkp2UoOGXzMQbZmpJMc1"
+        },
+        {
+            "Key": "_redirects",
+            "VersionId": "fWc_Oe_H0ClBjg1uRv_4LqvVhjktmFKK"
+        },
+        {
+            "Key": "assets/ProductsPage-Dp4wZwRF.js",
+            "VersionId": "ocElXaC5TV5WF_wrPmpV5zNLZIuKV_Q1"
+        },
+        {
+            "Key": "assets/AdminGallery-CXSwaNx9.js",
+            "VersionId": "WnPZ_GapDKsIKh1jVPp36NvSVgeJbYZ8"
+        },
+        {
+            "Key": "assets/AdminShippingRates-D3RGfpVV.js",
+            "VersionId": "nZavrctgFNZ6mrgdqwz2lIxy.p8aHhdm"
+        },
+        {
+            "Key": "slide-2.jpeg",
+            "VersionId": "rPe948xKaFIQu97.xNStWGdEI1_w8SfY"
+        },
+        {
+            "Key": "assets/AdminGallery-CTmVbkW_.js",
+            "VersionId": ".bYXg84d1YjJ3WKs.liOcU1TLO1jU3PM"
+        },
+        {
+            "Key": "assets/quill.snow-CsJHkhnM.js",
+            "VersionId": "Yli5NJs_5YAaDToNz3F83T9hdaeWajto"
+        },
+        {
+            "Key": "assets/AdminOrders-ofaq1g83.js",
+            "VersionId": "tYlN8tHm97XZC2GbUySGTrecC.qeIcXN"
+        },
+        {
+            "Key": "assets/HomePage-y7YwAq9s.js",
+            "VersionId": "ZggZ7jR9uF7Ld2R3KMnkSjdtJjHYRRVp"
+        },
+        {
+            "Key": "assets/AdminLoginPage-DI_QOUBx.js",
+            "VersionId": "7GI5Br4Xh8FaFxh1cmfek4L3MH0zlzYP"
+        },
+        {
+            "Key": "assets/AdminRoutes-CRovhggN.js",
+            "VersionId": "igs7NuWjHo88Y9VI3fw4MqFXIJ2KDV_z"
+        },
+        {
+            "Key": "slide-4.jpeg",
+            "VersionId": "HyH_9JUeXaL.woA64ERXQ6bufH5VOLpt"
+        },
+        {
+            "Key": "assets/AdminOrders-CrFd_1Jj.js",
+            "VersionId": "wo.2POfdyS.GxvW7fLAWK6ft_XoyMmpc"
+        },
+        {
+            "Key": "gallery/gallery-3.jpeg",
+            "VersionId": "eL4QZKT5mFZLT4jc4kqiQpSaRfHXGDUB"
+        },
+        {
+            "Key": "assets/AdminBlogEdit-DyuVUi0r.js",
+            "VersionId": "SsIO_khYFxLIXTXFNsE7gIMpKHvphcxF"
+        },
+        {
+            "Key": "slide-1.jpeg",
+            "VersionId": "PMyI6H0OdZZzarJ_9XfpcTLWcz3fQtC6"
+        },
+        {
+            "Key": "assets/SessionsPage-BMwh660w.js",
+            "VersionId": "vTuHcShGt2BFaF.guaBJkCbo3zVahH7Z"
+        },
+        {
+            "Key": "logo-light.png",
+            "VersionId": "s7B9w2GkePr.PvojsnxDwAv7BUfkJ8QL"
+        },
+        {
+            "Key": "slide-5.jpeg",
+            "VersionId": "e7KfrMiS.dKF8UmmpJZR1naP.SXa0w77"
+        },
+        {
+            "Key": "assets/AdminProductEdit-QiOUmjz4.js",
+            "VersionId": "gC_UhL8tdhYITgkx5pntJiGLE8rkxR4a"
+        },
+        {
+            "Key": "assets/ProductDetailPage-B_l4pjL9.css",
+            "VersionId": "IczWT8rPxwPoiGseV4TftVFUA._lvlzn"
+        },
+        {
+            "Key": "assets/SessionDetailPage-CZpPl0IL.js",
+            "VersionId": "9J9a8NjceZTxMXkJxOr83vOOEJDkzCMn"
+        },
+        {
+            "Key": "gallery/gallery-2.jpeg",
+            "VersionId": "Zt2kM7d6DIz4VgHYO4fXAT9dxoC_kglJ"
+        },
+        {
+            "Key": "assets/CartPage-BjLbGnOZ.js",
+            "VersionId": "515iusQFf2R99uFAA6sjQwuH7vUyn8e_"
+        },
+        {
+            "Key": "assets/AdminRoutes-DiSlW5Eg.js",
+            "VersionId": "FHwkKlfHDC40TLvJ55jTRXSG1mXEOsbQ"
+        },
+        {
+            "Key": "assets/emailApi-zOWeHEYV.js",
+            "VersionId": "xnc7CAr12C0bkR_v9OoJVSqy0x4A.503"
+        },
+        {
+            "Key": "slide-5.jpeg",
+            "VersionId": "GrMEeMPfeSs96EWy9Sr0bwQQZv036PZy"
+        },
+        {
+            "Key": "assets/AdminShippingRates-CmZHZlo-.js",
+            "VersionId": "DP1syuBG.Uu_EKgPpQ69InmDL4AlEnnN"
+        },
+        {
+            "Key": "gallery/gallery-1.jpeg",
+            "VersionId": ".jPCJGSZetc1mvbnOWRVbtS2XoL6yYs8"
+        },
+        {
+            "Key": "assets/BlogPostPage-CHxM_kdz.js",
+            "VersionId": "jAEDIDaIEbh36PQ7L.H2xCbAidrkNeZU"
+        },
+        {
+            "Key": "assets/AdminSettings-xZPv6rQa.js",
+            "VersionId": "xUgE3W50IcNwWyeqRe22MXlVbyrdaxoJ"
+        },
+        {
+            "Key": "assets/AdminProducts-foulWoLH.js",
+            "VersionId": "S3pqSdEsL6fXUjw9eOBP_ujGhU3GWqFo"
+        },
+        {
+            "Key": "assets/AdminDashboard-DmsoUTIJ.js",
+            "VersionId": "zR57m8xeXT2VyP1D_6.dyyXz6n3X3kgj"
+        },
+        {
+            "Key": "assets/GalleryPage-BU_PbgMu.js",
+            "VersionId": "aY9Ha4ggRubiAZ57Tu8ERd1DBSewZeVa"
+        },
+        {
+            "Key": "assets/NotFoundPage-jFbJy5Jc.js",
+            "VersionId": "dKR1ZwxSjkfonnnhxuYw6RR.9U5BvJMC"
+        },
+        {
+            "Key": "assets/AdminDashboard-ZZUp1A_H.js",
+            "VersionId": "zWOyC4O6_FI9HcjEyopFehv7pegC20kv"
+        },
+        {
+            "Key": "assets/AdminTestimonials-DDDHnKV6.js",
+            "VersionId": "zrmyvN6DDnd1g_EuP2GZjqWviQUA1uho"
+        },
+        {
+            "Key": "assets/AdminMessages-BFnWUwGw.js",
+            "VersionId": "JexjKbFSfKVHLEHpFSGXu9xcXzw9zv6b"
+        },
+        {
+            "Key": "assets/SessionsPage-C4a2KyWK.js",
+            "VersionId": "nUZ2dm1SzMECp9XLUs4xCojliPrwn3YA"
+        },
+        {
+            "Key": "assets/AdminSessions-DuyjiY3c.js",
+            "VersionId": "P4d7CLZoBWmAVGTu2vynZgyPABubUqVQ"
+        },
+        {
+            "Key": "logo-dark.png",
+            "VersionId": "mVbrLSQAO1tMMmNQyo2DJMXF2UUptLkL"
+        },
+        {
+            "Key": "assets/AdminGallery-BPQu93aA.js",
+            "VersionId": "nlFcGwuKyOGpb4IYAdg1zgnpp8DRZxfT"
+        },
+        {
+            "Key": "assets/NotFoundPage-NrYIRAzH.js",
+            "VersionId": "x0BLrnByedCIqR4MRY.Yy18GbnPRAVV_"
+        },
+        {
+            "Key": "slide-4.jpeg",
+            "VersionId": "WTIvZxKzlEUVL936mhlrnui_.PUXCuRO"
+        },
+        {
+            "Key": "index.html",
+            "VersionId": "TpLsuGw14WvAo0ilGIVM7BMgO0bQGBud"
+        },
+        {
+            "Key": "assets/AdminRoutes-DgRzwp92.js",
+            "VersionId": "WIGXXI7bczsOLFbts0RVqk_uOb4Uyf8T"
+        },
+        {
+            "Key": "assets/AdminSessionEdit-0RLgbsHf.js",
+            "VersionId": "90vnNwgFZVAPYr59nM9lSB2Z_MiC9nQt"
+        },
+        {
+            "Key": "slide-2.jpeg",
+            "VersionId": "pOp70s.0hA5noWq881V5o6JgPaWDDDcE"
+        },
+        {
+            "Key": "assets/AboutPage-QMQ3IU7L.js",
+            "VersionId": "hNdW2Gp5KAEORz3vpcaEXNCm1Yr5.U2z"
+        },
+        {
+            "Key": "slide-4.jpeg",
+            "VersionId": "8Ybyt3W1Kv3w570pYHKzE3RgvnoGxvVX"
+        },
+        {
+            "Key": "logo-dark.png",
+            "VersionId": "F_fU8Br3KjavfBdS9cBDf.mds0_qbawp"
+        },
+        {
+            "Key": "assets/v4-CEBnatR8.js",
+            "VersionId": "KwXhHDQSvsNjLTPHMJMbIQ0c9MTEKB3v"
+        },
+        {
+            "Key": "assets/TestimonialsPage-C9yI6cU4.js",
+            "VersionId": "xCWF28nxipBF8uz.OS5rmv_HVp2uuUBU"
+        },
+        {
+            "Key": "slide-6.jpeg",
+            "VersionId": "_8lEvbiOqP7m3Fh7iFYsOT8XJzdxbH8y"
+        },
+        {
+            "Key": "slide-7.jpeg",
+            "VersionId": "HAXnIPBaI1lEomSmRBXUzIQjRYLorItx"
+        },
+        {
+            "Key": "logo.svg",
+            "VersionId": "ut83fTd4ZE_YSww3Ntw.HCws9Cy1xoB0"
+        },
+        {
+            "Key": "assets/AdminSessions-DuyjiY3c.js",
+            "VersionId": "n_5VmWMRV900HsR2Mw0GH6_TvaJ3T7UA"
+        },
+        {
+            "Key": "assets/AdminPromoCodes-DyvEpNSD.js",
+            "VersionId": "lVcf4CYFEFK.MQIqT02kskGBNVkcgtAU"
+        },
+        {
+            "Key": "assets/index-DSgA39s8.js",
+            "VersionId": "Xvyzfh2j4ZwbJoSKnbk8_Quo9Lm1J2B8"
+        },
+        {
+            "Key": "assets/ProductDetailPage-B_l4pjL9.css",
+            "VersionId": "kZNMmEOOxn05p.1ClVJkwpMG8r.8ddtY"
+        },
+        {
+            "Key": "assets/AdminMessages-CH-WyQFB.js",
+            "VersionId": "EWwF1uPq2nIuW0IjPGQcfnbvOjE0._Og"
+        },
+        {
+            "Key": "assets/AdminSocialLinks-FMDK2WR6.js",
+            "VersionId": ".WJM8p97r2DQlBRmWRiHUaT5dQ.MoHd."
+        },
+        {
+            "Key": "assets/AdminLoginPage-Dp2dWDfi.js",
+            "VersionId": "pk_c693_PDxxNeNC8eHuVLziUhe89LvL"
+        },
+        {
+            "Key": "assets/index-Czs1riTU.js",
+            "VersionId": "4246Zv_45M8YCay0S8VL7SV42hmHtncY"
+        },
+        {
+            "Key": "assets/AdminSubscribers-Bf0gabsu.js",
+            "VersionId": "elpvL_i4p2pdQzx2ckAtxpJ17maOET9J"
+        },
+        {
+            "Key": "gallery/gallery-2.jpeg",
+            "VersionId": "g1JiKtQsaIWTKyZ.QsRHa869l8pyPJh1"
+        },
+        {
+            "Key": "assets/AdminDashboard-0tyT3DNr.js",
+            "VersionId": "tJy4d1wb.97oe0G0oxMQFeDp0mkqHhhn"
+        },
+        {
+            "Key": "assets/AdminSessions-l--DKiLt.js",
+            "VersionId": "awybt3OY1GWi_MsXcCXUvy6QM4zSpYIq"
+        },
+        {
+            "Key": "assets/ContactPage-qVjdKqIC.js",
+            "VersionId": "zfTlXP9TrYC2qKNwU8Fip99PNYxgGBm0"
+        },
+        {
+            "Key": "assets/AboutPage-B7izxH3t.js",
+            "VersionId": "n_b4tNSYzFT9rvpgtRcqgu2_4Cgax4cc"
+        },
+        {
+            "Key": "slide-6.jpeg",
+            "VersionId": "dPAveLbN5TwZdgb5wPBo2Iiww0TJvWl."
+        },
+        {
+            "Key": "assets/GalleryPage-ZNmKVqPZ.js",
+            "VersionId": "cqm8797OlvZIGPTGYpHWrTqxgXtdj0uP"
+        },
+        {
+            "Key": "assets/index-BoI3DLjr.js",
+            "VersionId": "YLUUm437wqZJHQhIWdlgPXHl9S8N8TQE"
+        },
+        {
+            "Key": "assets/index-Czs1riTU.js",
+            "VersionId": "oSuT8aVyjgxbx8LGOq_3olKP9_DxQ_2c"
+        },
+        {
+            "Key": "slide-3.jpeg",
+            "VersionId": "8hKuuxcoG2xmQPkpqYVDgdY.kXsne1tD"
+        },
+        {
+            "Key": "assets/AboutPage-QMQ3IU7L.js",
+            "VersionId": "1U4NKcnYAtefeewi23t3KZPcGCGkUXLy"
+        },
+        {
+            "Key": "assets/emailApi-B99OPTkH.js",
+            "VersionId": "IXOxNnpVV8ziSJVfw2O6otxxyw.dFW66"
+        },
+        {
+            "Key": "assets/AdminBlogs-BHbrVodK.js",
+            "VersionId": "CtrsEoxFUbYfO0iKKTFq.nj9wpg9fi0m"
+        },
+        {
+            "Key": "assets/AdminDashboard-BHRQPyKs.js",
+            "VersionId": "gabVmLNgpxcVY8zgVjO3DwA78lN0uNhJ"
+        },
+        {
+            "Key": "assets/AdminPromoCodes-D-4i3lSj.js",
+            "VersionId": "a0OziCGD61i58I27nooIJ8nuTr5qT8Bf"
+        },
+        {
+            "Key": "assets/LazyImage-Cy9J9TNI.js",
+            "VersionId": "79DGY8SdHT.2a_7J0eeyozJTbWP3ziBC"
+        },
+        {
+            "Key": "assets/SocialLinksPage-DdDFWVko.js",
+            "VersionId": "JT_IxmeSoBdNZBqzYgLROPYqM1EuPlRv"
+        },
+        {
+            "Key": "assets/SocialLinksPage-C9yKhLEV.js",
+            "VersionId": "qcJLQmsPn6aOJKbYz4gbjirmNSbKaqyO"
+        },
+        {
+            "Key": "logo-dark.png:Zone.Identifier",
+            "VersionId": "eUf6hl882reGkzkNwTgWLlPL5t1UAmkj"
+        },
+        {
+            "Key": "assets/quill.snow-BKT7AYHv.js",
+            "VersionId": "jpXOAuKx3jkvxmk7IjA35NOOrnCL9VBG"
+        },
+        {
+            "Key": "assets/GalleryPage-BHIPnbjb.js",
+            "VersionId": "l.mVEE60_BMwmtscDQnNtwCMtcLNSDUW"
+        },
+        {
+            "Key": "logo-light.png:Zone.Identifier",
+            "VersionId": "ym8YtWk7rUsK4hIPVadbllnp0nrxsdfO"
+        },
+        {
+            "Key": "slide-3.jpeg",
+            "VersionId": "lrq5wqcsTA_xCOxUwbJDNbgcbaqfLR9D"
+        },
+        {
+            "Key": "assets/AdminBlogEdit-DyuVUi0r.js",
+            "VersionId": "bnI6S2WwTLJI4IyTvpykV8d_bU93hWPJ"
+        },
+        {
+            "Key": "logo-dark.png",
+            "VersionId": "stFNl2RDTvyKmEbCQYx6X5CwehjE6pE9"
+        },
+        {
+            "Key": "assets/AdminProductEdit-C3wKZIGL.js",
+            "VersionId": "awqoDFie8knfKO5B_m_3M4f7rg3rqbIr"
+        },
+        {
+            "Key": "_redirects",
+            "VersionId": "cF7rZmFCQ8vveRgyLfn7iUdhEdCbjxXF"
+        },
+        {
+            "Key": "logo-dark.png",
+            "VersionId": "AcVVOTW7SxePmIKgpbaQu4bSFDlp48KM"
+        },
+        {
+            "Key": "logo-light.png",
+            "VersionId": "okQ_kxZSeLh87Rq4h8zeBsTFU4D0Hhb8"
+        },
+        {
+            "Key": "assets/AdminSettings-xZPv6rQa.js",
+            "VersionId": "3fsDxq3yKp_cT18J05Y_Ce.WJOStLK7G"
+        },
+        {
+            "Key": "assets/AdminSubscribers-BJfml5gw.js",
+            "VersionId": "1VuMd5sNX1aFWIbhjwbJOah5dQsVZPBV"
+        },
+        {
+            "Key": "assets/index-BValeuGM.css",
+            "VersionId": "MvvXyranK7gib2A4Rhn3AA7cypI0J9UU"
+        },
+        {
+            "Key": "assets/AdminSettings-CXmNCFSR.js",
+            "VersionId": "ds4lFZN23BuG5.n1PHWBaEKkjLVq3KgX"
+        },
+        {
+            "Key": "assets/AdminSettings-CwDs3KUV.js",
+            "VersionId": "A6SHLRtYJcgZGmXG1KHWd9n.YT_vqllg"
+        },
+        {
+            "Key": "logo-dark.png",
+            "VersionId": "HpTSC8SSQ9ZeMc.ea5T6T3j3Zt4.ZjVw"
+        },
+        {
+            "Key": "assets/ProductsPage-BT7uDSJn.js",
+            "VersionId": "B9NTmFLkYeAcneNB0q2J9apJi5vS0Emd"
+        },
+        {
+            "Key": "assets/AdminShippingRates-zd0tBNLs.js",
+            "VersionId": "3JTsUSQQ8RBna1Bqt7HNqWKQgKyOkFpw"
+        },
+        {
+            "Key": "assets/AdminPromoCodes-DZtO7usk.js",
+            "VersionId": "6FlCTDEMUl0ZjLVmiHwlwVwOCW2BdOvM"
+        },
+        {
+            "Key": "assets/AdminSettings-y8TUVSRb.js",
+            "VersionId": "LehxYFliE_t8OSoEkEpAg0ij_hYAjCrj"
+        },
+        {
+            "Key": "assets/AdminProductEdit-U8Bk550R.js",
+            "VersionId": "1L1MCx2KS6oTLynMEzRV1LAFbTnSSDLZ"
+        },
+        {
+            "Key": "assets/SocialLinksPage-1Hl0E4Ik.js",
+            "VersionId": "QrUrrbnGlEHwwMrPsshtzX1XHZ2IiG5F"
+        },
+        {
+            "Key": "gallery/gallery-4.jpeg",
+            "VersionId": "NmSURwFMmFZlcdIxTX0_1gHsxrT5d7rg"
+        },
+        {
+            "Key": "_redirects",
+            "VersionId": "21BDTzXoXrnhhwgmTNm1kAUlNPvRp36f"
+        },
+        {
+            "Key": "assets/ProductDetailPage-CqXpTd54.js",
+            "VersionId": "2Nrm.Cre.pSilGSmmIdVbIlzaPR58PXQ"
+        },
+        {
+            "Key": "assets/AdminShippingRates-BPXKHQ0w.js",
+            "VersionId": "DXBksWRc02Mhu3RRrz.3GoeE318awOfH"
+        },
+        {
+            "Key": "logo-light.png",
+            "VersionId": "GVtpqqDOnjja_aYcW3AyacdM1REcH6kX"
+        },
+        {
+            "Key": "assets/AdminGallery-CXSwaNx9.js",
+            "VersionId": "YCnlbxiJHZSiN_GxduWeqetX5WbNI1nI"
+        },
+        {
+            "Key": "assets/AdminTestimonials-Cw85avfT.js",
+            "VersionId": "2qbZFP2yD6BcZnVy6s9K.VHH06pCPyzk"
+        },
+        {
+            "Key": "assets/useSupabaseQuery-CDn-EuZK.js",
+            "VersionId": "xWeCaaatzeZuikY4dQfGomSHzzMrxmIa"
+        },
+        {
+            "Key": "assets/AdminBlogEdit-D2ug-nsv.js",
+            "VersionId": "RfTOePMVLhcZBtPx8Jik.Vnv9tPONw2M"
+        },
+        {
+            "Key": "assets/SessionDetailPage-D-YXUVVg.js",
+            "VersionId": "ofpWexdRmOAJaBjoZlJpG1Vb0RAPBnRO"
+        },
+        {
+            "Key": "assets/BlogPostPage-CHxM_kdz.js",
+            "VersionId": "pfaM_JYXCxhxJvy2E9vPuL6TubB.pi9n"
+        },
+        {
+            "Key": "assets/ContactPage-w-HNPH_U.js",
+            "VersionId": "puK5o3G0iEQPwK0BPcOn5iGO8v4zAwl1"
+        },
+        {
+            "Key": "assets/SessionsPage-orhR-1Nx.js",
+            "VersionId": "hfIuiY_c0H75RcoxccP3Cv0pToXCOlFT"
+        },
+        {
+            "Key": "assets/ProductDetailPage-Fo7hZggj.js",
+            "VersionId": "OwhnCk0oWpABHhM5kF12poigd9t0YsPi"
+        },
+        {
+            "Key": "gallery/gallery-1.jpeg",
+            "VersionId": "Q5y_.aSVu0shAjzTJXvI5RCJb1ZSYr6h"
+        },
+        {
+            "Key": "assets/LazyImage-D_m2uXN9.js",
+            "VersionId": "OS84tEecjxc0p23BzpGtgeeCC3TkhKu1"
+        },
+        {
+            "Key": "slide-7.jpeg",
+            "VersionId": "F23YDLCVQLflv1HijGwRtcp66jotNxcs"
+        },
+        {
+            "Key": "assets/v4-CxI44nYV.js",
+            "VersionId": "IUvLcaSx4X_hURTStLtzCAAhlHi2lbsu"
+        },
+        {
+            "Key": "assets/AdminSocialLinks-cpGqzVh7.js",
+            "VersionId": "l2aAiLMefIht.zOqwZLaosx9HN4EU81D"
+        },
+        {
+            "Key": "slide-5.jpeg",
+            "VersionId": "Yu.Ug8z4KDQaSU.hycf1Eg5c9TnnvJg5"
+        },
+        {
+            "Key": "assets/quill.snow-BQDWb5a9.js",
+            "VersionId": "snloSYvyOpD.7QPTRyeuPdhyCEBzXoav"
+        },
+        {
+            "Key": "assets/BlogPage-DtjgJAxp.js",
+            "VersionId": "xIBYwRYFGKIz5o1WDgmgzjoXCkR0joAw"
+        },
+        {
+            "Key": "assets/AdminGallery-BSrzuobw.js",
+            "VersionId": "dl1pVfTqOyog0ZwHmC74PUo4CDRBzZCs"
+        },
+        {
+            "Key": "assets/BlogPage-mrqrkIF_.js",
+            "VersionId": "fqAoVSBJbhw3PeEMxjwkxm28xDN3jhc_"
+        },
+        {
+            "Key": "assets/CartPage-D0k4eW7l.js",
+            "VersionId": "n7EuGukyrpOLV.RCHdiiI6206s1Brym5"
+        },
+        {
+            "Key": "slide-1.jpeg",
+            "VersionId": "PuSVSUNUHIaHtSJcHnzwA5gfqVqbD1PI"
+        },
+        {
+            "Key": "assets/AdminBlogEdit-DtvJdg89.js",
+            "VersionId": ".JJPDgfwDfd_U.ngMCfHWimGRHQlJCNx"
+        },
+        {
+            "Key": "assets/AdminProductEdit-QiOUmjz4.js",
+            "VersionId": "mptcndAa67QyAcqSDb1kE56s4V2KS2P6"
+        },
+        {
+            "Key": "logo-light.png:Zone.Identifier",
+            "VersionId": "8tEvQ3O011M_dMmQ965o7MHYTAJDNMFl"
+        },
+        {
+            "Key": "assets/AdminSessionEdit-BVmAfp2j.js",
+            "VersionId": "aDo4SYNIk32Kg9EMoLCsdZnV8Ly6zh57"
+        },
+        {
+            "Key": "assets/BlogPage-ByZrIbg9.js",
+            "VersionId": "FWvMINVPIzMvINS96vLyrMuO429iEfWn"
+        },
+        {
+            "Key": "gallery/gallery-1.jpeg",
+            "VersionId": "7Nq7lMl8PDgWRWbyhaoJQjJfjgQttS8W"
+        },
+        {
+            "Key": "assets/AdminSessions-6zUtf8Kb.js",
+            "VersionId": "7MuALkAuMVrQcAx0M12qb6wyWeJUJWbl"
+        },
+        {
+            "Key": "slide-3.jpeg",
+            "VersionId": "SqChnTTdUyAbzUBHuLsTSbACyXuWARtP"
+        },
+        {
+            "Key": "assets/BlogPage-ByZrIbg9.js",
+            "VersionId": "fUcRJF083VWycHb.8ITNG0IOkjIG1iCz"
+        },
+        {
+            "Key": "assets/LazyImage-BztFJ-ep.js",
+            "VersionId": "0h2z3_Sm6G3Y5S68Qv_Ak8m2ESu5pPFk"
+        },
+        {
+            "Key": "assets/LazyImage-DX_Y97sA.js",
+            "VersionId": "ZblJ2wxe_wRT9tpJ4t7DvVwYDCzgQTbE"
+        },
+        {
+            "Key": "assets/TestimonialsPage-DM9v8fmw.js",
+            "VersionId": "DHK4pcHFXs0ffuZLJy4ES8XoL4CvtldU"
+        },
+        {
+            "Key": "assets/AdminSubscribers-CDEgh2bo.js",
+            "VersionId": "GxMLEsBxtgVUlyOXyKrLAmFvLRs8rdJE"
+        },
+        {
+            "Key": "assets/quill-DZrYvFpI.css",
+            "VersionId": ".foSeo0.By.30zfE2Wv.avLGixBUBhjP"
+        },
+        {
+            "Key": "assets/quill-DZrYvFpI.css",
+            "VersionId": "6U7CM7IwbS0PF8qibPEdbVWGOu2kLY4k"
+        },
+        {
+            "Key": "logo.svg",
+            "VersionId": "0oGjXT8A3b80LgdWUhRozy9cWc4S8j7d"
+        },
+        {
+            "Key": "assets/SessionDetailPage-Cvop3dA-.js",
+            "VersionId": "t4HKQhOih1ltnyjWQyuTjDqBlVsndwsN"
+        },
+        {
+            "Key": "assets/ProductDetailPage-B_l4pjL9.css",
+            "VersionId": "KxMjjde4XNhrdQ.GY8KhsuMyF1YRMgYf"
+        },
+        {
+            "Key": "assets/BlogPostPage-TIVXvLRa.js",
+            "VersionId": "WJGWMmPt3sLhCfEySBwyoWygsr_tumXm"
+        },
+        {
+            "Key": "assets/NotFoundPage-NrYIRAzH.js",
+            "VersionId": "7oCs1UO9ZaDBhZmgePaJBaFoESC0bI98"
+        },
+        {
+            "Key": "assets/AdminDashboard-ZZUp1A_H.js",
+            "VersionId": "0Caeq38pQUdY82OrR.mfi5kVL2PvMPG5"
+        },
+        {
+            "Key": "logo.svg",
+            "VersionId": "6zyesC_av1wNOIPhG0MvfvyKQu4ZAeqG"
+        },
+        {
+            "Key": "gallery/gallery-4.jpeg",
+            "VersionId": "zBxTUP4_vB2jSSGIWUxVJSSwr0ndqVr_"
+        },
+        {
+            "Key": "assets/AdminPromoCodes-CO38k4DK.js",
+            "VersionId": "5jzw6fEelsuvDzzlo7cAxxDzHOTB9qDY"
+        },
+        {
+            "Key": "gallery/gallery-3.jpeg",
+            "VersionId": "d3MTRfr0qcjyin0Vom9ZgLEfv1Jm08Oa"
+        },
+        {
+            "Key": "assets/index-CMC_09x_.css",
+            "VersionId": "CP7OirPMzEWY5nbGj.QQ.nGcrvHGM3ur"
+        },
+        {
+            "Key": "assets/ProductDetailPage-jvEybqQA.js",
+            "VersionId": "QFeprun.62Sv70iS9FWSix.9Zh3h9wqE"
+        },
+        {
+            "Key": "assets/AdminLoginPage-BY9Mc3D2.js",
+            "VersionId": "3EsjY8YZLJiw_qOGget4rdhzicgLKM9Z"
+        },
+        {
+            "Key": "assets/OrderConfirmationPage-B_WRgcUK.js",
+            "VersionId": "g608qrh6wi_Pliqp3aQGJobJX8auxX5."
+        },
+        {
+            "Key": "vite.svg",
+            "VersionId": "hY3AS3kfj2jeFhQ_Gwuo5fW20Vd.8IbU"
+        },
+        {
+            "Key": "assets/HomePage-DTboT9ng.js",
+            "VersionId": "xxriv4swnekMXuVtAkd2G34eWgrLMrPE"
+        },
+        {
+            "Key": "slide-7.jpeg",
+            "VersionId": "76MxQJZE5D5cYVnqE622cC_aVHWAwM7A"
+        },
+        {
+            "Key": "assets/TestimonialsPage-IRY0fh2Y.js",
+            "VersionId": "4Uvw6Q6HbrblaZAbFHL3UZcUtlnF8IXv"
+        },
+        {
+            "Key": "logo.svg",
+            "VersionId": "58BWXgGvSnlKx9V02Tlk7Cj6u.7MqCUA"
+        },
+        {
+            "Key": "assets/quill.snow-CsJHkhnM.js",
+            "VersionId": "dTnc0d_xHLpA7EqaZNiy586gt.uFPXIL"
+        },
+        {
+            "Key": "assets/v4-D6y79Avp.js",
+            "VersionId": "ddBdkUo_EM5zJnBgbdAr6JyL3.Z544Z5"
+        },
+        {
+            "Key": "assets/AdminProducts-Ra5_Cd9n.js",
+            "VersionId": "8f_JrDjNBuCgLzKmRuUV5dgqHA4iMx60"
+        },
+        {
+            "Key": "_redirects",
+            "VersionId": "Mrrec1J_8qh9N3f.dr4Ufd9_k2gyIlYg"
+        },
+        {
+            "Key": "assets/AdminTestimonials-F2PrMT6z.js",
+            "VersionId": "btzcele05slN3hinx17prv3kHgo5RaDX"
+        },
+        {
+            "Key": "assets/OrderConfirmationPage-BczF0rRv.js",
+            "VersionId": "XZCbVBtLup2AkgLPGghtQWuI275I32kY"
+        },
+        {
+            "Key": "logo-light.png:Zone.Identifier",
+            "VersionId": "q2Snx.CANDmUKsKdUYPN7wychsr62.8M"
+        },
+        {
+            "Key": "assets/AdminShippingRates-CmZHZlo-.js",
+            "VersionId": "Mk3doXRlrwqDQAnaXlTOIuQC9frBnx0J"
+        },
+        {
+            "Key": "assets/LazyImage-BztFJ-ep.js",
+            "VersionId": "lUhGuDTQEJTrXwq9u5eLEgtR9JLBQ.xN"
+        },
+        {
+            "Key": "slide-1.jpeg",
+            "VersionId": "q0gFo_hZwmNqys11741C4Dr6jeLXYW0o"
+        },
+        {
+            "Key": "logo-dark.png:Zone.Identifier",
+            "VersionId": "fhaRHQhtcO5tysVu0e.x7Gu2P8cUe7wM"
+        },
+        {
+            "Key": "assets/index-DKzMyVh_.js",
+            "VersionId": "bDoe5yy1wH7myhRYn620TSlcrRjSpeGt"
+        },
+        {
+            "Key": "assets/ContactPage-qVjdKqIC.js",
+            "VersionId": "vPwk8jlv7fQa6CzEeU5OSIKVTyr1dBkX"
+        },
+        {
+            "Key": "assets/CartPage-D0k4eW7l.js",
+            "VersionId": "JKj2ZT9gz3GjPX6oMOkRKjrie0P64fE3"
+        },
+        {
+            "Key": "assets/ProductDetailPage-Fo7hZggj.js",
+            "VersionId": "l7CbCZD97Tqh54xzVbCfLLW2cgOa2YKF"
+        },
+        {
+            "Key": "assets/SocialLinksPage-C4S0STEL.js",
+            "VersionId": "3zrqGz4OqBod.BwFVhY6dQzLnN7mLAdA"
+        },
+        {
+            "Key": "gallery/gallery-3.jpeg",
+            "VersionId": "4mEjC1QTSDK29NR7TAqbjp17VzC5ZnJ1"
+        },
+        {
+            "Key": "assets/AdminMessages-C9VDc5Vl.js",
+            "VersionId": "XuecBSBjgXDLIlip7nwICBYya4hIRpds"
+        },
+        {
+            "Key": "assets/quill.snow-BC-X6xzY.js",
+            "VersionId": "lFOqkjdJowrVQCJqDH0x4guaC71Vw8xW"
+        },
+        {
+            "Key": "slide-7.jpeg",
+            "VersionId": "_v3jx4Mn45SED054ZV9LbkGSQqJ3MqzR"
+        },
+        {
+            "Key": "index.html",
+            "VersionId": "fZI23m3BwaWT3vrlnA1XVc0qLl05fPN3"
+        },
+        {
+            "Key": "slide-6.jpeg",
+            "VersionId": "wzKEvT37ljK4bpu9w66bP2QRUm9aIpSd"
+        },
+        {
+            "Key": "assets/HomePage-Dya2kGZH.js",
+            "VersionId": "rlhxgqhtP.g8VP5MQqeAmNikYl9bSFG."
+        },
+        {
+            "Key": "assets/AboutPage-DFSeyC80.js",
+            "VersionId": "xnbgPlVYUBcxxlbgRQPqzmGhTOD6F8fs"
+        },
+        {
+            "Key": "gallery/gallery-4.jpeg",
+            "VersionId": "FaX7Etnqr2jgTcjnycaukNU35HW3kk41"
+        },
+        {
+            "Key": "vite.svg",
+            "VersionId": "sPCEKUebw1sDdEUVp6wvfUES9snYsOgA"
+        },
+        {
+            "Key": "_redirects",
+            "VersionId": "jToR1CqMtRniY35nG.nqrmJ8IOZXF.KX"
+        },
+        {
+            "Key": "assets/AdminTestimonials-nr-WbGsT.js",
+            "VersionId": "R00lCF8FjOiE04tKVZI1JxL8wAWRMj8I"
+        },
+        {
+            "Key": "slide-3.jpeg",
+            "VersionId": "zNuSBpHdI.TMl2EDCTSoDLoKEhDxT0iX"
+        },
+        {
+            "Key": "slide-4.jpeg",
+            "VersionId": "m7bIOYdUDsE6NexQhmgz4wdwTTUbghnk"
+        },
+        {
+            "Key": "assets/quill-DZrYvFpI.css",
+            "VersionId": "0DRDH5NoWM3WDCCDoWazAXa0KwcbgWO4"
+        },
+        {
+            "Key": "slide-5.jpeg",
+            "VersionId": "yZyn_NdENJoYhPxS00y7avNMjT40EpPR"
+        },
+        {
+            "Key": "assets/HomePage-BvoPADgH.js",
+            "VersionId": "DJPpOockVMnWDAxyp83MZMBWyQRJM7Sw"
+        },
+        {
+            "Key": "assets/AdminSocialLinks-D2xLZLoT.js",
+            "VersionId": "3iq1Gp4Sc0L23P0rcbtuQcoVvtqxcK09"
+        },
+        {
+            "Key": "assets/AdminSocialLinks-FMDK2WR6.js",
+            "VersionId": "tdBrS97_TSJKtjn9WldeaKBpn4ClzxtX"
+        },
+        {
+            "Key": "assets/emailApi-zOWeHEYV.js",
+            "VersionId": "B6POLV3QeLrRXXsgWFjLX_8lxT8dY3cC"
+        },
+        {
+            "Key": "assets/BlogPostPage-D_fY1UGW.js",
+            "VersionId": "JmZ.63dJ07YXRuczMWb1daYe4eZRmIf6"
+        },
+        {
+            "Key": "assets/AdminSessionEdit-BVmAfp2j.js",
+            "VersionId": "jXk3xhPe8k4aWz3kxraYR9ijfBkALoCy"
+        },
+        {
+            "Key": "logo-dark.png:Zone.Identifier",
+            "VersionId": "zrJB_HJ35JsqtO94L_UGgScTnzGlGbfX"
+        },
+        {
+            "Key": "assets/useSupabaseQuery-DkgPYP0R.js",
+            "VersionId": "qv7J6xfmIs.jSR9CuEgUMwZM6n0Iilqy"
+        },
+        {
+            "Key": "assets/AdminLoginPage-BY9Mc3D2.js",
+            "VersionId": "SBrgSJreNSwVVOyVsR8JjFfyXpjCLWUE"
+        },
+        {
+            "Key": "vite.svg",
+            "VersionId": "DyJvv.r4d3EmhkZEE4V5k0vIQhsJEsK5"
+        },
+        {
+            "Key": "gallery/gallery-3.jpeg",
+            "VersionId": "ocXBFZ9bSrpmXYxTY8tjJjfXEyz5Tm3m"
+        },
+        {
+            "Key": "assets/useSupabaseQuery-BYchMusL.js",
+            "VersionId": "1OPJDVF5jiNzIlF5VkPzuR3sJE6Yz.Yx"
+        },
+        {
+            "Key": "slide-1.jpeg",
+            "VersionId": "1cFURFesDI5t6iWKthCHbRoF88PMjB_b"
+        },
+        {
+            "Key": "assets/BlogPostPage-DUuiZmvM.js",
+            "VersionId": "OjAvy1Bafjz5jETpTtFHi4DinLVFaVJv"
+        },
+        {
+            "Key": "assets/v4-CEBnatR8.js",
+            "VersionId": "xfOGZGudb7NltAvRzoF1GOFQYEISW9f8"
+        },
+        {
+            "Key": "assets/ProductDetailPage-BlMAryYV.js",
+            "VersionId": "2FLgxxAD0B6froXPGhn_l9JPFvgHdTuI"
+        },
+        {
+            "Key": "slide-3.jpeg",
+            "VersionId": "SFLiYhLaHBgKDPTwsS1QQUE3ZiiqcXck"
+        },
+        {
+            "Key": "assets/AdminProductEdit-DUXOzdLx.js",
+            "VersionId": "9KNvpeBRMm7eXF93k32ex.tk5jVFdErU"
+        },
+        {
+            "Key": "assets/OrderConfirmationPage-BPgqVVzK.js",
+            "VersionId": "qATA8xzsDoI7PDtj0Ho8ltyBVm4CGpzz"
+        },
+        {
+            "Key": "assets/AdminOrders-93hQAOIj.js",
+            "VersionId": "w0j4sT0K59xkVGhxyX_LIwjObOdk7peP"
+        },
+        {
+            "Key": "logo-light.png",
+            "VersionId": "i5xVbavovpfyGap5hHuEkUwcF7XTJFM8"
+        },
+        {
+            "Key": "assets/AdminSessionEdit-DBGrzmdU.js",
+            "VersionId": "_Xl0pw1eYPov7Ali2qzK4CrUWvc75Wq8"
+        },
+        {
+            "Key": "assets/AdminSubscribers-rOC7FlIJ.js",
+            "VersionId": "TyyYQd5XlmxV_xDChx9Zup47a8U1JeVK"
+        },
+        {
+            "Key": "assets/ProductsPage-yQ7tww7k.js",
+            "VersionId": "drUlIePhz6CttXCU5dFXavS46ceYMpwI"
+        },
+        {
+            "Key": "assets/emailApi-zOWeHEYV.js",
+            "VersionId": "dImR47wIbVwSpupEhu_GhW.HHssqC6qb"
+        },
+        {
+            "Key": "slide-6.jpeg",
+            "VersionId": "Uqwf0gIcsjGVWvBYUhKuFIvW4y0QFCeA"
+        },
+        {
+            "Key": "assets/AdminOrders-ofaq1g83.js",
+            "VersionId": "Gv0GRzrt9fm_u9voEx9aRfVrQc3GUU0n"
+        },
+        {
+            "Key": "assets/useSupabaseQuery-CDn-EuZK.js",
+            "VersionId": "mi_Pacp22gg59XySePIbIavrw.INFFCE"
+        },
+        {
+            "Key": "assets/AdminSessions-C_js4peP.js",
+            "VersionId": "99Asx_kHes0EMasCxcW26t.bhHwQfm9R"
+        },
+        {
+            "Key": "assets/SessionsPage-C7PCllJl.js",
+            "VersionId": "bBc9FaiD3K0KTHMgjXNdUtQ83CqdqAlr"
+        },
+        {
+            "Key": "assets/quill-DZrYvFpI.css",
+            "VersionId": "QwZBN_vg1Cd94VRfC0bn8hr6OrHXjLUp"
+        },
+        {
+            "Key": "assets/AdminSessionEdit-CCGDe-sS.js",
+            "VersionId": "t8fGwSzXHKOEMdPk_NNfYoMMOWyT5JtO"
+        },
+        {
+            "Key": "slide-2.jpeg",
+            "VersionId": "HjmmZwttCvzmPmE5bOSUxcPvr7kEV1tq"
+        },
+        {
+            "Key": "assets/index-CMC_09x_.css",
+            "VersionId": "ppA4uZswRPTapWs5J4JAb_ixhweoSE3z"
+        }
+    ]
+}
