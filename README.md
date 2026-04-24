@@ -5,16 +5,11 @@
 
 # 🌸 YasMade — Handcrafted Embroidery & Creative Workshops
 
-<p align="center">
-  A modern e-commerce platform for artisanal embroidery, creative workshops, and Islamic-inspired art — powered by AWS.
-</p>
+A modern e-commerce platform for artisanal embroidery, creative workshops, and Islamic-inspired art — powered by AWS.
 
-<p align="center">
-  <a href="https://dev.yasmade.net">🌐 Live Site</a> &nbsp;·&nbsp;
-  <a href="#-architecture">Architecture</a> &nbsp;·&nbsp;
-  <a href="#-quick-start">Quick Start</a> &nbsp;·&nbsp;
-  <a href="#-cicd-pipeline">CI/CD</a>
-</p>
+[🌐 Live Site](https://dev.yasmade.net) · [Architecture](#-architecture) · [Quick Start](#-quick-start) · [CI/CD](#-cicd-pipeline)
+
+</div>
 
 ---
 
