@@ -75,27 +75,27 @@ This is the **AWS edition** — migrated from Netlify/Vercel to a fully managed 
 
 ```
 YasMadeAWS/
-  packages/
-    frontend/                    # React + Vite SPA
-      src/
-        components/              # Reusable UI (layout, auth, home, common)
-        pages/                   # HomePage, Products, Cart, Gallery, Blog, Contact, About
-          admin/                 # Admin dashboard pages
-        contexts/                # Supabase, Theme, Toast providers
-        hooks/                   # Custom hooks (error handling, keyboard nav)
-        stores/                  # Zustand cart store
-        utils/                   # API clients, validation, helpers
-    cdk/                         # AWS CDK infrastructure
-      src/
-        bin/                     # CDK app entry points
-        domains/
-          frontend/              # S3, CloudFront, Route 53, ACM stacks
-          email/                 # SES, Lambda, API Gateway stacks
-          pipeline/              # CodePipeline CI/CD
-        shared/                  # Config, types, utilities
-  architecture.png               # Architecture diagram
-  nx.json                        # Nx workspace config
-  tsconfig.base.json             # Shared TypeScript config
+├── packages/
+│   ├── frontend/                    # React + Vite SPA
+│   │   └── src/
+│   │       ├── components/          # Reusable UI (layout, auth, home, common)
+│   │       ├── pages/               # HomePage, Products, Cart, Gallery, Blog, Contact, About
+│   │       │   └── admin/           # Admin dashboard pages
+│   │       ├── contexts/            # Supabase, Theme, Toast providers
+│   │       ├── hooks/               # Custom hooks (error handling, keyboard nav)
+│   │       ├── stores/              # Zustand cart store
+│   │       └── utils/               # API clients, validation, helpers
+│   └── cdk/                         # AWS CDK infrastructure
+│       └── src/
+│           ├── bin/                  # CDK app entry points
+│           ├── domains/
+│           │   ├── frontend/        # S3, CloudFront, Route 53, ACM stacks
+│           │   ├── email/           # SES, Lambda, API Gateway stacks
+│           │   └── pipeline/        # CodePipeline CI/CD
+│           └── shared/              # Config, types, utilities
+├── architecture.png                 # Architecture diagram
+├── nx.json                          # Nx workspace config
+└── tsconfig.base.json               # Shared TypeScript config
 ```
 
 ---
