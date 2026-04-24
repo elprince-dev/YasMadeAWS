@@ -30,6 +30,12 @@ const connectionArn =
   process.env.CODESTAR_CONNECTION_ARN ||
   '';
 
+if (!connectionArn) {
+  throw new Error(
+    'Missing CODESTAR_CONNECTION_ARN. Set it via CDK context, environment variable, or .env.local'
+  );
+}
+
 new PipelineStack(app, 'YasMade-Pipeline', {
   env: { account: devConfig.account, region: devConfig.region },
   githubOwner,
